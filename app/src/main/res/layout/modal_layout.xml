@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    android:id="@+id/gridModal"
+    android:rowCount="9"
+    android:columnCount="2"
+    android:background="@drawable/modal_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--       id label and value -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/lbId"
+            android:text="@string/id"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvShowId"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lbName"
+            android:text="@string/studentName"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/studentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <!--        gender label and value -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/lbGender"
+            android:textColor="@color/black"
+            android:text="@string/gender"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvGender"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/lbMajor"
+            android:text="@string/major"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvMajor"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/lbGeneration"
+            android:text="@string/generation"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvGeneration"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/generation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/lbEntryTime"
+            android:textColor="@color/black"
+            android:text="@string/entryTime"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvEntryTime"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/entryTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/lbExitingTime"
+            android:textColor="@color/black"
+            android:text="@string/exitingTime"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvExitingTime"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/exitingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+    <!--        student label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/lbPurpose"
+            android:textColor="@color/black"
+            android:text="@string/purpose"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvPurpose"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/purpose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!--        status label and value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/lbStatus"
+            android:textColor="@color/black"
+            android:text="@string/status"
+            android:layout_columnWeight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:layout_columnWeight="1"
+            android:text="@string/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

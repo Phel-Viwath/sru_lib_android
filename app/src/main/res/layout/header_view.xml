@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@android:color/darker_gray">
+
+    <TextView
+        android:id="@+id/tvNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvStudentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student Name"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvMajor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Major"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvEntryTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entery Times"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvPurpose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Purpose"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvSatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

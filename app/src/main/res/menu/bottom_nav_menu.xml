@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_white_dashboard_36"
+        android:id="@+id/btDashboard"
+        android:title="@string/btDashboard"/>
+
+    <item
+        android:icon="@drawable/round_qr_code_scanner_24"
+        android:id="@+id/btQrEntry"
+        android:title="@string/entry"/>
+
+    <item
+        android:icon="@drawable/ic_book_24"
+        android:id="@+id/btBook"
+        android:title="@string/book"/>
+
+    <item
+        android:icon="@drawable/ic_person_24"
+        android:id="@+id/btStudent"
+        android:title="@string/student"/>
+
+    <item
+        android:icon="@drawable/ic_settings_24"
+        android:id="@+id/btSetting"
+        android:title="@string/setting"/>
+</menu>

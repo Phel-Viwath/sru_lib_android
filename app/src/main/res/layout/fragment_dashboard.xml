@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:contentDescription="@string/app_name">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:id="@+id/scrollDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Welcome Section  -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+                    <TextView
+                        android:id="@+id/greeting_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/welcome_text"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        tools:ignore="RelativeOverlap" />
+                </RelativeLayout>
+
+                <!--  Card Section-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+                    <!-- Card layout -->
+                    <RelativeLayout
+                        android:id="@+id/relativeCard"
+                        android:paddingVertical="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/light_box_bg"
+                        android:orientation="vertical"
+                        android:spacing="16dp"
+                        tools:ignore="UselessParent">
+
+                        <!-- Entry Today Card -->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card1"
+                            android:layout_alignParentTop="true"
+                            app:cardCornerRadius="@dimen/fab_margin"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardElevation="4dp">
+                            <RelativeLayout
+                                android:id="@+id/entry_relative"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp">
+                                <TextView
+                                    android:id="@+id/tvCard1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_text"
+                                    android:textSize="16sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    tools:ignore="RelativeOverlap" />
+
+                                <TextView
+                                    android:id="@+id/tv_entry_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_int"
+                                    android:textSize="32sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tvCard1"
+                                    android:layout_marginTop="8dp"/>
+
+                                <TextView
+                                    android:id="@+id/tv_entry_percentage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_percent"
+                                    android:textSize="14sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tv_entry_count"
+                                    android:layout_marginTop="8dp"/>
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/walk_icon"/>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!-- Book Borrow Today Card -->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card2"
+                            android:layout_below="@+id/card1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
+                            app:cardCornerRadius="@dimen/fab_margin"
+                            app:cardElevation="4dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp">
+                                <TextView
+                                    android:id="@+id/tvCard2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/borrow_text"
+                                    android:textSize="16sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    tools:ignore="RelativeOverlap" />
+
+                                <TextView
+                                    android:id="@+id/tv_book_borrow_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/borrow_int"
+                                    android:textSize="32sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tvCard2"
+                                    android:layout_marginTop="8dp"/>
+
+                                <TextView
+                                    android:id="@+id/tv_book_borrow_percentage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/borrow_percent"
+                                    android:textSize="14sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tv_book_borrow_count"
+                                    android:layout_marginTop="8dp"/>
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/walk_icon"/>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!-- Book Sponsor Card -->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card3"
+                            android:layout_below="@+id/card2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
+                            android:elevation="4dp"
+                            app:cardCornerRadius="@dimen/fab_margin">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp">
+
+                                <TextView
+                                    android:id="@+id/tvCard3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sponsor_text"
+                                    android:textSize="16sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    tools:ignore="RelativeOverlap"/>
+
+                                <TextView
+                                    android:id="@+id/tv_book_sponsor_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sponsor_int"
+                                    android:textSize="32sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tvCard3"
+                                    android:layout_marginTop="8dp"/>
+
+                                <TextView
+                                    android:id="@+id/tv_book_sponsor_percentage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sponsor_percent"
+                                    android:textSize="14sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tv_book_sponsor_count"
+                                    android:layout_marginTop="8dp"/>
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/walk_icon"/>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!-- Total Entry Of This Month Card -->
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card4"
+                            android:layout_below="@+id/card3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
+                            android:elevation="4dp"
+                            app:cardCornerRadius="@dimen/fab_margin">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp">
+
+                                <TextView
+                                    android:id="@+id/tvCard4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/total_entry_this_month"
+                                    android:textSize="16sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    tools:ignore="RelativeOverlap" />
+
+                                <TextView
+                                    android:id="@+id/tv_total_entry_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_month_int"
+                                    android:textSize="32sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tvCard4"
+                                    android:layout_marginTop="8dp"/>
+
+                                <TextView
+                                    android:id="@+id/tv_total_entry_percentage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_month_percent"
+                                    android:textSize="14sp"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_below="@id/tv_total_entry_count"
+                                    android:layout_marginTop="8dp"/>
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/walk_icon"/>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <!--  Bar Chart Section-->
+                <LinearLayout
+                    android:padding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeBarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:background="@drawable/white_box_bg"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginStart="20dp"
+                            android:text="@string/weekly_visitor"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="20sp" />
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/barChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:layout_below="@id/title"
+                            android:layout_marginTop="18dp"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!--  Pie Chart Section-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+                    <RelativeLayout
+                        android:id="@+id/relativePieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/white_box_bg"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/titlePie"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginStart="20dp"
+                            android:text="@string/major_visitor"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="20sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@id/titlePie"
+                            android:layout_marginTop="10dp"
+                            android:padding="@dimen/fab_margin">
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieChart"
+                                android:layout_width="300dp"
+                                android:layout_height="300dp"
+                                android:layout_centerInParent="true" />
+
+                            <TextView
+                                android:id="@+id/tvTotalMajor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="@string/total"
+                                android:textAlignment="center"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="24sp" />
+
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!--  Progress ring Section-->
+                <LinearLayout
+                    android:padding="8dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/linearProgress"
+                        android:padding="16dp"
+                        android:background="@drawable/white_box_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/titleProgress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_book_of_this_month"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:layout_marginBottom="24dp" />
+
+                        <!-- Text Progress  -->
+                        <RelativeLayout
+                            android:id="@+id/re_language"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/khmer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/khmer"
+                                    android:textColor="#8A2BE2"
+                                    android:textSize="18sp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/english"
+                                    android:layout_marginEnd="40dp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/english"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/english"
+                                    android:textColor="#8A2BE2"
+                                    android:textSize="18sp"
+                                    app:layout_constraintStart_toEndOf="@+id/khmer"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    android:layout_marginStart="40dp"
+                                    android:textStyle="bold"/>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </RelativeLayout>
+
+                        <!-- Progress Circle -->
+                        <LinearLayout
+                            android:id="@+id/container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="24dp"
+                            tools:ignore="DisableBaselineAlignment">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center">
+
+                                <com.github.lzyzsd.circleprogress.DonutProgress
+                                    android:id="@+id/progress_khmer"
+                                    android:layout_width="150dp"
+                                    android:layout_height="150dp"
+                                    app:donut_finished_color="#8A2BE2"
+                                    app:donut_unfinished_color="#6B6868"
+                                    app:donut_progress="50"
+                                    app:donut_text="2345"
+                                    app:donut_text_color="#8A2BE2"
+                                    app:donut_text_size="24sp"/>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center">
+
+                                <com.github.lzyzsd.circleprogress.DonutProgress
+                                    android:id="@+id/progress_english"
+                                    android:layout_width="150dp"
+                                    android:layout_height="150dp"
+                                    app:donut_finished_color="#8A2BE2"
+                                    app:donut_unfinished_color="#6B6868"
+                                    app:donut_progress="80"
+                                    app:donut_text="4535"
+                                    app:donut_text_color="#8A2BE2"
+                                    app:donut_text_size="24sp"/>
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- recycle view -->
+                <LinearLayout
+                    android:padding="8dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintRecycle"
+                        android:background="@drawable/top_light_box_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:id="@+id/relativeTexBut"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="8dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tvAddEntry"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/entry_today"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:layout_marginBottom="24dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerInParent="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentBottom="true"
+                                tools:ignore="RelativeOverlap" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btEntry"
+                                app:icon="@drawable/ic_person_add_24"
+                                app:iconGravity="start"
+                                android:text="@string/entry"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentBottom="true"
+                                tools:ignore="RelativeOverlap" />
+
+                        </RelativeLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bottom_light_box_bg"
+                        android:scrollbars="none"
+                        android:paddingHorizontal="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="12dp">
+
+                        <!-- RecyclerView for Horizontal Scrolling -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewEntry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+                <!--   space -->
+                <LinearLayout
+                    android:id="@+id/linearSpace"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    android:background="@android:color/transparent"/>
+                <!--  Parent  -->
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

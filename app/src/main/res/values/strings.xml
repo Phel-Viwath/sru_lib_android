@@ -1,0 +1,99 @@
+<resources>
+    <string name="app_name">SRU Library Mobile</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="login">Login</string>
+    <string name="forgot">Forgot password</string>
+
+    <string name="khmer">Khmer</string>
+    <string name="english">English</string>
+
+    <!-- Dashboard   -->
+    <string name="weekly_visitor">Weekly Visitor</string>
+    <string name="walk_icon">Walk Icon</string>
+    <string name="total_entry_this_month">Total Entry Of This Month</string>
+    <string name="borrow_int">10</string>
+    <string name="entry_int">30</string>
+    <string name="sponsor_int">20</string>
+    <string name="entry_month_int">200</string>
+    <string name="menu">Button menu</string>
+    <string name="sponsor_text">Book Sponsor</string>
+    <string name="entry_text">Entry Today</string>
+    <string name="borrow_text">Book Borrow Today</string>
+    <string name="welcome_text">WELCOME BACK PEOPLE</string>
+    <string name="entry_percent">36.5 % from yesterday</string>
+    <string name="entry_month_percent">-4 % from yesterday</string>
+    <string name="borrow_percent">23.3 % from yesterday</string>
+    <string name="sponsor_percent">47.5 % from yesterday</string>
+    <string name="major_visitor">Total Major Visitor</string>
+    <string name="total_book_of_this_month">Total Book of This Month</string>
+    <string name="entry_today">Entry Today</string>
+
+    <!--    Major Name-->
+    <string name="eng">ENG</string>
+    <string name="cs">CS</string>
+    <string name="math">MATH</string>
+    <string name="pa">PA</string>
+    <string name="bus">BUS</string>
+
+    <!-- Menu button -->
+    <string name="btMenu">Menu</string>
+    <string name="btDashboard">Dashboard</string>
+    <string name="role">User</string>
+    <string name="name">My name</string>
+    <string name="qr">QR Student Entry</string>
+
+    <!-- QR Fragment -->
+    <string name="entry">Entry</string>
+    <string name="entry_num">20</string>
+    <string name="entry_desc">Current Entry Now</string>
+    <string name="exit_desc">Current Exit Now</string>
+    <string name="exited">Exited</string>
+    <string name="exit_num">10</string>
+    <string name="total">Total</string>
+    <string name="total_num">30</string>
+    <string name="total_desc">Total Entry</string>
+    <string name="scan_here">Scan Your Card Here</string>
+    <string name="tab_to_scan">Tab to scan!</string>
+    <string name="major">Major</string>
+    <string name="id">Student ID</string>
+    <string name="student_name">Student Name</string>
+    <string name="purpose">Purpose</string>
+
+    <string name="dash">..........</string>
+<!--    Purpose -->
+    <string name="use_pc">Use PC</string>
+    <string name="read">Read Book</string>
+    <string name="assignment">Assignment</string>
+    <string name="other">Other</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="flashlight">Flashlight</string>
+
+
+    <string name="register">Register</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="register_login_hint">Already have an account? Sign In</string>
+    <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+
+<!--    item attend detail-->
+    <string name="studentId">ID</string>
+    <string name="studentName">Student Name</string>
+    <string name="gender">Gender</string>
+    <string name="generation">Generation</string>
+    <string name="entryTime">Entry Time</string>
+    <string name="exitingTime">Exiting Time</string>
+    <string name="status">Status</string>
+
+<!--    bottom navigation menu-->
+    <string name="book">Book</string>
+    <string name="student">Student</string>
+    <string name="setting">Setting</string>
+
+    <string name="themeText">ThemeText</string>
+</resources>

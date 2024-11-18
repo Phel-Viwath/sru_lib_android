@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_white_dashboard_36"
+        android:id="@+id/btDashboard"
+        android:title="@string/btDashboard"/>
+    <item
+        android:icon="@drawable/ic_white_qr_code_scanner_36"
+        android:id="@+id/btQr"
+        android:title="@string/qr"/>
+</menu>
