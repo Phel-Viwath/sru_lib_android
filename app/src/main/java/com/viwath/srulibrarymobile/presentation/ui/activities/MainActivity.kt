@@ -10,6 +10,7 @@ import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
 import com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment
 import com.viwath.srulibrarymobile.presentation.ui.fragment.DashboardFragment
 import com.viwath.srulibrarymobile.presentation.ui.fragment.QrEntryFragment
+import com.viwath.srulibrarymobile.presentation.ui.fragment.SettingFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dashboardFragment: DashboardFragment
     private lateinit var qrEntryFragment: QrEntryFragment
     private lateinit var bookFragment: BookFragment
+    private lateinit var settingFragment: SettingFragment
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -27,9 +29,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // init fragment
         dashboardFragment = DashboardFragment()
         qrEntryFragment = QrEntryFragment()
         bookFragment = BookFragment()
+        settingFragment = SettingFragment()
 
         binding.bottomNavView.background = null
 
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.btSetting -> {
                     // Load setting fragment
+                    loadFragment(settingFragment)
                     true
                 }
                 R.id.btStudent -> {

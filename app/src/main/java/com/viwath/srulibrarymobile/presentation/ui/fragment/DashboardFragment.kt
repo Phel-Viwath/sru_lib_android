@@ -151,10 +151,6 @@ class DashboardFragment : Fragment() {
 
     // set up theme
     private fun setUpTheme(isDarkMode: Boolean){
-        val lightColor = resources.getColor(R.color.light_color)
-        val nightColor = resources.getColor(R.color.night_color)
-        val lightButton = R.drawable.light_button_bg
-        val nightButton = R.drawable.night_button_bg
         val nightBoxBackground = R.drawable.night_box_bg
         val lightBoxBackground = R.drawable.light_box_bg
         val bottomLightBackground = R.drawable.bottom_light_box_bg

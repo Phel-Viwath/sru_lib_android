@@ -77,6 +77,7 @@
 
     <string name="register">Register</string>
     <string name="login_email_hint">Email</string>
+    <string name="username_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="register_login_hint">Already have an account? Sign In</string>
     <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
@@ -96,4 +97,10 @@
     <string name="setting">Setting</string>
 
     <string name="themeText">ThemeText</string>
+
+
+    <string name="user">User</string>
+    <string name="admin">Admin</string>
+    <string name="logout">Logout</string>
+    <string name="theme">Theme</string>
 </resources>

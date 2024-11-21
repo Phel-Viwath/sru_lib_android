@@ -1,11 +1,13 @@
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
@@ -25,6 +27,11 @@ class RegisterActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val nightButtonBackground = R.drawable.night_button_bg
+        val lightButtonBackground = R.drawable.light_button_bg
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        binding.btRegister.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
 
         binding.tvGoSignIn.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -68,14 +75,18 @@ class RegisterActivity : AppCompatActivity(){
                 }
             }
         }
-        binding.edtUsername.setText(state.value.signUpEmail)
+
+        binding.edtUsername.setText(state.value.signUpUsername)
         binding.edtPassword.setText(state.value.signUpPassword)
+        binding.edtEmail.setText(state.value.signUpEmail)
 
         binding.btRegister.setOnClickListener {
             val username = binding.edtUsername.text
             val password = binding.edtPassword.text
+            val email = binding.edtEmail.text
             viewModel.onEvent(AuthEvent.SignUpUsernameChanged(username.toString()))
             viewModel.onEvent(AuthEvent.SignUpPasswordChanged(password.toString()))
+            viewModel.onEvent(AuthEvent.SignUpEmailChanged(email.toString()))
             viewModel.onEvent(AuthEvent.SignUp)
         }
 

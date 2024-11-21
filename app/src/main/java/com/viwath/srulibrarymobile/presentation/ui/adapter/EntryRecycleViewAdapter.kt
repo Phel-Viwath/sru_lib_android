@@ -42,15 +42,15 @@ class EntryRecycleViewAdapter(
                     tvGender.text = "Gender"
                     tvStatus.text = "Status"
 
-                    tvId.setTextColor(Color.WHITE)
-                    tvStudentName.setTextColor(Color.WHITE)
-                    tvGender.setTextColor(Color.WHITE)
-                    tvStatus.setTextColor(Color.WHITE)
-
-                    tvId.setBackgroundColor(R.color.colorPrimaryDark)
-                    tvStudentName.setBackgroundColor(R.color.colorPrimaryDark)
-                    tvGender.setBackgroundColor(R.color.colorPrimaryDark)
-                    tvStatus.setBackgroundColor(R.color.colorPrimaryDark)
+//                    tvId.setTextColor(Color.WHITE)
+//                    tvStudentName.setTextColor(Color.WHITE)
+//                    tvGender.setTextColor(Color.WHITE)
+//                    tvStatus.setTextColor(Color.WHITE)
+//
+//                    tvId.setBackgroundColor(R.color.colorPrimaryDark)
+//                    tvStudentName.setBackgroundColor(R.color.colorPrimaryDark)
+//                    tvGender.setBackgroundColor(R.color.colorPrimaryDark)
+//                    tvStatus.setBackgroundColor(R.color.colorPrimaryDark)
                 }
             }
 

@@ -1,11 +1,13 @@
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
@@ -26,6 +28,12 @@ class LoginActivity : AppCompatActivity(){
         binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val nightButtonBackground = R.drawable.night_button_bg
+        val lightButtonBackground = R.drawable.light_button_bg
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        binding.btLogin.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
+
 
         binding.tvGoSignUp.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))

@@ -48,10 +48,10 @@ android {
 kapt {
     correctErrorTypes = true
     includeCompileClasspath = false
-    arguments {
-        arg("dagger.fastInit", "enabled")
-        arg("kapt.kotlin.generated", "true")
-    }
+//    arguments {
+//        arg("dagger.fastInit", "enabled")
+//        arg("kapt.kotlin.generated", "true")
+//    }
 }
 hilt {
     enableAggregatingTask = true

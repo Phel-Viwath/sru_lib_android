@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:gravity="center"
@@ -19,14 +18,14 @@
         <TextView
             android:id="@+id/lbId"
             android:text="@string/id"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvShowId"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/id"
             android:layout_width="wrap_content"
@@ -40,18 +39,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <TextView
             android:id="@+id/lbName"
             android:text="@string/studentName"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvName"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/studentName"
             android:layout_width="wrap_content"
@@ -66,7 +64,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/lbGender"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/gender"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
@@ -74,7 +72,7 @@
         <TextView
             android:id="@+id/tvGender"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/gender"
             android:layout_width="wrap_content"
@@ -92,14 +90,14 @@
         <TextView
             android:id="@+id/lbMajor"
             android:text="@string/major"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvMajor"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/major"
             android:layout_width="wrap_content"
@@ -115,14 +113,14 @@
         <TextView
             android:id="@+id/lbGeneration"
             android:text="@string/generation"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvGeneration"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/generation"
             android:layout_width="wrap_content"
@@ -137,7 +135,7 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbEntryTime"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/entryTime"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
@@ -146,7 +144,7 @@
         <TextView
             android:id="@+id/tvEntryTime"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/entryTime"
             android:layout_width="wrap_content"
@@ -163,7 +161,7 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbExitingTime"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/exitingTime"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
@@ -172,7 +170,7 @@
         <TextView
             android:id="@+id/tvExitingTime"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/exitingTime"
             android:layout_width="wrap_content"
@@ -189,7 +187,7 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbPurpose"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/purpose"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
@@ -197,7 +195,7 @@
         <TextView
             android:id="@+id/tvPurpose"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/purpose"
             android:layout_width="wrap_content"
@@ -211,7 +209,7 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbStatus"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:text="@string/status"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
@@ -219,7 +217,7 @@
         <TextView
             android:id="@+id/tvStatus"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/status"
             android:layout_width="wrap_content"

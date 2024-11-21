@@ -8,8 +8,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="@dimen/fab_margin"
-    android:background="@color/white"
-    tools:context=".auth_feature.presentation.activities.RegisterActivity">
+    tools:context=".presentation.ui.activities.Hilt_RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/sruLogo"
@@ -32,10 +31,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:autofillHints=""
+        android:hint="@string/username_hint"
+        android:inputType="textEmailAddress"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="20sp"
+        tools:ignore="ContentDescription" />
+
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:autofillHints=""
         android:hint="@string/login_email_hint"
         android:inputType="textEmailAddress"
-        android:textColor="@android:color/black"
-        android:textColorHint="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
         tools:ignore="ContentDescription" />
 
@@ -47,8 +57,7 @@
         android:autofillHints=""
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:textColor="@android:color/black"
-        android:textColorHint="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp" />
 
     <TextView
@@ -57,15 +66,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="@string/register_login_hint"
-        android:textColor="@color/black" />
+        android:textColor="?android:attr/textColorPrimary" />
 
     <Button
         android:id="@+id/btRegister"
-        android:layout_width="115dp"
+        android:layout_width="130dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:text="@string/register"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="18sp"
-        android:background="@drawable/button_effect"
+        android:background="@drawable/light_button_bg"
         android:contentDescription="@string/ok" />
+
+
 </LinearLayout>

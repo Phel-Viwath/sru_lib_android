@@ -19,17 +19,9 @@ import retrofit2.http.Query
 
 interface RemoteApi {
 
-    @POST("api/v1/auth/register")
-    suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
 
-    @POST("api/v1/auth/login")
-    suspend fun logIn(@Body request: LogInRequest): Response<AuthResponse>
 
-    @POST("api/v1/auth/refresh-token")
-    suspend fun refreshToken(@Body refreshToken: RefreshToken): Response<AuthResponse>
 
-    @GET("api/v1/welcome")
-    suspend fun authenticate(): Response<Unit>
 
     /// core api
     @GET("/api/v1/dashboard")

@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.viwath.srulibrarymobile.common.constant.Constant
+import com.viwath.srulibrarymobile.data.api.AuthApi
 import com.viwath.srulibrarymobile.data.api.AuthInterceptor
 import com.viwath.srulibrarymobile.data.api.RemoteApi
 import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
@@ -13,6 +14,7 @@ import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthenticateUseCase
+import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RefreshTokenUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RegisterUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.SigninUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
@@ -53,6 +55,15 @@ object AppModule {
             .create(RemoteApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideAuthApi(): AuthApi {
+        return Retrofit.Builder()
+            .baseUrl(Constant.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(AuthApi::class.java)
+    }
     ///////////// OK Http client
     @Provides
     @Singleton
@@ -65,8 +76,8 @@ object AppModule {
     // Inject Auth Repository
     @Provides
     @Singleton
-    fun provideAuthRepository(remoteApi: RemoteApi, tokenManager: TokenManager): AuthRepository {
-        return AuthRepositoryImp(remoteApi, tokenManager)
+    fun provideAuthRepository(authApi: AuthApi, tokenManager: TokenManager): AuthRepository {
+        return AuthRepositoryImp(authApi, tokenManager)
     }
 
     // Inject Core Repository
@@ -79,8 +90,8 @@ object AppModule {
     // Auth interceptor
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager, authRepository: Provider<AuthRepository>): AuthInterceptor {
-        return AuthInterceptor(tokenManager, lazy { authRepository.get() })
+    fun provideAuthInterceptor(tokenManager: TokenManager, authUseCase: Provider<AuthUseCase>): AuthInterceptor {
+        return AuthInterceptor(tokenManager, lazy { authUseCase.get() })
     }
 
 
@@ -104,7 +115,8 @@ object AppModule {
         return AuthUseCase(
             RegisterUseCase(repository),
             SigninUseCase(repository),
-            AuthenticateUseCase(repository)
+            AuthenticateUseCase(repository),
+            RefreshTokenUseCase(repository)
         )
     }
 

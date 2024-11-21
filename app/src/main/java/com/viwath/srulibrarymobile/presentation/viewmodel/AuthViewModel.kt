@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.exception.InvalidAuthException
 import com.viwath.srulibrarymobile.common.result.AuthResult
+import com.viwath.srulibrarymobile.data.repository.TokenManager
 import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
@@ -35,6 +36,9 @@ class AuthViewModel @Inject constructor(
     fun onEvent(event: AuthEvent) {
         when(event) {
             is AuthEvent.SignUpUsernameChanged -> {
+                state.value = state.value.copy(signUpUsername = event.value)
+            }
+            is AuthEvent.SignUpEmailChanged -> {
                 state.value = state.value.copy(signUpEmail = event.value)
             }
             is AuthEvent.SignUpPasswordChanged -> {
@@ -80,7 +84,7 @@ class AuthViewModel @Inject constructor(
                 val result = async {
                     useCase.registerUseCase.invoke(
                         RegisterRequest(
-                            username = state.value.signUpEmail,
+                            username = state.value.signUpUsername,
                             password = state.value.signUpPassword,
                             email = state.value.signUpEmail
                         )

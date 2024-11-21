@@ -32,6 +32,10 @@ class TokenManager @Inject constructor(context: Context) {
         return prefs.getString(USERNAME, null)
     }
 
+    fun clearToken(){
+        prefs.edit().clear().apply()
+    }
+
     companion object{
         private const val ACCESS_TOKEN = "access_token"
         private const val REFRESH_TOKEN = "refresh_token"

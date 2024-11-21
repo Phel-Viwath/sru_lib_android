@@ -12,15 +12,13 @@ class RegisterUseCase @Inject constructor(
     @Throws(InvalidAuthException::class)
     suspend operator fun invoke(request: RegisterRequest): AuthResult<Unit> {
         val isPasswordTooShort = request.password.length < 8
-        val isUsernameFieldBlank = request.username.isBlank() && request.password.isNotBlank()
-        val isPasswordFieldBlank = request.username.isNotBlank() && request.password.isBlank()
-        val areFieldBlank = request.username.isBlank() || request.password.isBlank()
+        val isUsernameFieldBlank = request.email.isBlank()
+        val isPasswordFieldBlank = request.password.isBlank()
+        val areFieldBlank = isUsernameFieldBlank || isPasswordFieldBlank
         if (isUsernameFieldBlank)
             throw InvalidAuthException("Please enter username.")
         if (isPasswordFieldBlank)
             throw InvalidAuthException("Please enter password.")
-        if (areFieldBlank)
-            throw InvalidAuthException("Field can not be blank.")
         if (isPasswordTooShort)
             throw InvalidAuthException("Password must greater than 8.")
         return repository.register(request)

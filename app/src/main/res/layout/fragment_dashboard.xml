@@ -511,6 +511,7 @@
                                 app:icon="@drawable/ic_person_add_24"
                                 app:iconGravity="start"
                                 android:text="@string/entry"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -518,6 +519,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
+                                android:backgroundTint="@color/your_background_color"
                                 tools:ignore="RelativeOverlap" />
 
                         </RelativeLayout>
