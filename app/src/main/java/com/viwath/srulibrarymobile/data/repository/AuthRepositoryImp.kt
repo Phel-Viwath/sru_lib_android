@@ -49,20 +49,30 @@ class AuthRepositoryImp @Inject constructor(
 
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
-
             val token = tokenManager.getAccessToken()?.let {
                 if (it.isBlank()) return AuthResult.BadRequest()
                 else "Bearer $it"
             }
-            Log.d("authenticate ", "authenticate: $token")
             val response = api.authenticate(token.toString())
-            Log.d("authenticate ", "authenticate: ${response.code()}")
-            Log.d("authenticate ", "authenticate error: ${response.message()}")
-            if (response.isSuccessful) {
-                AuthResult.Authorize()
-            } else {
-                AuthResult.Unauthorized()
+
+            if (response.isSuccessful) AuthResult.Authorize()
+            else if (response.code() == 401) {
+                if (refreshToken()) {
+                    val newAccessToken = tokenManager.getAccessToken()?.let {
+                        if (it.isBlank()) return AuthResult.BadRequest()
+                        else "Bearer $it"
+                    }
+                    val retryResponse = api.authenticate(newAccessToken!!)
+                    Log.d("Retry Auth", "authenticate: ${retryResponse.code()}")
+                    if (retryResponse.isSuccessful) return AuthResult.Authorize()
+                    else {
+                        Log.d("authenticate", "Retry failed: ${retryResponse.code()}")
+                        return AuthResult.Unauthorized()
+                    }
+                }else AuthResult.Unauthorized()
             }
+            else AuthResult.Unauthorized()
+
         } catch (e: Exception) {
             Log.e("AuthRepository-Authenticate", "Error:", e)
             handleError(e)
@@ -71,19 +81,18 @@ class AuthRepositoryImp @Inject constructor(
 
 
     override suspend fun refreshToken(): Boolean {
-        val refreshToken = tokenManager.getRefreshToken() ?: return false
+        val refreshToken = tokenManager.getRefreshToken()
         return try {
-            Log.d("RefreshToken", "refreshToken: Hello")
+            if (refreshToken == null) return false
             val response = api.refreshToken(RefreshToken(refreshToken))
             Log.d("AuthRepositoryImp", "refreshToken: ${response.code()}")
             if (response.isSuccessful) {
                 response.body()?.let {
+                    tokenManager.saveUsername(it.username)
                     tokenManager.saveAccessToken(it.accessToken)
                     tokenManager.saveRefreshToken(it.refreshToken)
                     true
                 } ?: false
-            }else{
-                Log.d("AuthRepositoryImp", "refreshToken error: ${response.body()}")
             }
             false
         } catch (e: Exception) {

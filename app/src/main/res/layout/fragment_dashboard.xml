@@ -100,7 +100,7 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:src="@drawable/ic_person_add_24"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -155,7 +155,7 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:src="@drawable/ic_book_24"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -210,7 +210,7 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:src="@drawable/ic_book_24"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -265,7 +265,7 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:src="@drawable/ic_accessibility_new_24"
+                                    android:src="@drawable/ic_person_add_24"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -300,6 +300,7 @@
                             android:textSize="20sp" />
 
                         <com.github.mikephil.charting.charts.BarChart
+                            android:backgroundTint="@color/dark_gray"
                             android:id="@+id/barChart"
                             android:layout_width="match_parent"
                             android:layout_height="400dp"
