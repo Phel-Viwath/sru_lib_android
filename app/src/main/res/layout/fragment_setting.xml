@@ -9,6 +9,7 @@
 
     <!-- Header Section -->
     <RelativeLayout
+        android:id="@+id/relativeUserSection"
         android:padding="12dp"
         android:background="@drawable/light_box_bg"
         android:layout_width="match_parent"
@@ -18,8 +19,8 @@
         <!-- Logo/Icon -->
         <ImageView
             android:id="@+id/ivProfile"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:contentDescription="@string/themeText"
             android:src="@drawable/sru_image"
             android:layout_centerVertical="true"
@@ -48,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="?android:attr/textColorPrimary" />
         </LinearLayout>
 
@@ -60,46 +61,27 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="@string/logout"
-            android:backgroundTint="@android:color/darker_gray"
-            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@color/white"
             tools:ignore="RelativeOverlap" />
     </RelativeLayout>
 
     <!-- Setting Options -->
     <LinearLayout
-        android:padding="12dp"
+        android:id="@+id/linearSpinner"
+        android:padding="10dp"
+        android:layout_marginVertical="10dp"
         android:background="@drawable/light_box_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Dark Mode Option -->
-        <LinearLayout
+        <Spinner
+            android:id="@+id/themeSpinner"
+            android:spinnerMode="dropdown"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:id="@+id/tvDarkMode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/theme"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary" />
-
-            <ImageView
-                android:id="@+id/ivDarkModeToggle"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="@string/theme"
-                android:src="@drawable/ic_light_mode_24" />
-        </LinearLayout>
-
-
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

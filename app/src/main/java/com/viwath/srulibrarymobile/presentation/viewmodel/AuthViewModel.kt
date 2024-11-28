@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.exception.InvalidAuthException
 import com.viwath.srulibrarymobile.common.result.AuthResult
-import com.viwath.srulibrarymobile.data.repository.TokenManager
 import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase

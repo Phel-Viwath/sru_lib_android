@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bookFragment: BookFragment
     private lateinit var settingFragment: SettingFragment
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

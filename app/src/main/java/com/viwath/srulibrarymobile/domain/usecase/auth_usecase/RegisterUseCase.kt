@@ -14,7 +14,6 @@ class RegisterUseCase @Inject constructor(
         val isPasswordTooShort = request.password.length < 8
         val isUsernameFieldBlank = request.email.isBlank()
         val isPasswordFieldBlank = request.password.isBlank()
-        val areFieldBlank = isUsernameFieldBlank || isPasswordFieldBlank
         if (isUsernameFieldBlank)
             throw InvalidAuthException("Please enter username.")
         if (isPasswordFieldBlank)

@@ -3,7 +3,7 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.viwath.srulibrarymobile.data.repository.TokenManager
+import com.viwath.srulibrarymobile.utils.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,12 +12,13 @@ class SettingViewModel @Inject constructor(
     private val tokenManager: TokenManager
 ): ViewModel(){
 
-    private val _username = MutableLiveData("USER")
+    private val _username = MutableLiveData(tokenManager.getUsername() ?: "User")
     val username: LiveData<String> = _username
-    private val _userType = MutableLiveData("USER")
+    private val _userType = MutableLiveData(tokenManager.getRole() ?: "?")
     val userType: LiveData<String> = _userType
 
-    private val _isDarkModeEnable = MutableLiveData(false)
-    val isDarkModeEnable: LiveData<Boolean> = _isDarkModeEnable
+    fun logout(){
+        tokenManager.clearToken()
+    }
 
 }

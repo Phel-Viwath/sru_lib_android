@@ -1,15 +1,11 @@
 package com.viwath.srulibrarymobile.data.api
 
 import android.util.Log
-import com.viwath.srulibrarymobile.data.repository.TokenManager
+import com.viwath.srulibrarymobile.utils.TokenManager
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject

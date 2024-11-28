@@ -103,4 +103,10 @@
     <string name="admin">Admin</string>
     <string name="logout">Logout</string>
     <string name="theme">Theme</string>
+
+    <string-array name="theme">
+        <item>Light Mode</item>
+        <item>Dark Mode</item>
+        <item>System Default</item>
+    </string-array>
 </resources>

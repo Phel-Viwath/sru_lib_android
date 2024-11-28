@@ -1,4 +1,4 @@
-package com.viwath.srulibrarymobile.domain.usecase
+package com.viwath.srulibrarymobile.domain.usecase.dashboard_usecase
 
 import com.viwath.srulibrarymobile.common.result.CoreResult
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard

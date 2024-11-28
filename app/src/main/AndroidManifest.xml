@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
-        android:name=".SruApp"
+        android:name=".Application"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

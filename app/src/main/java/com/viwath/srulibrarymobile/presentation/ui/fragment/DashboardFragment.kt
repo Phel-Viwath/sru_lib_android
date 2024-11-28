@@ -141,10 +141,14 @@ class DashboardFragment : Fragment() {
                     binding.swipeRefresh.isRefreshing = false
                 }
                 state.error.isNotEmpty() -> {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
                     binding.swipeRefresh.isRefreshing = false
                 }
             }
+        }
+        val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
+        cardList.forEach { cardView ->
+            setupCardAnimation(cardView)
         }
 
     }
@@ -173,13 +177,13 @@ class DashboardFragment : Fragment() {
     private fun setupCardAnimation(cardView: CardView) {
         cardView.setOnClickListener {
             if (currentExpandCard != null && currentExpandCard != cardView){
-                animateCard(currentExpandCard!!, 1.1f, 1.0f)
+                animateCard(currentExpandCard!!, 1.05f, 1.0f)
             }
             if (currentExpandCard == cardView){
-                animateCard(cardView, 1.1f, 1.0f)
+                animateCard(cardView, 1.05f, 1.0f)
                 currentExpandCard = null
             }else{
-                animateCard(cardView, 1.0f, 1.1f)
+                animateCard(cardView, 1.0f, 1.05f)
                 currentExpandCard = cardView
             }
         }

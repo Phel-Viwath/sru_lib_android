@@ -9,7 +9,7 @@ import com.viwath.srulibrarymobile.data.api.AuthInterceptor
 import com.viwath.srulibrarymobile.data.api.RemoteApi
 import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
 import com.viwath.srulibrarymobile.data.repository.CoreRepositoryImp
-import com.viwath.srulibrarymobile.data.repository.TokenManager
+import com.viwath.srulibrarymobile.utils.TokenManager
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
@@ -123,7 +123,7 @@ object AppModule {
     // token manger
     @Provides
     @Singleton
-    fun provideTokenManger(@ApplicationContext context: Context): TokenManager{
+    fun provideTokenManger(@ApplicationContext context: Context): TokenManager {
         return TokenManager(context)
     }
 }

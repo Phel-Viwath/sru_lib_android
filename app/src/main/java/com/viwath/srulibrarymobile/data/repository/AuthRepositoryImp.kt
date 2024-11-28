@@ -7,6 +7,7 @@ import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RefreshToken
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
+import com.viwath.srulibrarymobile.utils.TokenManager
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class AuthRepositoryImp @Inject constructor(
                     tokenManager.saveAccessToken(it.accessToken)
                     tokenManager.saveRefreshToken(it.refreshToken)
                     tokenManager.saveUsername(it.username)
+                    tokenManager.saveRole(it.role)
                     return AuthResult.Authorize()
                 }
             }else return AuthResult.Unauthorized()
@@ -53,26 +55,11 @@ class AuthRepositoryImp @Inject constructor(
                 if (it.isBlank()) return AuthResult.BadRequest()
                 else "Bearer $it"
             }
+            Log.d("Auth", "authenticate token: $token")
             val response = api.authenticate(token.toString())
-
+            Log.d("Authenticate", "authenticate response: ${response.code()}")
             if (response.isSuccessful) AuthResult.Authorize()
-            else if (response.code() == 401) {
-                if (refreshToken()) {
-                    val newAccessToken = tokenManager.getAccessToken()?.let {
-                        if (it.isBlank()) return AuthResult.BadRequest()
-                        else "Bearer $it"
-                    }
-                    val retryResponse = api.authenticate(newAccessToken!!)
-                    Log.d("Retry Auth", "authenticate: ${retryResponse.code()}")
-                    if (retryResponse.isSuccessful) return AuthResult.Authorize()
-                    else {
-                        Log.d("authenticate", "Retry failed: ${retryResponse.code()}")
-                        return AuthResult.Unauthorized()
-                    }
-                }else AuthResult.Unauthorized()
-            }
             else AuthResult.Unauthorized()
-
         } catch (e: Exception) {
             Log.e("AuthRepository-Authenticate", "Error:", e)
             handleError(e)
@@ -82,6 +69,7 @@ class AuthRepositoryImp @Inject constructor(
 
     override suspend fun refreshToken(): Boolean {
         val refreshToken = tokenManager.getRefreshToken()
+        Log.d("RefreshToken", "refreshToken: $refreshToken")
         return try {
             if (refreshToken == null) return false
             val response = api.refreshToken(RefreshToken(refreshToken))
@@ -91,6 +79,7 @@ class AuthRepositoryImp @Inject constructor(
                     tokenManager.saveUsername(it.username)
                     tokenManager.saveAccessToken(it.accessToken)
                     tokenManager.saveRefreshToken(it.refreshToken)
+                    tokenManager.saveRole(it.role)
                     true
                 } ?: false
             }

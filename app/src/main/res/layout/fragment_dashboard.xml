@@ -350,7 +350,7 @@
                                 android:layout_centerInParent="true"
                                 android:text="@string/total"
                                 android:textAlignment="center"
-                                android:textColor="?android:attr/textColorPrimary"
+                                android:textColor="@color/black"
                                 android:textSize="24sp" />
 
                         </RelativeLayout>

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.CoreResult
-import com.viwath.srulibrarymobile.data.repository.TokenManager
-import com.viwath.srulibrarymobile.domain.usecase.DashboardUseCase
+import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.domain.usecase.dashboard_usecase.DashboardUseCase
 import com.viwath.srulibrarymobile.presentation.state.DashboardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
