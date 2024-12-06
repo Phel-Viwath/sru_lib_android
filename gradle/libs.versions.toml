@@ -10,8 +10,8 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
 constraintlayout = "2.2.0"
-navigationFragmentKtx = "2.8.3"
-navigationUiKtx = "2.8.3"
+navigationFragmentKtx = "2.8.4"
+navigationUiKtx = "2.8.4"
 # Coroutines version
 kotlinxCoroutinesCore = "1.8.1"
 kotlinxCoroutinesAndroid = "1.8.1"
@@ -29,13 +29,15 @@ androidChart = "3.0.3"
 # Glass morphism
 fkBlurViewAndroid = "1.0.1"
 # google meterail design
-materialVersion = "1.13.0-alpha07"
+materialVersion = "1.13.0-alpha08"
 # Circle progress bar
 circleprogress = "1.2.1"
 # Swipe refresh layout version
 swiperefreshlayout = "1.1.0"
 #zxing
 zxingAndroidEmbedded = "4.3.0"
+#flex box
+flexbox = "3.0.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
@@ -80,6 +82,8 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 zxing = { module = "com.google.zxing:core", version.ref = "core" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
+#flexbox
+flexbox-layout = {module = "com.google.android.flexbox:flexbox", version.ref = "flexbox"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

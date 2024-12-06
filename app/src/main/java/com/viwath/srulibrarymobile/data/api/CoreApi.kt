@@ -2,26 +2,17 @@ package com.viwath.srulibrarymobile.data.api
 
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Students
-import com.viwath.srulibrarymobile.domain.model.auth.AuthResponse
-import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
-import com.viwath.srulibrarymobile.domain.model.auth.RefreshToken
-import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.model.entry.EntryStatus
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface RemoteApi {
-
-
-
-
+interface CoreApi {
 
     /// core api
     @GET("/api/v1/dashboard")
@@ -45,4 +36,6 @@ interface RemoteApi {
 
     @PUT("/api/v1/entry")
     suspend fun updateExitingTime(@Query("entryId") id: Long): Response<String>
+
+
 }

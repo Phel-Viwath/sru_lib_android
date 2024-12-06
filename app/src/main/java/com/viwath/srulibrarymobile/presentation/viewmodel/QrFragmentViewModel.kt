@@ -27,7 +27,7 @@ class QrFragmentViewModel @Inject constructor(
 
     fun onEvent(event: QrEntryEvent){
         when(event){
-            is QrEntryEvent.LoadStudent -> checkExitingTime(event.studentId.toString())
+            is QrEntryEvent.LoadStudent -> checkExitingTime(event.studentId)
             is QrEntryEvent.SaveAttention -> saveAttend(event.studentId, event.purpose)
             is QrEntryEvent.LoadRecentEntry -> getRecentEntryData()
         }

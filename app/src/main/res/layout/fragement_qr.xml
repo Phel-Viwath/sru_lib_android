@@ -299,7 +299,7 @@
                         style="@style/Widget.AppCompat.CompoundButton.CheckBox"/>
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/radioReadBook"
-                        android:text="@string/read"
+                        android:text="@string/reading"
                         android:textSize="18sp"
                         android:buttonTint="?android:attr/textColorPrimary"
                         android:textColor="?android:attr/textColorPrimary"

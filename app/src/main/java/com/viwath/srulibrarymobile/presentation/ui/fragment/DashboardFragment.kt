@@ -1,6 +1,7 @@
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
@@ -13,12 +14,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -27,14 +33,23 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentDashboardBinding
 import com.viwath.srulibrarymobile.domain.model.AttendDetail
 import com.viwath.srulibrarymobile.domain.model.dashboard.Day
 import com.viwath.srulibrarymobile.domain.model.dashboard.TotalMajorVisitor
+import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
+import com.viwath.srulibrarymobile.presentation.state.StudentState
 import com.viwath.srulibrarymobile.presentation.ui.adapter.EntryRecycleViewAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+@Suppress("DEPRECATION")
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -70,6 +85,9 @@ class DashboardFragment : Fragment() {
             }, 3000)
         }
 
+        ////////////////
+
+        //// load data
         binding.greetingText.text = "Hello, ${viewModel.username}"
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when{
@@ -111,24 +129,32 @@ class DashboardFragment : Fragment() {
                             append(dashboard.totalMajorVisitor.size.toString())
                         }
                         // bar chart
-                        barChart(dashboard.weeklyVisitor.days)
+                        barChart(dashboard.weeklyVisitor.days, isDarkMode)
                         // pie chart
-                        pieChart(dashboard.totalMajorVisitor)
+                        pieChart(dashboard.totalMajorVisitor, isDarkMode)
                         // progress ring
 
-                        val totalKhBook = dashboard.bookAvailable[0].totalBook
-                        val khBookAvailable = dashboard.bookAvailable[0].available
-                        val kh = dashboard.bookAvailable[0].language
-                        binding.progressKhmer.progress = khBookAvailable.toFloat()
-                        binding.progressKhmer.text = totalKhBook.toString()
-                        binding.khmer.text = kh
-
-                        val totalEngBook = dashboard.bookAvailable[1].totalBook
-                        val engBookAvailable = dashboard.bookAvailable[1].available
-                        val eng = dashboard.bookAvailable[1].language
-                        binding.progressEnglish.progress = totalEngBook.toFloat()
-                        binding.progressEnglish.text = engBookAvailable.toString()
+                        val totalEngBook = dashboard.bookAvailable[0].totalBook
+                        val engBookAvailable = dashboard.bookAvailable[0].available
+                        val eng = dashboard.bookAvailable[0].language
+                        with(binding.progressEnglish){
+                            progress = totalEngBook.toFloat()
+                            text = engBookAvailable.toString()
+                            textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                            finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else Color.parseColor("#8A2BE2")
+                        }
                         binding.english.text = eng
+
+                        val totalKhBook = dashboard.bookAvailable[1].totalBook
+                        val khBookAvailable = dashboard.bookAvailable[1].available
+                        val kh = dashboard.bookAvailable[1].language
+                        with(binding.progressKhmer){
+                            progress = khBookAvailable.toFloat()
+                            text = totalKhBook.toString()
+                            textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                            finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else Color.parseColor("#8A2BE2")
+                        }
+                        binding.khmer.text = kh
 
 
                         /// add recycler view
@@ -146,6 +172,13 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
+
+        // button entry
+        binding.btEntry.setOnClickListener {
+            showModal(requireContext(), isDarkMode)
+        }
+
+        // set card animation
         val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
         cardList.forEach { cardView ->
             setupCardAnimation(cardView)
@@ -218,7 +251,7 @@ class DashboardFragment : Fragment() {
 
     ///////////////////////* Bar Chart *///////////////////////
     //                                                       //
-    private fun barChart(day: List<Day>){
+    private fun barChart(day: List<Day>, isDarkMode: Boolean){
         val entries: MutableList<BarEntry> = ArrayList()
         for (i in 0..6){
             entries.add(BarEntry(i.toFloat(), day[i].count.toFloat()))
@@ -234,38 +267,71 @@ class DashboardFragment : Fragment() {
             Color.parseColor("#e314ba")   // Sun
         )
 
+        dataSet.valueTextColor = if (isDarkMode) Color.WHITE else Color.BLACK
+        dataSet.valueTextSize = 12f
         val barData = BarData(dataSet)
         binding.barChart.data = barData
         binding.barChart.invalidate() // Refresh the chart
 
-        binding.barChart.description.isEnabled = false
-        binding.barChart.xAxis.valueFormatter = IndexAxisValueFormatter(arrayOf("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"))
+        with(binding.barChart){
+            description.isEnabled = false
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(arrayOf("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"))
+                textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+            }
+            axisLeft.apply {
+                textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                textSize = 12f
+            }
+            axisRight.apply {
+                textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                textSize = 12f
+            }
+            legend.apply {
+                textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                textSize = 12f
+            }
+        }
 
     }
 
     ///////////////////////* Pie Chart *///////////////////////
     //                                                       //
-    private fun pieChart(majorVisitor: List<TotalMajorVisitor>){
+    private fun pieChart(majorVisitor: List<TotalMajorVisitor>, isDarkMode: Boolean){
         val entries: MutableList<PieEntry> = ArrayList()
         val color: MutableList<Int> = ArrayList()
         majorVisitor.forEach { major ->
             entries.add(PieEntry(major.totalAmount.toFloat(), cutMajorName(major.majorName)))
             color.add(generateColor(major.majorName))
         }
-        val pieDataSet = PieDataSet(entries, "")
-        pieDataSet.colors = color
-        pieDataSet.valueTextColor = Color.WHITE
+        val pieDataSet = PieDataSet(entries, "").apply {
+            colors = color
+            valueTextColor = if (isDarkMode) Color.WHITE else Color.BLACK
+            valueTextSize = 14f
+        }
+
+
         val data = PieData(pieDataSet)
-        binding.pieChart.data = data
-        binding.pieChart.description.isEnabled = false
-        binding.pieChart.legend.formSize = 18f
-        binding.pieChart.holeRadius = 60f
-        binding.pieChart.setDrawEntryLabels(false)
-        binding.pieChart.setEntryLabelColor(Color.WHITE)
-        binding.pieChart.setUsePercentValues(false)
-        binding.pieChart.setDrawCenterText(true)
-        binding.pieChart.setCenterTextColor(Color.parseColor("#99CCFF"))
-        binding.pieChart.invalidate()
+        with(binding.pieChart){
+            this.data = data
+            this.description.isEnabled = false
+            this.legend.apply {
+                textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                textSize = 14f
+                formSize = 18f
+            }
+            description.isEnabled = false
+            holeRadius = 60f
+            setDrawEntryLabels(false)
+            setEntryLabelColor(Color.WHITE)
+            setUsePercentValues(false)
+            setDrawCenterText(true)
+            holeRadius = 60f
+            transparentCircleRadius = 65f
+            setCenterTextColor(Color.parseColor("#99CCFF"))
+            invalidate()
+        }
+
 
     }
     /// generate color for pia chart
@@ -286,5 +352,93 @@ class DashboardFragment : Fragment() {
     }
 
     //////////
+    @SuppressLint("SetTextI18n")
+    private fun showModal(context: Context, isDarkMode: Boolean){
+        // purpose option
+        val purposes = mutableListOf<String>()
+        val usePC = "Use PC"
+        val reading = "Reading"
+        val assignment = "Assignment"
+        val other = "Other"
+
+        val view = LayoutInflater.from(context).inflate( R.layout.modal_entry, null)
+        // change view background
+        view.setBackgroundColor(if (isDarkMode) Color.BLACK else Color.WHITE)
+        // create dialog
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setView(view)
+            .setCancelable(true)
+            .create()
+
+        //button
+        val btnFind = view.findViewById<ImageButton>(R.id.btFind)
+        val btEntry = view.findViewById<Button>(R.id.btn_submit)
+        btnFind.setImageResource(if (isDarkMode) R.drawable.ic_light_search_24 else R.drawable.ic_night_search_24)
+        // TextView and EditText
+        val edtStudentId = view.findViewById<EditText>(R.id.et_student_id)
+        val tvStudentName = view.findViewById<TextView>(R.id.tv_student_name)
+        val tvMajorName = view.findViewById<TextView>(R.id.tv_major_name)
+        val tvGeneration = view.findViewById<TextView>(R.id.tv_generation)
+        // radio button
+        val cbReading = view.findViewById<MaterialCheckBox>(R.id.rb_read_book)
+        val cbAssignment = view.findViewById<MaterialCheckBox>(R.id.rb_assignment)
+        val cbUsePc= view.findViewById<MaterialCheckBox>(R.id.rb_use_pc)
+        val cbOther = view.findViewById<MaterialCheckBox>(R.id.rb_other)
+
+
+        btnFind.setOnClickListener {
+            val studentId = edtStudentId.text.toString().toLongOrNull()
+            if (studentId != null){
+                // search
+                viewModel.onEntryEvent(DashboardEntryEvent.GetStudent(studentId.toString()))
+            }
+        }
+
+        btEntry.setOnClickListener {
+            val studentId = edtStudentId.text.toString()
+            if (cbReading.isChecked) purposes.add(reading)
+            if (cbAssignment.isChecked) purposes.add(assignment)
+            if (cbUsePc.isChecked) purposes.add(usePC)
+            if (cbOther.isChecked) purposes.add(other)
+            val purpose = purposes.joinToString(", ")
+
+            if (purpose.isEmpty())
+                Toast.makeText(context, "Purpose is empty", Toast.LENGTH_LONG).show()
+            else {
+                viewModel.onEntryEvent(DashboardEntryEvent.SaveAttend(studentId, purpose))
+            }
+        }
+
+        // collect channel result
+        lifecycleScope.launch {
+            viewModel.eventFlow.collect { result ->
+                when(result){
+                    is StudentState.GetStudentSuccess -> {
+                        val student = result.students
+                        tvStudentName.text = "Name: ${student.studentName}"
+                        tvGeneration.text = "Generation: ${student.generation}"
+                        tvMajorName.text = "Major: ${student.majorName}"
+                        withContext(Dispatchers.Main){
+                            btEntry.isEnabled = true
+                        }
+                    }
+                    is StudentState.GetStudentError -> Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
+
+                    is StudentState.GetStudentLoading -> {
+
+                    }
+                    is StudentState.SaveAttendSuccess -> {
+                        Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
+                        dialog.dismiss()
+                    }
+                    is StudentState.SaveAttendError -> Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
+                    is StudentState.SaveAttendLoading -> {
+                    }
+                }
+            }
+        }
+
+        dialog.show()
+    }
 
 }

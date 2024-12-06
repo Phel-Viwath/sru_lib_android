@@ -2,7 +2,7 @@ package com.viwath.srulibrarymobile.data.repository
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.exception.CoreException
-import com.viwath.srulibrarymobile.data.api.RemoteApi
+import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
@@ -11,7 +11,7 @@ import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import javax.inject.Inject
 
 class CoreRepositoryImp @Inject constructor(
-    private val api: RemoteApi,
+    private val api: CoreApi,
 ) : CoreRepository {
     override suspend fun getDashboard(): Dashboard {
         val response = api.dashboard()
@@ -31,6 +31,7 @@ class CoreRepositoryImp @Inject constructor(
 
     override suspend fun getStudentById(id: Long): Students {
         val response = api.getStudentById(id)
+        if (response.code() == 404) throw CoreException("Not Found")
         return if (response.isSuccessful){
             response.body()?.let {
                 Students(

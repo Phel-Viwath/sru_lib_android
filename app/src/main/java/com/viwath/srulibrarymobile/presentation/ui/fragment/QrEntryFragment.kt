@@ -198,13 +198,12 @@ class QrEntryFragment: Fragment(){
                     showSuccessMessage()
                     onButtonClearClick()
                 }
-                is QrFragmentState.EntryState -> {
-                    state.entry?.let {
-                        binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
-                        binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
-                        binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
-                    }
+                is QrFragmentState.EntryState -> state.entry?.let {
+                    binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
+                    binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
+                    binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
                 }
+
             }
         }.launchIn(lifecycleScope)
     }
@@ -238,13 +237,13 @@ class QrEntryFragment: Fragment(){
     private fun onButtonOkClick(){
         var purpose = ""
         val usePC = "Use PC"
-        val readBook = "Read Book"
+        val reading = "Reading"
         val assignment = "Assignment"
         val other = "Other"
         if (binding.radioUsePc.isChecked)
             purpose += if (purpose.isEmpty()) usePC else ", $usePC"
         if (binding.radioReadBook.isChecked)
-            purpose += if (purpose.isEmpty()) readBook else ", $readBook"
+            purpose += if (purpose.isEmpty()) reading else ", $reading"
         if (binding.radioAssignment.isChecked)
             purpose += if (purpose.isEmpty()) assignment else ", $assignment"
         if (binding.radioOther.isChecked)

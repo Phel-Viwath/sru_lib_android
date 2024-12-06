@@ -9,7 +9,7 @@ import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
-import com.viwath.srulibrarymobile.presentation.event.AuthState
+import com.viwath.srulibrarymobile.presentation.state.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -98,7 +98,6 @@ class AuthViewModel @Inject constructor(
 
     fun authenticate() {
         viewModelScope.launch(Dispatchers.Main) {
-            Log.d("AuthViewModel", "authenticate() started")
             try {
                 val result = useCase.authenticateUseCase()
                 Log.d("AuthViewModel Result", "authenticateUseCase() returned: $result")

@@ -2,6 +2,7 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bookFragment: BookFragment
     private lateinit var settingFragment: SettingFragment
 
+    private var activeFragmentTag: String? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +39,27 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavView.background = null
 
-        loadFragment(dashboardFragment)
+        if (savedInstanceState == null){
+            loadFragment(dashboardFragment, DashboardFragment::class.java.simpleName)
+            Log.d("SavedInstanceState", "onCreate: $activeFragmentTag")
+        }else{
+            activeFragmentTag = savedInstanceState.getString(ACTIVE_FRAGMENT_TAG)
+            activeFragmentTag?.let { restoreFragment(it) }
+        }
 
         binding.bottomNavView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.btDashboard -> {
-                    loadFragment(dashboardFragment)
+                    loadFragment(dashboardFragment, DashboardFragment::class.java.simpleName)
                     true
                 }
                 R.id.btQrEntry -> {
-                    loadFragment(qrEntryFragment)
+                    loadFragment(qrEntryFragment, QrEntryFragment::class.java.simpleName)
                     true
                 }
                 R.id.btSetting -> {
                     // Load setting fragment
-                    loadFragment(settingFragment)
+                    loadFragment(settingFragment, SettingFragment::class.java.simpleName)
                     true
                 }
                 R.id.btStudent -> {
@@ -59,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.btBook -> {
                     // Load book fragment
-                    loadFragment(bookFragment)
+                    loadFragment(bookFragment, BookFragment::class.java.simpleName)
                     true
                 }
                 else -> false
@@ -68,11 +77,44 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragmentFrame, fragment)
-            commit()
+    // save fragment
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(ACTIVE_FRAGMENT_TAG, activeFragmentTag)
+    }
+
+    // load fragment
+    private fun loadFragment(fragment: Fragment, tag: String){
+        if (activeFragmentTag != tag) {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragmentFrame, fragment, tag)
+                addToBackStack(null)
+                commit()
+            }
+            activeFragmentTag = tag
         }
+    }
+
+    // restore fragment
+    private fun restoreFragment(tag: String){
+        val fragment = supportFragmentManager.findFragmentByTag(tag)
+        if (fragment != null){
+            loadFragment(fragment, tag)
+        }else {
+            // Create a new fragment instance if it's missing
+            val newFragment = when (tag) {
+                DashboardFragment::class.java.simpleName -> dashboardFragment
+                QrEntryFragment::class.java.simpleName -> qrEntryFragment
+                BookFragment::class.java.simpleName -> bookFragment
+                SettingFragment::class.java.simpleName -> settingFragment
+                else -> dashboardFragment // Fallback to dashboard
+            }
+            loadFragment(newFragment, tag)
+        }
+    }
+
+    companion object{
+        private const val ACTIVE_FRAGMENT_TAG = "active_fragment"
     }
 
 }

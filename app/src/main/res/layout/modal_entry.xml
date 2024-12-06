@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/BoxBackgroundStyle"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Student Information Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_student_id"
+            android:importantForAutofill="no"
+            android:textSize="18sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/studentId" />
+        <ImageButton
+            android:id="@+id/btFind"
+            android:backgroundTint="@color/zxing_transparent"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/studentId"
+            android:src="@drawable/ic_night_search_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_student_name"
+        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/student_name" />
+
+    <TextView
+        android:id="@+id/tv_major_name"
+        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/major" />
+
+    <TextView
+        android:id="@+id/tv_generation"
+        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/generation" />
+
+    <!-- Entry Purpose Section -->
+    <TextView
+        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/purpose"
+        android:layout_marginTop="8dp" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        app:flexWrap="wrap"
+        app:justifyContent="center"
+        app:alignItems="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rb_read_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reading" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rb_assignment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assignment" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rb_use_pc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/use_pc" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rb_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry"
+        android:enabled="false"
+        android:backgroundTint="@color/teal_200"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

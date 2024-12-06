@@ -1,4 +1,4 @@
-package com.viwath.srulibrarymobile.presentation.event
+package com.viwath.srulibrarymobile.presentation.state
 
 data class AuthState(
     val signInEmail: String = "",

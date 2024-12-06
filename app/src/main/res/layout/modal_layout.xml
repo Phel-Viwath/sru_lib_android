@@ -6,7 +6,7 @@
     android:id="@+id/gridModal"
     android:rowCount="9"
     android:columnCount="2"
-    android:background="@drawable/modal_background"
+    style="@style/BoxBackgroundStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,13 +17,14 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/lbId"
-            android:text="@string/id"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvShowId"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -41,13 +42,14 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/lbName"
-            android:text="@string/studentName"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvName"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -64,13 +66,14 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/lbGender"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/gender"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvGender"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -86,16 +89,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <TextView
             android:id="@+id/lbMajor"
-            android:text="@string/major"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvMajor"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -112,13 +115,14 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbGeneration"
-            android:text="@string/generation"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvGeneration"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -135,14 +139,15 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbEntryTime"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/entryTime"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvEntryTime"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -151,8 +156,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-
 
     <!--        student label and value -->
     <LinearLayout
@@ -161,24 +164,22 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbExitingTime"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/exitingTime"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tvExitingTime"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
             android:text="@string/exitingTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
     </LinearLayout>
-
 
     <!--        student label and value -->
     <LinearLayout
@@ -187,13 +188,14 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbPurpose"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/purpose"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvPurpose"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"
@@ -209,13 +211,14 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/lbStatus"
+            android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/status"
             android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvStatus"
+            android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textColor="?android:attr/textColorPrimary"
             android:layout_columnWeight="1"

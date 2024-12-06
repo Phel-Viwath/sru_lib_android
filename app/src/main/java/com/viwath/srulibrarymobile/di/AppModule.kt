@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder
 import com.viwath.srulibrarymobile.common.constant.Constant
 import com.viwath.srulibrarymobile.data.api.AuthApi
 import com.viwath.srulibrarymobile.data.api.AuthInterceptor
-import com.viwath.srulibrarymobile.data.api.RemoteApi
+import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
 import com.viwath.srulibrarymobile.data.repository.CoreRepositoryImp
 import com.viwath.srulibrarymobile.utils.TokenManager
@@ -46,13 +46,13 @@ object AppModule {
     //// Auth API
     @Provides
     @Singleton
-    fun provideRemoteApi(okHttpClient: OkHttpClient, gson: Gson): RemoteApi {
+    fun provideRemoteApi(okHttpClient: OkHttpClient, gson: Gson): CoreApi {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(Constant.BASE_URL)
             .client(okHttpClient)
             .build()
-            .create(RemoteApi::class.java)
+            .create(CoreApi::class.java)
     }
 
     @Provides
@@ -83,7 +83,7 @@ object AppModule {
     // Inject Core Repository
     @Provides
     @Singleton
-    fun provideCoreRepository(api: RemoteApi): CoreRepository {
+    fun provideCoreRepository(api: CoreApi): CoreRepository {
         return CoreRepositoryImp(api)
     }
 

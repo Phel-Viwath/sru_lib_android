@@ -5,6 +5,7 @@ import com.viwath.srulibrarymobile.utils.TokenManager
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -12,25 +13,20 @@ import javax.inject.Inject
 
 @OptIn(DelicateCoroutinesApi::class)
 class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager, // Inject TokenManager (TokenManager use to store and get token)
     private val authUseCase: Lazy<AuthUseCase>
 ): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
-
         tokenManager.getAccessToken()?.let { token ->
             requestBuilder.addHeader("Authorization", "Bearer $token")
         }
-
         var response = chain.proceed(requestBuilder.build())
-
         if (response.code == 401){
             response.close()
-
             synchronized(this){
-
                 GlobalScope.launch {
                     val newAccessToken = authUseCase.value.refreshTokenUseCase()
 

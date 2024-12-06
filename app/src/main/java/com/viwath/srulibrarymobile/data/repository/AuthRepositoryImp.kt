@@ -55,7 +55,6 @@ class AuthRepositoryImp @Inject constructor(
                 if (it.isBlank()) return AuthResult.BadRequest()
                 else "Bearer $it"
             }
-            Log.d("Auth", "authenticate token: $token")
             val response = api.authenticate(token.toString())
             Log.d("Authenticate", "authenticate response: ${response.code()}")
             if (response.isSuccessful) AuthResult.Authorize()
@@ -69,21 +68,19 @@ class AuthRepositoryImp @Inject constructor(
 
     override suspend fun refreshToken(): Boolean {
         val refreshToken = tokenManager.getRefreshToken()
-        Log.d("RefreshToken", "refreshToken: $refreshToken")
         return try {
             if (refreshToken == null) return false
             val response = api.refreshToken(RefreshToken(refreshToken))
-            Log.d("AuthRepositoryImp", "refreshToken: ${response.code()}")
             if (response.isSuccessful) {
                 response.body()?.let {
                     tokenManager.saveUsername(it.username)
                     tokenManager.saveAccessToken(it.accessToken)
                     tokenManager.saveRefreshToken(it.refreshToken)
                     tokenManager.saveRole(it.role)
-                    true
-                } ?: false
+                    return true
+                }
             }
-            false
+            return false
         } catch (e: Exception) {
             Log.d("AuthRepositoryImp", "refreshToken: ${e.message}")
             false

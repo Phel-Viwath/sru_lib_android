@@ -7,7 +7,7 @@ import com.viwath.srulibrarymobile.utils.SettingPreferences
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class Application : Application(){
+class LibApp : Application(){
     private lateinit var settingPreferences: SettingPreferences
     override fun onCreate() {
         super.onCreate()

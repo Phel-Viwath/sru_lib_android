@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity(){
                 when(result){
                     is AuthResult.Unauthorized -> {
                         dialogMessage(
-                            "Please check your email.",
+                            "Please check your email. ${result.data}",
                             "Unauthorized"
                         )
                     }

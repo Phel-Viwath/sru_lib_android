@@ -48,5 +48,10 @@
     <color name="night_color">#1f1f1f</color>
     <color name="light_color">#D8DEDE</color>
 
+    <color name="dark_grey">#121212</color>
+    <color name="purple">#BB86FC</color>
+
+    <color name="dark_shade_purple">#3a2d49</color>
+
 
 </resources>
