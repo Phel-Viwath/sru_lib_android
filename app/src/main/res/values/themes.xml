@@ -24,4 +24,8 @@
         <item name="android:background">@drawable/light_box_bg</item>
     </style>
 
+    <style name="layoutBackground">
+        <item name="android:background">@color/light_background</item>
+    </style>
+
 </resources>

@@ -73,7 +73,7 @@ class DashboardViewModel @Inject constructor(
                             _eventChannel.send(StudentState.GetStudentError(result.message.toString()))
                         }
                         is CoreResult.Loading -> {
-
+                            _eventChannel.send(StudentState.GetStudentLoading)
                         }
                         is CoreResult.Success -> {
                             result.data?.let { student ->

@@ -37,6 +37,7 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentDashboardBinding
 import com.viwath.srulibrarymobile.domain.model.AttendDetail
 import com.viwath.srulibrarymobile.domain.model.dashboard.Day
@@ -56,6 +57,7 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
     private var isCardEnlarged = false
     private var currentExpandCard: CardView? = null
+    private lateinit var loading: Loading
 
     // Define View Model
     private val viewModel: DashboardViewModel by activityViewModels()
@@ -73,6 +75,7 @@ class DashboardFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loading = Loading(requireActivity())
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         setUpTheme(isDarkMode)
 
@@ -181,6 +184,9 @@ class DashboardFragment : Fragment() {
         // set card animation
         val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
         cardList.forEach { cardView ->
+            if (isDarkMode){
+                cardView.setCardBackgroundColor(resources.getColor(R.color.dark_shade_purple))
+            }
             setupCardAnimation(cardView)
         }
 
@@ -413,27 +419,34 @@ class DashboardFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.eventFlow.collect { result ->
                 when(result){
+                    is StudentState.GetStudentLoading -> withContext(Dispatchers.Main){ loading.startLoading() }
                     is StudentState.GetStudentSuccess -> {
+                        loading.dialogDismiss()
                         val student = result.students
-                        tvStudentName.text = "Name: ${student.studentName}"
-                        tvGeneration.text = "Generation: ${student.generation}"
-                        tvMajorName.text = "Major: ${student.majorName}"
+                        with(student){
+                            tvStudentName.text = "Name: $studentName"
+                            tvGeneration.text = "Generation: $generation"
+                            tvMajorName.text = "Major: $majorName"
+                        }
                         withContext(Dispatchers.Main){
                             btEntry.isEnabled = true
                         }
                     }
-                    is StudentState.GetStudentError -> Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
-
-                    is StudentState.GetStudentLoading -> {
-
+                    is StudentState.GetStudentError -> {
+                        loading.dialogDismiss()
+                        Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
+                    is StudentState.SaveAttendLoading -> withContext(Dispatchers.Main){ loading.startLoading() }
                     is StudentState.SaveAttendSuccess -> {
+                        loading.dialogDismiss()
                         Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
                         dialog.dismiss()
                     }
-                    is StudentState.SaveAttendError -> Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
-                    is StudentState.SaveAttendLoading -> {
+                    is StudentState.SaveAttendError -> {
+                        loading.dialogDismiss()
+                        Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
+
                 }
             }
         }

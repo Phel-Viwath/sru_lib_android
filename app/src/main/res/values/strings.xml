@@ -20,7 +20,7 @@
     <string name="sponsor_int">20</string>
     <string name="entry_month_int">200</string>
     <string name="menu">Button menu</string>
-    <string name="sponsor_text">Book Sponsor</string>
+    <string name="donate_text">Book Donated</string>
     <string name="entry_text">Entry Today</string>
     <string name="borrow_text">Book Borrow Today</string>
     <string name="welcome_text">WELCOME BACK PEOPLE</string>
@@ -104,9 +104,26 @@
     <string name="logout">Logout</string>
     <string name="theme">Theme</string>
 
+<!--    Book fragment-->
+    <string name="total_book">Total Books</string>
+    <string name="total_donate_book">Total Donate</string>
+    <string name="total_borrow">Total Borrow</string>
+    <string name="total_exp">Total Expired</string>
+    <string name="borrow_today">Borrow Today</string>
+    <string name="return_today">Return Today</string>
+
+    <string name="zero">0</string>
+    
+    <string name="add_book">Add Books</string>
+    <string name="borrowed">Borrowed</string>
+    <string name="donation">Donation</string>
+    <string name="backup">Backup</string>
+
     <string-array name="theme">
         <item>Light Mode</item>
         <item>Dark Mode</item>
         <item>System Default</item>
     </string-array>
+
+    <string name="test_text">If your layout needs flexibility and responsiveness (e.g., buttons should wrap on smaller screens), FlexboxLayout is an excellent choice. However, for simpler, scrollable rows of buttons (as seen in YouTube)</string>
 </resources>

@@ -12,6 +12,7 @@ import com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment
 import com.viwath.srulibrarymobile.presentation.ui.fragment.DashboardFragment
 import com.viwath.srulibrarymobile.presentation.ui.fragment.QrEntryFragment
 import com.viwath.srulibrarymobile.presentation.ui.fragment.SettingFragment
+import com.viwath.srulibrarymobile.presentation.ui.fragment.StudentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var qrEntryFragment: QrEntryFragment
     private lateinit var bookFragment: BookFragment
     private lateinit var settingFragment: SettingFragment
+    private lateinit var studentFragment: StudentFragment
 
     private var activeFragmentTag: String? = null
 
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         qrEntryFragment = QrEntryFragment()
         bookFragment = BookFragment()
         settingFragment = SettingFragment()
+        studentFragment = StudentFragment()
 
         binding.bottomNavView.background = null
 
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.btStudent -> {
                     // Load student fragment
+                    loadFragment(studentFragment, StudentFragment::class.java.simpleName)
                     true
                 }
                 R.id.btBook -> {

@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/layoutBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_grey"
     android:orientation="vertical"
     android:contentDescription="@string/app_name">
 
@@ -17,10 +17,12 @@
             android:id="@+id/scrollDashboard"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <!-- Welcome Section  -->
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -64,7 +66,6 @@
                             android:layout_marginBottom="12dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardBackgroundColor="@color/dark_shade_purple"
                             app:cardElevation="1dp">
                             <RelativeLayout
                                 android:id="@+id/entry_relative"
@@ -101,9 +102,9 @@
                                     android:layout_marginTop="8dp"/>
 
                                 <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/ic_person_add_24"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/walk"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -120,7 +121,6 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="12dp"
                             app:cardCornerRadius="@dimen/fab_margin"
-                            app:cardBackgroundColor="@color/dark_shade_purple"
                             app:cardElevation="4dp">
 
                             <RelativeLayout
@@ -157,9 +157,9 @@
                                     android:layout_marginTop="8dp"/>
 
                                 <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/ic_book_24"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/borrow_book"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -176,7 +176,6 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="12dp"
                             android:elevation="4dp"
-                            app:cardBackgroundColor="@color/dark_shade_purple"
                             app:cardCornerRadius="@dimen/fab_margin">
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -187,7 +186,7 @@
                                     android:id="@+id/tvCard3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/sponsor_text"
+                                    android:text="@string/donate_text"
                                     android:textSize="16sp"
                                     android:textColor="?android:attr/textColorPrimary"
                                     tools:ignore="RelativeOverlap"/>
@@ -213,9 +212,9 @@
                                     android:layout_marginTop="8dp"/>
 
                                 <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/ic_book_24"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/books_stack"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -232,7 +231,6 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="12dp"
                             android:elevation="4dp"
-                            app:cardBackgroundColor="@color/dark_shade_purple"
                             app:cardCornerRadius="@dimen/fab_margin">
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -269,9 +267,9 @@
                                     android:layout_marginTop="8dp"/>
 
                                 <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/ic_person_add_24"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/people"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>

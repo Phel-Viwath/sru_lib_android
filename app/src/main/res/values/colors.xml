@@ -53,5 +53,9 @@
 
     <color name="dark_shade_purple">#3a2d49</color>
 
+    <color name="dark_background">#121212</color>
+    <color name="light_background">#FFFFFF</color>
+    <color name="light_card">#fff</color>
+
 
 </resources>

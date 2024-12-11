@@ -21,4 +21,8 @@
     <style name="BoxBackgroundStyle">
         <item name="android:background">@drawable/night_box_bg</item>
     </style>
+
+    <style name="layoutBackground">
+        <item name="android:background">@color/dark_background</item>
+    </style>
 </resources>
