@@ -24,10 +24,10 @@
     <string name="entry_text">Entry Today</string>
     <string name="borrow_text">Book Borrow Today</string>
     <string name="welcome_text">WELCOME BACK PEOPLE</string>
-    <string name="entry_percent">36.5 % from yesterday</string>
-    <string name="entry_month_percent">-4 % from yesterday</string>
-    <string name="borrow_percent">23.3 % from yesterday</string>
-    <string name="sponsor_percent">47.5 % from yesterday</string>
+    <string name="entry_percent">0% from yesterday</string>
+    <string name="entry_month_percent">0% from yesterday</string>
+    <string name="borrow_percent">0% from yesterday</string>
+    <string name="sponsor_percent">0% from yesterday</string>
     <string name="major_visitor">Total Major Visitor</string>
     <string name="total_book_of_this_month">Total Book of This Month</string>
     <string name="entry_today">Entry Today</string>
@@ -119,11 +119,14 @@
     <string name="donation">Donation</string>
     <string name="backup">Backup</string>
 
+
+    <string name="search">Search...</string>
+
     <string-array name="theme">
         <item>Light Mode</item>
         <item>Dark Mode</item>
         <item>System Default</item>
     </string-array>
 
-    <string name="test_text">If your layout needs flexibility and responsiveness (e.g., buttons should wrap on smaller screens), FlexboxLayout is an excellent choice. However, for simpler, scrollable rows of buttons (as seen in YouTube)</string>
+    <string name="develop">Develop by Viwath.</string>
 </resources>

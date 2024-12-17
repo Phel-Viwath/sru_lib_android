@@ -55,6 +55,9 @@ class QrEntryFragment: Fragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragementQrBinding.inflate(inflater, container, false)
+        previewView = binding.cameraPreview
+        // init cameraAction object
+        cameraAction = CameraPreview(requireContext(), previewView, this)
         return binding.root
     }
 
@@ -66,16 +69,16 @@ class QrEntryFragment: Fragment(){
         setUpBackground(isDarkTheme)
 
         permission = PermissionRequest(this)
-        previewView = binding.cameraPreview
-        // init cameraAction object
-        cameraAction = CameraPreview(requireContext(), previewView, this)
+
         // PreviewView and TextView click event
         val commonClickListener = View.OnClickListener {
             binding.tvClickScan.visibility = View.GONE
             if (permission.hasCameraPermission())
                 startCameraWithHandler()
-            else permission.requestPermission(0)
+            else
+                permission.requestPermission(0)
         }
+
         binding.cameraPreview.setOnClickListener(commonClickListener)
         binding.tvClickScan.setOnClickListener(commonClickListener)
         binding.flashlight.setOnClickListener {
@@ -130,9 +133,12 @@ class QrEntryFragment: Fragment(){
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraAction.stopCamera()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (::cameraAction.isInitialized){
+            cameraAction.stopCamera()
+        }
+        _binding = null
     }
     //// End override method
 

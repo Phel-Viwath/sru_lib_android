@@ -3,9 +3,11 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
 import com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment
@@ -115,6 +117,14 @@ class MainActivity : AppCompatActivity() {
             }
             loadFragment(newFragment, tag)
         }
+    }
+
+    fun hideBottomNav() {
+        binding.bottomNavView.visibility = View.GONE
+    }
+
+    fun showBottomNav() {
+        binding.bottomNavView.visibility = View.VISIBLE
     }
 
     companion object{

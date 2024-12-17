@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.viwath.srulibrarymobile.common.result.CoreResult
+import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.usecase.dashboard_usecase.DashboardUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
@@ -50,13 +50,13 @@ class DashboardViewModel @Inject constructor(
     fun getDashboard() {
         useCase().onEach { result ->
             when(result){
-                is CoreResult.Success -> {
+                is Resource.Success -> {
                     _state.value = DashboardState(dashboard = result.data)
                 }
-                is CoreResult.Loading -> {
+                is Resource.Loading -> {
                     _state.value = DashboardState(isLoading = true)
                 }
-                is CoreResult.Error -> {
+                is Resource.Error -> {
                     _state.value = DashboardState(error = result.message.toString())
                 }
             }
@@ -69,13 +69,13 @@ class DashboardViewModel @Inject constructor(
             try {
                 entryUseCase.getStudentByIDUseCase(id).collect{ result ->
                     when(result){
-                        is CoreResult.Error -> {
+                        is Resource.Error -> {
                             _eventChannel.send(StudentState.GetStudentError(result.message.toString()))
                         }
-                        is CoreResult.Loading -> {
+                        is Resource.Loading -> {
                             _eventChannel.send(StudentState.GetStudentLoading)
                         }
-                        is CoreResult.Success -> {
+                        is Resource.Success -> {
                             result.data?.let { student ->
                                 _eventChannel.send(StudentState.GetStudentSuccess(student))
                             } ?: _eventChannel.send(StudentState.GetStudentError("Student not found"))

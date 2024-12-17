@@ -2,12 +2,17 @@ package com.viwath.srulibrarymobile.data.repository
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.exception.CoreException
+import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
 class CoreRepositoryImp @Inject constructor(
@@ -88,6 +93,87 @@ class CoreRepositoryImp @Inject constructor(
         val body = response.body()
         Log.d("CheckExitingAttend", "Response body: $body")
         return body?.status ?: throw CoreException("Response body is null")
+    }
+
+    override suspend fun addBooks(books: List<BookDto>): BookDto {
+        val response = api.addBooks(books)
+        return if (response.isSuccessful){
+            response.body()?.let {
+                BookDto(
+                    bookId = it.bookId,
+                    bookTitle = it.bookTitle,
+                    bookQuan = it.bookQuan,
+                    languageId = it.languageId,
+                    collegeId = it.collegeId,
+                    author = it.author,
+                    publicationYear = it.publicationYear,
+                    genre = it.genre,
+                    receiveDate = it.receiveDate
+                )
+            } ?: throw CoreException("Response body is null")
+        }else{
+            throw CoreException("Error add book")
+        }
+
+    }
+
+    override suspend fun updateBook(book: BookDto): BookDto {
+        val response = api.updateBook(book)
+        return if (response.isSuccessful){
+            response.body()?.let {
+                BookDto(
+                    bookId = it.bookId,
+                    bookTitle = it.bookTitle,
+                    bookQuan = it.bookQuan,
+                    languageId = it.languageId,
+                    collegeId = it.collegeId,
+                    author = it.author,
+                    publicationYear = it.publicationYear,
+                    genre = it.genre,
+                    receiveDate = it.receiveDate
+                )
+            }?: throw CoreException("Response body is null")
+        }else throw CoreException("Error update book")
+    }
+
+    override fun getBooks(): Flow<BookDto> {
+        val response = api.getBooks()
+        if (response.isSuccessful)
+            return response.body() ?: emptyFlow()
+        else throw CoreException("Error get book")
+    }
+
+    override fun getBooksInTrash(): Flow<BookDto> {
+        val response = api.bookInTrash()
+        if (response.isSuccessful)
+            return response.body() ?: emptyFlow()
+        else throw CoreException("Error get book")
+    }
+
+    override suspend fun getSummaryBook(): BookSummary{
+        val response = api.getSummaryBook()
+        return if (response.isSuccessful){
+            response.body()?.let {
+                BookSummary(
+                    totalBook = it.totalBook,
+                    totalBorrow = it.totalBorrow,
+                    totalDonation = it.totalDonation,
+                    totalExp = it.totalExp,
+                    todayBorrowed = it.todayBorrowed,
+                    todayReturned = it.todayReturned
+                )
+            } ?: throw CoreException("Response body is null")
+        }else throw CoreException("")
+    }
+
+    override suspend fun moveToTrash(bookId: String): Boolean {
+        val response = api.movToTrash(bookId)
+        return response.isSuccessful
+    }
+
+    override suspend fun recoverBook(bookId: String): Boolean {
+        val response = api.recoverBook(bookId)
+        return response.isSuccessful
     }
 
 }

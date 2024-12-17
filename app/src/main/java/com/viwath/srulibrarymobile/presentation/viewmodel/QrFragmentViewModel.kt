@@ -2,7 +2,7 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.viwath.srulibrarymobile.common.result.CoreResult
+import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.presentation.event.QrEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
@@ -37,9 +37,9 @@ class QrFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             useCase.getStudentByIDUseCase(id).collect{ result ->
                 when(result){
-                    is CoreResult.Loading -> _state.value = QrFragmentState.Loading
-                    is CoreResult.Error -> _state.value = QrFragmentState.Error(result.message ?: "Unknown error.")
-                    is CoreResult.Success -> {
+                    is Resource.Loading -> _state.value = QrFragmentState.Loading
+                    is Resource.Error -> _state.value = QrFragmentState.Error(result.message ?: "Unknown error.")
+                    is Resource.Success -> {
                         result.data?.let {
                             _state.value = QrFragmentState.StudentLoaded(it)
                         } ?: run {
@@ -66,13 +66,13 @@ class QrFragmentViewModel @Inject constructor(
     private fun getRecentEntryData(){
         useCase.recentEntryUseCase().onEach { result ->
             when(result){
-                is CoreResult.Loading -> {
+                is Resource.Loading -> {
                     _state.value = QrFragmentState.Loading
                 }
-                is CoreResult.Success -> {
+                is Resource.Success -> {
                     _state.value = QrFragmentState.EntryState(result.data)
                 }
-                is CoreResult.Error -> {
+                is Resource.Error -> {
                     _state.value = QrFragmentState.Error(result.message)
                 }
             }
@@ -83,18 +83,18 @@ class QrFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             useCase.checkExitingUseCase(studentId).collect{
                 when(it){
-                    is CoreResult.Loading -> _state.value = QrFragmentState.Loading
-                    is CoreResult.Error -> _state.value = QrFragmentState.Error(it.message ?: "Unknown error.")
-                    is CoreResult.Success -> {
+                    is Resource.Loading -> _state.value = QrFragmentState.Loading
+                    is Resource.Error -> _state.value = QrFragmentState.Error(it.message ?: "Unknown error.")
+                    is Resource.Success -> {
                         if (it.data == "new attend!" || it.data == "exited"){
                             loadStudent(studentId.toLong())
                         }
                         else{
                             useCase.updateExitingUseCase(studentId.toLong()).collect{ updateResult ->
                                 when(updateResult){
-                                    is CoreResult.Loading -> _state.value = QrFragmentState.Loading
-                                    is CoreResult.Error -> _state.value = QrFragmentState.Error(updateResult.message)
-                                    is CoreResult.Success -> loadStudent(studentId.toLong())
+                                    is Resource.Loading -> _state.value = QrFragmentState.Loading
+                                    is Resource.Error -> _state.value = QrFragmentState.Error(updateResult.message)
+                                    is Resource.Success -> loadStudent(studentId.toLong())
                                 }
                             }
                         }

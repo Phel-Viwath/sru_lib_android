@@ -56,8 +56,9 @@
                         tools:ignore="UselessParent">
 
                         <!-- Entry Today Card -->
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card1"
+                            style="?attr/materialCardViewOutlinedStyle"
                             android:layout_alignParentTop="true"
                             app:cardCornerRadius="@dimen/fab_margin"
                             android:layout_marginTop="12dp"
@@ -85,7 +86,7 @@
                                     android:id="@+id/tv_entry_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/entry_int"
+                                    android:text="@string/zero"
                                     android:textSize="32sp"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:layout_below="@id/tvCard1"
@@ -109,11 +110,12 @@
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
                             </RelativeLayout>
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <!-- Book Borrow Today Card -->
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card2"
+                            style="?attr/materialCardViewOutlinedStyle"
                             android:layout_below="@+id/card1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -140,7 +142,7 @@
                                     android:id="@+id/tv_book_borrow_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/borrow_int"
+                                    android:text="@string/zero"
                                     android:textSize="32sp"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:layout_below="@id/tvCard2"
@@ -164,11 +166,12 @@
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
                             </RelativeLayout>
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <!-- Book Sponsor Card -->
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card3"
+                            style="?attr/materialCardViewOutlinedStyle"
                             android:layout_below="@+id/card2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -195,7 +198,7 @@
                                     android:id="@+id/tv_book_sponsor_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/sponsor_int"
+                                    android:text="@string/zero"
                                     android:textSize="32sp"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:layout_below="@id/tvCard3"
@@ -219,11 +222,12 @@
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
                             </RelativeLayout>
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <!-- Total Entry Of This Month Card -->
-                        <androidx.cardview.widget.CardView
+                        <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card4"
+                            style="?attr/materialCardViewOutlinedStyle"
                             android:layout_below="@+id/card3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -250,7 +254,7 @@
                                     android:id="@+id/tv_total_entry_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/entry_month_int"
+                                    android:text="@string/zero"
                                     android:textSize="32sp"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:layout_below="@id/tvCard4"
@@ -274,7 +278,7 @@
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
                             </RelativeLayout>
-                        </androidx.cardview.widget.CardView>
+                        </com.google.android.material.card.MaterialCardView>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -513,6 +517,10 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btEntry"
+                                style="?attr/materialButtonOutlinedStyle"
+                                app:strokeColor="?android:attr/textColorPrimary"
+                                app:strokeWidth="1.5dp"
+                                app:cornerRadius="6dp"
                                 app:icon="@drawable/ic_person_add_24"
                                 app:iconGravity="start"
                                 android:text="@string/entry"
@@ -524,7 +532,6 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentBottom="true"
-                                android:backgroundTint="@color/your_background_color"
                                 tools:ignore="RelativeOverlap" />
 
                         </RelativeLayout>

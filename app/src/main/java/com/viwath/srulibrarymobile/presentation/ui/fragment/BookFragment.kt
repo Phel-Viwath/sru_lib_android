@@ -4,67 +4,93 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.google.android.material.button.MaterialButton
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookBinding
+import com.viwath.srulibrarymobile.presentation.ui.adapter.ViewPagerAdapter
+import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class BookFragment : Fragment(R.layout.fragment_book){
 
     private var _binding: FragmentBookBinding?= null
     private val binding get() = _binding!!
-    private var previousClickButton: MaterialButton? = null
+    private lateinit var loading: Loading
+    private val viewModel: BookFragmentViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBookBinding.bind(view)
+        loading = Loading(requireActivity())
+
+        val fragmentList = listOf(
+            AddBookFragment(),
+            BorrowedFragment(),
+            DonationFragment(),
+            BackupBookFragment()
+        )
+        val tabTitle = listOf(
+            getString(R.string.add_book),
+            getString(R.string.borrowed),
+            getString(R.string.donation),
+            getString(R.string.backup)
+        )
 
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         val cardList = listOf(binding.cardTotalBook, binding.cardDonateBook, binding.cardBorrow, binding.cardExp, binding.cardBorrowToday, binding.cardReturn)
-        val buttonList = listOf(binding.btAddBook, binding.btBorrow, binding.btDonation, binding.btBackup)
 
-
-        setUpColor(buttonList, isDarkMode)
-        updateButtonBackgroundOnClick(isDarkMode = isDarkMode)
-
-    }
-
-    private fun setUpColor(listOfButton: List<MaterialButton>, isDarkMode: Boolean){
-        listOfButton.forEach { materialButton ->
-            materialButton.setStrokeColorResource(
-                if (isDarkMode) R.color.white
-                else R.color.black
-            )
-        }
-    }
-    private fun updateButtonBackgroundOnClick(isDarkMode: Boolean){
-        val textWhite = resources.getColor(R.color.text_white)
-        val textBlack = resources.getColor(R.color.text_black)
-        val darkBlue = resources.getColor(R.color.dark_blue)
-        val buttonClicked = {button: MaterialButton ->
-            with(previousClickButton){
-                this?.setTextColor(if (isDarkMode) textWhite else textBlack)
-                this?.setStrokeColorResource(if (isDarkMode) R.color.white else R.color.black)
+        binding.viewPagerBook.adapter = ViewPagerAdapter(fragmentList, requireActivity())
+        TabLayoutMediator(binding.tabLayout, binding.viewPagerBook){tab, position ->
+            tab.text = tabTitle[position]
+        }.attach()
+        // bind data
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state.collect{ state ->
+                if (state.isLoading){
+                    startLoading()
+                }
+                if (state.error.isEmpty()){
+                    stopLoading()
+                    bindData(
+                        totalBook = state.totalBook,
+                        totalDonation = state.totalDonation,
+                        totalBorrowed = state.totalBorrowed,
+                        totalExpiration = state.totalExpiration,
+                        borrowToday = state.borrowToday,
+                        returnToday = state.returnToday
+                    )
+                }
+                if (state.error.isNotEmpty()){
+                    stopLoading()
+                    Snackbar.make(view, state.error, Snackbar.LENGTH_LONG).show()
+                }
             }
-            button.setTextColor(darkBlue)
-            button.setStrokeColorResource(R.color.dark_blue)
-            previousClickButton = button
         }
-        binding.btAddBook.setOnClickListener{
-            buttonClicked(binding.btAddBook)
 
-        }
-        binding.btBorrow.setOnClickListener{
-            buttonClicked(binding.btBorrow)
-        }
-        binding.btDonation.setOnClickListener{
-            buttonClicked(binding.btDonation)
-        }
-        binding.btBackup.setOnClickListener{
-            buttonClicked(binding.btBackup)
-        }
+    }
+    private fun bindData(totalBook: Int, totalDonation: Int, totalBorrowed: Int, totalExpiration: Int, borrowToday: Int, returnToday: Int){
+        binding.tvTotalBook.text = "$totalBook"
+        binding.tvTotalDonate.text = "$totalDonation"
+        binding.tvBorrows.text = "$totalBorrowed"
+        binding.tvBorrowExp.text = "$totalExpiration"
+        binding.tvBorrowToday.text = "$borrowToday"
+        binding.tvReturnToday.text = "$returnToday"
     }
 
+
+    private fun startLoading() = CoroutineScope(Dispatchers.Main).launch{
+        loading.loadingStart()
+    }
+
+    private fun stopLoading() = CoroutineScope(Dispatchers.Main).launch {
+        loading.loadingDismiss()
+    }
 }

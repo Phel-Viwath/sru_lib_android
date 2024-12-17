@@ -17,6 +17,14 @@ import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthenticateUseCa
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RefreshTokenUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RegisterUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.SigninUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBooksUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
@@ -125,5 +133,19 @@ object AppModule {
     @Singleton
     fun provideTokenManger(@ApplicationContext context: Context): TokenManager {
         return TokenManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookUseCase(repository: CoreRepository): BookUseCase{
+        return BookUseCase(
+            AddBookUseCase(repository),
+            GetBooksUseCase(repository),
+            UpdateBookUseCase(repository),
+            RemoveBookUseCase(repository),
+            RecoverBookUseCase(repository),
+            GetBookInTrashUseCase(repository),
+            GetSummaryUseCase(repository)
+        )
     }
 }

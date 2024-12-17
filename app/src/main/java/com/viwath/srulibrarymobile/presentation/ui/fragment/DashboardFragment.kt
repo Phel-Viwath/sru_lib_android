@@ -46,6 +46,7 @@ import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.StudentState
 import com.viwath.srulibrarymobile.presentation.ui.adapter.EntryRecycleViewAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -94,9 +95,10 @@ class DashboardFragment : Fragment() {
         binding.greetingText.text = "Hello, ${viewModel.username}"
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when{
-                state.isLoading -> binding.swipeRefresh.isRefreshing = true
+                state.isLoading -> startLoading()
                 state.dashboard != null -> {
                     state.dashboard.let { dashboard ->
+                        stopLoading()
                         // entry card
                         val cardData = dashboard.cardData
                         Log.d("Viwath", "onViewCreated: ${cardData[1]}")
@@ -170,6 +172,7 @@ class DashboardFragment : Fragment() {
                     binding.swipeRefresh.isRefreshing = false
                 }
                 state.error.isNotEmpty() -> {
+                    stopLoading()
                     Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
                     binding.swipeRefresh.isRefreshing = false
                 }
@@ -184,9 +187,6 @@ class DashboardFragment : Fragment() {
         // set card animation
         val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
         cardList.forEach { cardView ->
-            if (isDarkMode){
-                cardView.setCardBackgroundColor(resources.getColor(R.color.dark_shade_purple))
-            }
             setupCardAnimation(cardView)
         }
 
@@ -208,6 +208,7 @@ class DashboardFragment : Fragment() {
         binding.constraintRecycle.setBackgroundResource(if (isDarkMode) topNightBackground else topLightBackground)
         binding.horizontalScrollView.setBackgroundResource(if (isDarkMode) bottomNightBackground else bottomLightBackground)
 
+        binding.btEntry.setIconTintResource(if (isDarkMode) R.color.white else R.color.black)
     }
 
     ///////////////////////* Card View *///////////////////////
@@ -419,11 +420,10 @@ class DashboardFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.eventFlow.collect { result ->
                 when(result){
-                    is StudentState.GetStudentLoading -> withContext(Dispatchers.Main){ loading.startLoading() }
+                    is StudentState.GetStudentLoading -> startLoading()
                     is StudentState.GetStudentSuccess -> {
-                        loading.dialogDismiss()
-                        val student = result.students
-                        with(student){
+                        stopLoading()
+                        with(result.students){
                             tvStudentName.text = "Name: $studentName"
                             tvGeneration.text = "Generation: $generation"
                             tvMajorName.text = "Major: $majorName"
@@ -433,17 +433,17 @@ class DashboardFragment : Fragment() {
                         }
                     }
                     is StudentState.GetStudentError -> {
-                        loading.dialogDismiss()
+                        stopLoading()
                         Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
-                    is StudentState.SaveAttendLoading -> withContext(Dispatchers.Main){ loading.startLoading() }
+                    is StudentState.SaveAttendLoading -> startLoading()
                     is StudentState.SaveAttendSuccess -> {
-                        loading.dialogDismiss()
+                        stopLoading()
                         Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
                         dialog.dismiss()
                     }
                     is StudentState.SaveAttendError -> {
-                        loading.dialogDismiss()
+                        stopLoading()
                         Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
 
@@ -452,6 +452,14 @@ class DashboardFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun startLoading() = CoroutineScope(Dispatchers.Main).launch{
+        loading.loadingStart()
+    }
+
+    private fun stopLoading() = CoroutineScope(Dispatchers.Main).launch {
+        loading.loadingDismiss()
     }
 
 }
