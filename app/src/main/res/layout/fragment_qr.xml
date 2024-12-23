@@ -54,7 +54,7 @@
                             android:layout_height="match_parent">
                             <TextView
                                 android:id="@+id/tvEntry"
-                                android:text="@string/entry_num"
+                                android:text="@string/zero"
                                 android:textStyle="bold"
                                 android:textSize="34sp"
                                 android:textColor="?android:attr/textColorPrimary"
@@ -90,7 +90,7 @@
                             android:layout_height="match_parent">
                             <TextView
                                 android:id="@+id/tvExit"
-                                android:text="@string/exit_num"
+                                android:text="@string/zero"
                                 android:textStyle="bold"
                                 android:textSize="34sp"
                                 android:textColor="?android:attr/textColorPrimary"
@@ -126,7 +126,7 @@
                             android:layout_height="match_parent">
                             <TextView
                                 android:id="@+id/tvTotal"
-                                android:text="@string/total_num"
+                                android:text="@string/zero"
                                 android:textStyle="bold"
                                 android:textSize="34sp"
                                 android:textColor="?android:attr/textColorPrimary"

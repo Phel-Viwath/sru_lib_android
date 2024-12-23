@@ -39,6 +39,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -51,6 +52,7 @@ object AppModule {
     fun provideGson(): Gson = GsonBuilder()
         .setLenient() // Allows some leniency with JSON parsing
         .create()
+
     //// Auth API
     @Provides
     @Singleton
@@ -78,6 +80,9 @@ object AppModule {
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
+            .connectTimeout(240, TimeUnit.SECONDS)
+            .readTimeout(240, TimeUnit.SECONDS)
+            .writeTimeout(240, TimeUnit.SECONDS)
             .build()
     }
 

@@ -25,4 +25,8 @@
     <style name="layoutBackground">
         <item name="android:background">@color/dark_background</item>
     </style>
+
+    <style name="RecyclerBackground">
+        <item name="android:background">@drawable/night_recycler_book_background</item>
+    </style>
 </resources>

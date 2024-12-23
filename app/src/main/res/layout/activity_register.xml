@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:padding="@dimen/fab_margin"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="50dp"
     tools:context=".presentation.ui.activities.Hilt_RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -18,48 +19,93 @@
         android:src="@drawable/sru_image" />
 
     <TextView
+        android:textSize="18sp"
+        android:fontFamily="sans-serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/system"/>
+
+    <TextView
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="@string/register"
-        android:textColor="@color/black"
+        android:text="@string/Register"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/edtUsername"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:autofillHints=""
-        android:hint="@string/username_hint"
-        android:inputType="textEmailAddress"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="20sp"
-        tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content">
+        <!-- TextInputLayout for Username -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:hintTextColor="?android:attr/textColorSecondary"
+            app:boxStrokeColor="?android:attr/textColorSecondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tilEmail">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username_hint"
+                android:inputType="textEmailAddress"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- TextInputLayout for Email -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:hintTextColor="?android:attr/textColorSecondary"
+            app:boxStrokeColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@+id/tilUsername"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tilPassword">
 
-    <EditText
-        android:id="@+id/edtEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:autofillHints=""
-        android:hint="@string/login_email_hint"
-        android:inputType="textEmailAddress"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="20sp"
-        tools:ignore="ContentDescription" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_email_hint"
+                android:inputType="textEmailAddress"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edtPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:autofillHints=""
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="20sp" />
+        <!-- TextInputLayout for Password -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:hintTextColor="?android:attr/textColorSecondary"
+            app:boxStrokeColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@+id/tilEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvGoSignIn"
@@ -69,16 +115,16 @@
         android:text="@string/register_login_hint"
         android:textColor="?android:attr/textColorPrimary" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btRegister"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        app:cornerRadius="4dp"
         android:layout_marginTop="16dp"
         android:text="@string/register"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="18sp"
-        android:background="@drawable/light_button_bg"
-        android:contentDescription="@string/ok" />
-
+        android:textSize="20sp"
+        android:contentDescription="@string/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

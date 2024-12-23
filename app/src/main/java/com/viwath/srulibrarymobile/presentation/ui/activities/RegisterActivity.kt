@@ -3,6 +3,7 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.SpannableString
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,18 @@ class RegisterActivity : AppCompatActivity(){
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         binding.btRegister.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
 
+        val fullText = getString(R.string.register_login_hint)
+        val boldText = "Sign In"
+        val spannable = SpannableString(fullText)
+        val startIndex = fullText.indexOf(boldText)
+        val endIndex = startIndex + boldText.length
+        spannable.setSpan(
+            android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+            startIndex,
+            endIndex,
+            android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.tvGoSignIn.text = spannable
         binding.tvGoSignIn.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
@@ -84,6 +97,10 @@ class RegisterActivity : AppCompatActivity(){
             val username = binding.edtUsername.text
             val password = binding.edtPassword.text
             val email = binding.edtEmail.text
+            if (username.isNullOrBlank() || password.isNullOrBlank() || email.isNullOrBlank()){
+                dialogMessage(message = "Please enter username, password and email.", title = "Error!")
+                return@setOnClickListener
+            }
             viewModel.onEvent(AuthEvent.SignUpUsernameChanged(username.toString()))
             viewModel.onEvent(AuthEvent.SignUpPasswordChanged(password.toString()))
             viewModel.onEvent(AuthEvent.SignUpEmailChanged(email.toString()))

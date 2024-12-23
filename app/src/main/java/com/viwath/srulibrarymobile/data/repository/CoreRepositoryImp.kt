@@ -2,17 +2,14 @@ package com.viwath.srulibrarymobile.data.repository
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.exception.CoreException
-import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.data.api.CoreApi
-import com.viwath.srulibrarymobile.domain.model.Attend
-import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
+import com.viwath.srulibrarymobile.domain.model.Attend
+import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
 class CoreRepositoryImp @Inject constructor(
@@ -136,17 +133,14 @@ class CoreRepositoryImp @Inject constructor(
         }else throw CoreException("Error update book")
     }
 
-    override fun getBooks(): Flow<BookDto> {
-        val response = api.getBooks()
-        if (response.isSuccessful)
-            return response.body() ?: emptyFlow()
-        else throw CoreException("Error get book")
+    override suspend fun getBooks(): List<BookDto> {
+        return api.getBooks()
     }
 
-    override fun getBooksInTrash(): Flow<BookDto> {
+    override suspend fun getBooksInTrash(): List<BookDto> {
         val response = api.bookInTrash()
         if (response.isSuccessful)
-            return response.body() ?: emptyFlow()
+            return response.body() ?: emptyList()
         else throw CoreException("Error get book")
     }
 

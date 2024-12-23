@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.databinding.FragementQrBinding
+import com.viwath.srulibrarymobile.databinding.FragmentQrBinding
 import com.viwath.srulibrarymobile.presentation.event.QrEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
 import com.viwath.srulibrarymobile.presentation.viewmodel.QrFragmentViewModel
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.onEach
 class QrEntryFragment: Fragment(){
 
     // binding
-    private var _binding: FragementQrBinding? = null
+    private var _binding: FragmentQrBinding? = null
     private val binding get() = _binding!!
     // object
     private lateinit var previewView: PreviewView
@@ -54,7 +54,7 @@ class QrEntryFragment: Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragementQrBinding.inflate(inflater, container, false)
+        _binding = FragmentQrBinding.inflate(inflater, container, false)
         previewView = binding.cameraPreview
         // init cameraAction object
         cameraAction = CameraPreview(requireContext(), previewView, this)
@@ -138,7 +138,6 @@ class QrEntryFragment: Fragment(){
         if (::cameraAction.isInitialized){
             cameraAction.stopCamera()
         }
-        _binding = null
     }
     //// End override method
 

@@ -28,4 +28,8 @@
         <item name="android:background">@color/light_background</item>
     </style>
 
+    <style name="RecyclerBackground">
+        <item name="android:background">@drawable/light_recycler_book_background</item>
+    </style>
+
 </resources>

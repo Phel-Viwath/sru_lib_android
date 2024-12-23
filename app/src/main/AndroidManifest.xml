@@ -24,6 +24,7 @@
         <activity android:name=".presentation.ui.activities.RegisterActivity"/>
         <activity android:name=".presentation.ui.activities.MainActivity"/>
         <activity android:name=".presentation.ui.activities.LoginActivity"/>
+        <activity android:name=".presentation.ui.activities.ForgetPasswordActivity"/>
 
         <activity
             android:name=".presentation.ui.activities.LauncherActivity"

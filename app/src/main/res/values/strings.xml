@@ -4,8 +4,16 @@
     <string name="previous">Previous</string>
 
     <string name="password">Password</string>
+    <string name="otp">OTP</string>
     <string name="username">Username</string>
+    <string name="getOtp">Get OTP</string>
+    <string name="system">Library Management System</string>
+    <string name="sru">Svay Rieng University</string>
     <string name="login">Login</string>
+    <string name="confirm">Confirm</string>
+    <string name="verify">Verify</string>
+    <string name="Login">LOGIN</string>
+    <string name="please_enter_your_email_to_get_otp">Pleas enter your email to get OTP</string>
     <string name="forgot">Forgot password</string>
 
     <string name="khmer">Khmer</string>
@@ -76,11 +84,14 @@
 
 
     <string name="register">Register</string>
+    <string name="Register">REGISTER</string>
     <string name="login_email_hint">Email</string>
     <string name="username_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="register_login_hint">Already have an account? Sign In</string>
     <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="back_to_login">Back to login</string>
 
 <!--    item attend detail-->
     <string name="studentId">ID</string>
@@ -129,4 +140,9 @@
     </string-array>
 
     <string name="develop">Develop by Viwath.</string>
+
+
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="publication">publication Year</string>
 </resources>

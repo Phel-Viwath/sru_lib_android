@@ -3,6 +3,7 @@ package com.viwath.srulibrarymobile.data.repository
 import android.util.Log
 import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.data.api.AuthApi
+import com.viwath.srulibrarymobile.domain.model.auth.ChangePasswordRequest
 import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RefreshToken
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
@@ -51,11 +52,14 @@ class AuthRepositoryImp @Inject constructor(
 
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
-            val token = tokenManager.getAccessToken()?.let {
-                if (it.isBlank()) return AuthResult.BadRequest()
-                else "Bearer $it"
+            val tokens = tokenManager.getAccessToken()
+            val accessToken: String
+            if (tokens == null){
+                return AuthResult.BadRequest()
+            }else{
+                accessToken = "Bearer $tokens"
             }
-            val response = api.authenticate(token.toString())
+            val response = api.authenticate(accessToken)
             Log.d("Authenticate", "authenticate response: ${response.code()}")
             if (response.isSuccessful) AuthResult.Authorize()
             else AuthResult.Unauthorized()
@@ -85,6 +89,21 @@ class AuthRepositoryImp @Inject constructor(
             Log.d("AuthRepositoryImp", "refreshToken: ${e.message}")
             false
         }
+    }
+
+    override suspend fun requestOtp(email: String): Boolean {
+        val response = api.requestOtp(email)
+        return response.isSuccessful
+    }
+
+    override suspend fun verifyOtp(otp: String): Boolean {
+        val response = api.verifyOtp(otp)
+        return response.isSuccessful
+    }
+
+    override suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): Boolean {
+        val response = api.changePassword(changePasswordRequest)
+        return response.isSuccessful
     }
 
     private fun <T> handleError(e: Throwable): AuthResult<T> {

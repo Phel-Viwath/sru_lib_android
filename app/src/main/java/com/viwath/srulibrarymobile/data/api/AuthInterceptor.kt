@@ -1,11 +1,10 @@
 package com.viwath.srulibrarymobile.data.api
 
 import android.util.Log
-import com.viwath.srulibrarymobile.utils.TokenManager
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
+import com.viwath.srulibrarymobile.utils.TokenManager
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -29,7 +28,6 @@ class AuthInterceptor @Inject constructor(
             synchronized(this){
                 GlobalScope.launch {
                     val newAccessToken = authUseCase.value.refreshTokenUseCase()
-
                     Log.d("AuthInterceptor", "access token: $newAccessToken")
                     if (newAccessToken){
                         val newToken = tokenManager.getAccessToken() ?: return@launch

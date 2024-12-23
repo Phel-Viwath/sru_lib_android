@@ -32,7 +32,7 @@ class BookFragment : Fragment(R.layout.fragment_book){
         loading = Loading(requireActivity())
 
         val fragmentList = listOf(
-            AddBookFragment(),
+            BookTabFragment(),
             BorrowedFragment(),
             DonationFragment(),
             BackupBookFragment()

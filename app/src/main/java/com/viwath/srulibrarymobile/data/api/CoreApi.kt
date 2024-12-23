@@ -53,7 +53,7 @@ interface CoreApi {
     @POST("/api/v1/book")
     suspend fun addBooks(@Body books: List<BookDto>): Response<BookDto>
     @GET("/api/v1/book")
-    fun getBooks(): Response<Flow<BookDto>>
+    suspend fun getBooks(): List<BookDto>
     @PUT("/api/v1/book")
     suspend fun updateBook(@Body book: BookDto): Response<BookDto>
     @PUT("/api/v1/trash")
@@ -61,5 +61,5 @@ interface CoreApi {
     @PUT("/api/v1/recover")
     suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
     @GET("api/v1/in-trash")
-    fun bookInTrash(): Response<Flow<BookDto>>
+    suspend fun bookInTrash(): Response<List<BookDto>>
 }

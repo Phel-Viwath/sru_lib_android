@@ -3,6 +3,7 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.SpannableString
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -34,11 +35,27 @@ class LoginActivity : AppCompatActivity(){
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         binding.btLogin.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
 
-
+        val boldText = "Sign Up"
+        val fullText = getString(R.string.login_signup_hint)
+        val spannable = SpannableString(fullText)
+        val startIndex = fullText.indexOf(boldText)
+        val endIndex = startIndex + boldText.length
+        spannable.setSpan(
+            android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+            startIndex,
+            endIndex,
+            android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.tvGoSignUp.text = spannable
         binding.tvGoSignUp.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-            finish()
+            this.finish()
         }
+        binding.tvGoGetOtp.setOnClickListener {
+            startActivity(Intent(this, ForgetPasswordActivity::class.java))
+            this.finish()
+        }
+
         val state = viewModel.state
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -82,6 +99,10 @@ class LoginActivity : AppCompatActivity(){
             val username = binding.edtUsername.text
             val password = binding.edtPassword.text
 
+            if (username.isNullOrBlank() || password.isNullOrBlank()){
+                dialogMessage("Please enter username and password.", "Error!")
+                return@setOnClickListener
+            }
             viewModel.onEvent(AuthEvent.SignInUsernameChanged(username.toString()))
             viewModel.onEvent(AuthEvent.SignInPasswordChanged(password.toString()))
             viewModel.onEvent(AuthEvent.SignIn)

@@ -19,8 +19,8 @@ interface CoreRepository {
 
     suspend fun addBooks(books: List<BookDto>): BookDto
     suspend fun updateBook(book: BookDto): BookDto
-    fun getBooks(): Flow<BookDto>
-    fun getBooksInTrash(): Flow<BookDto>
+    suspend fun getBooks(): List<BookDto>
+    suspend fun getBooksInTrash(): List<BookDto>
     suspend fun getSummaryBook(): BookSummary
     suspend fun moveToTrash(bookId: String): Boolean
     suspend fun recoverBook(bookId: String): Boolean
