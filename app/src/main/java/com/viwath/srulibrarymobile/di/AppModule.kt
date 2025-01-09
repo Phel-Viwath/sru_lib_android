@@ -14,9 +14,12 @@ import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthenticateUseCase
+import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.ChangePasswordUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RefreshTokenUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RegisterUseCase
+import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.RequestOtpUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.SigninUseCase
+import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.VerifyOtpUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
@@ -129,7 +132,10 @@ object AppModule {
             RegisterUseCase(repository),
             SigninUseCase(repository),
             AuthenticateUseCase(repository),
-            RefreshTokenUseCase(repository)
+            RefreshTokenUseCase(repository),
+            RequestOtpUseCase(repository),
+            VerifyOtpUseCase(repository),
+            ChangePasswordUseCase(repository)
         )
     }
 

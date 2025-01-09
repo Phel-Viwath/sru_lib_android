@@ -4,6 +4,8 @@
     <string name="previous">Previous</string>
 
     <string name="password">Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="otp">OTP</string>
     <string name="username">Username</string>
     <string name="getOtp">Get OTP</string>
@@ -92,6 +94,8 @@
     <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
     <string name="forget_password">Forget password?</string>
     <string name="back_to_login">Back to login</string>
+
+    <string name="create_account">Create new account.</string>
 
 <!--    item attend detail-->
     <string name="studentId">ID</string>

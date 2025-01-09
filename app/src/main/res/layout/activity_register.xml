@@ -109,6 +109,7 @@
 
     <TextView
         android:id="@+id/tvGoSignIn"
+        android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -119,7 +120,7 @@
         android:id="@+id/btRegister"
         style="@style/Widget.Material3.Button.ElevatedButton"
         app:cornerRadius="4dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="@string/register"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"

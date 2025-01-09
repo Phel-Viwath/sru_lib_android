@@ -4,5 +4,8 @@ data class AuthUseCase (
     val registerUseCase: RegisterUseCase,
     val signinUseCase: SigninUseCase,
     val authenticateUseCase: AuthenticateUseCase,
-    val refreshTokenUseCase: RefreshTokenUseCase
+    val refreshTokenUseCase: RefreshTokenUseCase,
+    val requestOtpUseCase: RequestOtpUseCase,
+    val verifyOtpUseCase: VerifyOtpUseCase,
+    val changePasswordUseCase: ChangePasswordUseCase
 )

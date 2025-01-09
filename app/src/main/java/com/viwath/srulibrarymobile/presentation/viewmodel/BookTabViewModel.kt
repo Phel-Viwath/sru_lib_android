@@ -35,7 +35,7 @@ class BookTabViewModel @Inject constructor(
         when(event){
             is BookTabEvent.SaveBook -> { saveBook(event.book) }
             is BookTabEvent.Remove -> { removeBook(event.bookId) }
-            is BookTabEvent.UpdateBook -> {}
+            is BookTabEvent.UpdateBook -> { }
             is BookTabEvent.Borrow -> { }
         }
     }
@@ -60,9 +60,10 @@ class BookTabViewModel @Inject constructor(
 
     private fun saveBook(books: List<BookDto>){
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
             when(val result = useCase.addBookUseCase(books)){
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(isLoading = true)
+                }
                 is Resource.Success -> {
                     _state.value = _state.value.copy(isLoading = false)
                     _eventFlow.emit(ResultEvent.ShowSnackbar("Books added successfully."))

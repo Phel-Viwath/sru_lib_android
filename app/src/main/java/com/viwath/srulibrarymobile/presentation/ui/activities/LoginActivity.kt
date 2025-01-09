@@ -2,6 +2,7 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import androidx.activity.viewModels
@@ -34,25 +35,14 @@ class LoginActivity : AppCompatActivity(){
         val lightButtonBackground = R.drawable.light_button_bg
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         binding.btLogin.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
+        binding.line.setBackgroundColor(if (isDarkMode) Color.WHITE else Color.BLACK)
 
-        val boldText = "Sign Up"
-        val fullText = getString(R.string.login_signup_hint)
-        val spannable = SpannableString(fullText)
-        val startIndex = fullText.indexOf(boldText)
-        val endIndex = startIndex + boldText.length
-        spannable.setSpan(
-            android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
-            startIndex,
-            endIndex,
-            android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        binding.tvGoSignUp.text = spannable
-        binding.tvGoSignUp.setOnClickListener {
+        binding.btCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
             this.finish()
         }
         binding.tvGoGetOtp.setOnClickListener {
-            startActivity(Intent(this, ForgetPasswordActivity::class.java))
+            startActivity(Intent(this, RequestOtpActivity::class.java))
             this.finish()
         }
 
