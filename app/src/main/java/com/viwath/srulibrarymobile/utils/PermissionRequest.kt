@@ -1,33 +1,75 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.utils
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
-class PermissionRequest(private val fragment: Fragment){
+class PermissionRequest(private val fragment: Fragment) {
 
-    fun hasCameraPermission(): Boolean{
-        return ActivityCompat.checkSelfPermission(
+    fun hasCameraPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
             fragment.requireContext(),
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun requestPermission(requestCode: Int){
+    fun hasReadStoragePermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // For Android 13 and above
+            ContextCompat.checkSelfPermission(
+                fragment.requireContext(),
+                Manifest.permission.READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            // For Android 12 and below
+            ContextCompat.checkSelfPermission(
+                fragment.requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    fun requestPermissions(vararg permissions: String, requestCode: Int) {
         ActivityCompat.requestPermissions(
             fragment.requireActivity(),
-            arrayOf(Manifest.permission.CAMERA),
+            permissions,
             requestCode
         )
     }
 
     fun handlePermissionResult(
         requestCode: Int,
-        grandResult: IntArray,
-        onPermissionGraded: () -> Unit
-    ){
-        if (requestCode == 0 && grandResult.isNotEmpty() && grandResult[0] == PackageManager.PERMISSION_GRANTED)
-            onPermissionGraded()
+        permissions: Array<out String?>,
+        grantResults: IntArray,
+        onPermissionGranted: () -> Unit,
+        onPermissionDenied: () -> Unit
+    ) {
+        if (grantResults.isNotEmpty()) {
+            // Check if all permissions are granted
+            val allGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+            if (allGranted) {
+                onPermissionGranted()
+            } else {
+                onPermissionDenied()
+            }
+        } else {
+            // No permissions were granted
+            onPermissionDenied()
+        }
+    }
+
+    companion object {
+        const val CAMERA_PERMISSION_CODE = 100
+        const val STORAGE_PERMISSION_CODE = 101
     }
 }

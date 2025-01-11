@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 data class BookUseCase(
@@ -7,5 +14,8 @@ data class BookUseCase(
     val removeBookUseCase: RemoveBookUseCase,
     val recoverBookUseCase: RecoverBookUseCase,
     val getBookInTrashUseCase: GetBookInTrashUseCase,
-    val getSummaryUseCase: GetSummaryUseCase
+    val getSummaryUseCase: GetSummaryUseCase,
+    val getLanguageUseCase: GetLanguageUseCase,
+    val getCollegeUseCase: GetCollegeUseCase,
+    val uploadBookUseCase: UploadBookUseCase
 )

@@ -1,16 +1,25 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.presentation.state.book_state.SummaryBookState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,12 +31,18 @@ class BookFragmentViewModel @Inject constructor(
     val state: StateFlow<SummaryBookState> get() = _state.asStateFlow()
 
     init {
-        getSummaryBook()
+        viewModelScope.launch{
+            val summaryBookDeferred = async{ getSummaryBook() }
+            summaryBookDeferred.await()
+        }
     }
 
-    private fun getSummaryBook(){
-        viewModelScope.launch {
-            useCase.getSummaryUseCase().collect{ result ->
+    private suspend fun getSummaryBook(){
+        withContext(IO) {
+            val result = async{
+                useCase.getSummaryUseCase()
+            }.await()
+            result.collect{ result ->
                 when(result){
                     is Resource.Success -> {
                         val data = result.data

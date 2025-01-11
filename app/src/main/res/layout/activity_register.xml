@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,8 +15,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="50dp"
+    android:paddingHorizontal="10dp"
     tools:context=".presentation.ui.activities.Hilt_RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -19,15 +25,8 @@
         android:src="@drawable/sru_image" />
 
     <TextView
-        android:textSize="18sp"
-        android:fontFamily="sans-serif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/system"/>
-
-    <TextView
         android:id="@+id/tvRegister"
+        android:fontFamily="@font/hawthorne_vintage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -36,7 +35,7 @@
         android:textSize="30sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!-- TextInputLayout for Username -->
@@ -44,6 +43,7 @@
             android:id="@+id/tilUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
             app:endIconMode="clear_text"
             app:hintTextColor="?android:attr/textColorSecondary"
             app:boxStrokeColor="?android:attr/textColorSecondary"
@@ -58,13 +58,14 @@
                 android:hint="@string/username_hint"
                 android:inputType="textEmailAddress"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
         <!-- TextInputLayout for Email -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
             app:endIconMode="clear_text"
             app:hintTextColor="?android:attr/textColorSecondary"
             app:boxStrokeColor="?android:attr/textColorSecondary"
@@ -80,7 +81,7 @@
                 android:hint="@string/login_email_hint"
                 android:inputType="textEmailAddress"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TextInputLayout for Password -->
@@ -88,6 +89,7 @@
             android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
             app:endIconMode="password_toggle"
             app:hintTextColor="?android:attr/textColorSecondary"
             app:boxStrokeColor="?android:attr/textColorSecondary"
@@ -103,26 +105,27 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvGoSignIn"
-        android:layout_gravity="end"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:text="@string/register_login_hint"
         android:textColor="?android:attr/textColorPrimary" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btRegister"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        app:cornerRadius="4dp"
-        android:layout_marginTop="12dp"
+        app:cornerRadius="6dp"
+        android:backgroundTint="@color/dark_blue"
+        android:layout_marginTop="8dp"
         android:text="@string/register"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:contentDescription="@string/ok"
         android:layout_width="wrap_content"

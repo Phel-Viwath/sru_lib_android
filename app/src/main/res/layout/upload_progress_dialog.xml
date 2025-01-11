@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@drawable/material_dialog_background">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvProgressTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uploading File"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textColor="@color/black" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="0"
+        android:max="100"
+        android:progressDrawable="@drawable/horizontal_progress_bar"
+        android:indeterminate="false" />
+
+    <!-- Percentage Text -->
+    <TextView
+        android:id="@+id/tvProgressPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="0%"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        android:textColor="@color/black" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/tvProgressMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uploading your file, please wait..."
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@color/dark_gray" />
+
+</LinearLayout>

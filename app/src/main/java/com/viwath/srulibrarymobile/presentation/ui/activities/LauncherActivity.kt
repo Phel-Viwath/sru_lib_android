@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
@@ -23,15 +30,10 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
-        Log.d("LauncherActivity", "onCreate started")
-
         viewModel.authenticate()
-
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.authResult.collect { result ->
                 withContext(Dispatchers.Main) {
-                    Log.d("Launcher", "onCreate: $result")
                     handleAuthResult(result)
                 }
             }

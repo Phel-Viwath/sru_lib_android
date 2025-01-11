@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -231,7 +238,7 @@
 
                     <TextView
                         android:layout_marginTop="10dp"
-                        android:text="@string/id"
+                        android:text="@string/student_id"
                         android:textSize="22sp"
                         android:textColor="?android:attr/textColorPrimary"
                         android:layout_width="wrap_content"

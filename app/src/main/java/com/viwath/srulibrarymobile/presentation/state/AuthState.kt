@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.state
 
 data class AuthState(
@@ -5,5 +12,5 @@ data class AuthState(
     val signInPassword: String = "",
     val signUpEmail: String = "",
     val signUpPassword: String = "",
-    val signUpUsername: String = ""
+    val signUpUsername: String = "",
 )

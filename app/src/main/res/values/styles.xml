@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <resources>
     <style name="roundImageView" parent="Theme.MaterialComponents">
         <item name="cornerFamily">rounded</item>

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.domain.usecase.auth_usecase
 
 import android.util.Log
@@ -18,16 +25,20 @@ class ChangePasswordUseCase @Inject constructor(
         try {
             val changePasswordRequest = ChangePasswordRequest(email, password)
             val response = repository.changePassword(changePasswordRequest)
-            emit(Resource.Success(response))
+            if (response == false){
+                return@flow emit(Resource.Error("Something went wrong."))
+            }else{
+                return@flow emit(Resource.Success(true))
+            }
         }catch (e: IOException){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error("${e.message}"))
         }catch (e: HttpException){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error("${e.message}"))
         }catch (e: Exception){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error("${e.message}"))
         }
     }
 }

@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.utils
 
 import android.content.Context
 
-class TokenManager(private val context: Context) {
+class TokenManager(context: Context) {
 
     private val sharedPreferencesHelper = SharedPreferencesHelper.getInstance(context)
 
@@ -11,7 +18,7 @@ class TokenManager(private val context: Context) {
     }
 
     fun saveRefreshToken(refreshToken: String){
-        sharedPreferencesHelper.putString(REFRESH_TOKEN, refreshToken)
+        sharedPreferencesHelper.putEncryptedString(REFRESH_TOKEN, refreshToken)
     }
 
     fun saveUsername(username: String){
@@ -26,14 +33,15 @@ class TokenManager(private val context: Context) {
         return sharedPreferencesHelper.getString(ACCESS_TOKEN)
     }
 
-    fun getRefreshToken(): String? = sharedPreferencesHelper.getString(REFRESH_TOKEN)
+    fun getRefreshToken(): String? = sharedPreferencesHelper.getEncryptedString(REFRESH_TOKEN)
 
     fun getUsername(): String? = sharedPreferencesHelper.getString(USERNAME)
 
     fun getRole(): String? = sharedPreferencesHelper.getString(ROLE)
 
     fun clearToken(){
-        sharedPreferencesHelper.clearValue(ACCESS_TOKEN, REFRESH_TOKEN, USERNAME, ROLE)
+        sharedPreferencesHelper.clearValue(ACCESS_TOKEN, USERNAME, ROLE)
+        sharedPreferencesHelper.clearValue(REFRESH_TOKEN)
     }
 
     companion object{

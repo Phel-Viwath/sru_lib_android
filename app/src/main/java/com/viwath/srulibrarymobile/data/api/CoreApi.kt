@@ -1,18 +1,29 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.data.api
 
+import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.model.Attend
+import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
-import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.model.entry.EntryStatus
-import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -48,10 +59,13 @@ interface CoreApi {
     // PUT("/recover", bookHandler::recoverBook)
     // GET("/in-trash", bookHandler::getBooksInTrash)
 
+    @Multipart @POST("/api/v1/upload/book")
+    suspend fun uploadBook(@Part file: MultipartBody.Part): Response<Unit>
+    
     @GET("/api/v1/book/about-book-data")
     suspend fun getSummaryBook(): Response<BookSummary>
     @POST("/api/v1/book")
-    suspend fun addBooks(@Body books: List<BookDto>): Response<BookDto>
+    suspend fun addBooks(@Body books: List<BookDto>): Response<Unit>
     @GET("/api/v1/book")
     suspend fun getBooks(): List<BookDto>
     @PUT("/api/v1/book")
@@ -60,6 +74,11 @@ interface CoreApi {
     suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
     @PUT("/api/v1/recover")
     suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
-    @GET("api/v1/in-trash")
+    @GET("/api/v1/in-trash")
     suspend fun bookInTrash(): Response<List<BookDto>>
+    @GET("/api/v1/language")
+    suspend fun bookLanguage(): Response<List<Language>>
+    @GET("/api/v1/college")
+    suspend fun college(): Response<List<College>>
+
 }

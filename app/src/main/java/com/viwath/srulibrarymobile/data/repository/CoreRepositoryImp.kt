@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.data.repository
 
 import android.util.Log
@@ -6,10 +13,15 @@ import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.model.Attend
+import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import okhttp3.MultipartBody
+import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 
 class CoreRepositoryImp @Inject constructor(
@@ -92,45 +104,20 @@ class CoreRepositoryImp @Inject constructor(
         return body?.status ?: throw CoreException("Response body is null")
     }
 
-    override suspend fun addBooks(books: List<BookDto>): BookDto {
+    override suspend fun addBooks(books: List<BookDto>): Boolean {
         val response = api.addBooks(books)
-        return if (response.isSuccessful){
-            response.body()?.let {
-                BookDto(
-                    bookId = it.bookId,
-                    bookTitle = it.bookTitle,
-                    bookQuan = it.bookQuan,
-                    languageId = it.languageId,
-                    collegeId = it.collegeId,
-                    author = it.author,
-                    publicationYear = it.publicationYear,
-                    genre = it.genre,
-                    receiveDate = it.receiveDate
-                )
-            } ?: throw CoreException("Response body is null")
-        }else{
-            throw CoreException("Error add book")
-        }
-
+        Log.d("CoreRepositoryImp", "addBooks: ${response.code()} ${response.message()}")
+        return response.code() == 200
     }
 
-    override suspend fun updateBook(book: BookDto): BookDto {
+    override suspend fun uploadBook(file: MultipartBody.Part): Response<Unit> {
+        val response = api.uploadBook(file)
+        return response
+    }
+
+    override suspend fun updateBook(book: BookDto): Boolean {
         val response = api.updateBook(book)
-        return if (response.isSuccessful){
-            response.body()?.let {
-                BookDto(
-                    bookId = it.bookId,
-                    bookTitle = it.bookTitle,
-                    bookQuan = it.bookQuan,
-                    languageId = it.languageId,
-                    collegeId = it.collegeId,
-                    author = it.author,
-                    publicationYear = it.publicationYear,
-                    genre = it.genre,
-                    receiveDate = it.receiveDate
-                )
-            }?: throw CoreException("Response body is null")
-        }else throw CoreException("Error update book")
+        return response.isSuccessful
     }
 
     override suspend fun getBooks(): List<BookDto> {
@@ -168,6 +155,20 @@ class CoreRepositoryImp @Inject constructor(
     override suspend fun recoverBook(bookId: String): Boolean {
         val response = api.recoverBook(bookId)
         return response.isSuccessful
+    }
+
+    override suspend fun bookLanguages(): List<Language> {
+        val response = api.bookLanguage()
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error get language")
+    }
+
+    override suspend fun college(): List<College> {
+        val response = api.college()
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error get college")
     }
 
 }

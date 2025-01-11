@@ -1,4 +1,11 @@
-<resources>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SRU Library Mobile</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -14,12 +21,19 @@
     <string name="login">Login</string>
     <string name="confirm">Confirm</string>
     <string name="verify">Verify</string>
+    <string name="receive_code">Didn\'t you receive any code?</string>
+    <string name="resent_code">RESENT NEW CODE</string>
+    <string name="sent_code">Sent Code</string>
     <string name="Login">LOGIN</string>
-    <string name="please_enter_your_email_to_get_otp">Pleas enter your email to get OTP</string>
+    <string name="change_password">Change Password</string>
+    <string name="please_enter_your_email_to_get_otp">Pleas enter your email we will send OTP code.</string>
+    <string name="please_check_your_email_to_get_otp">Pleas check your email to get OTP code.</string>
     <string name="forgot">Forgot password</string>
 
     <string name="khmer">Khmer</string>
     <string name="english">English</string>
+    <string name="kh">Kh</string>
+    <string name="eng">Eng</string>
 
     <!-- Dashboard   -->
     <string name="weekly_visitor">Weekly Visitor</string>
@@ -43,7 +57,7 @@
     <string name="entry_today">Entry Today</string>
 
     <!--    Major Name-->
-    <string name="eng">ENG</string>
+    <string name="Eng">ENG</string>
     <string name="cs">CS</string>
     <string name="math">MATH</string>
     <string name="pa">PA</string>
@@ -69,7 +83,7 @@
     <string name="scan_here">Scan Your Card Here</string>
     <string name="tab_to_scan">Tab to scan!</string>
     <string name="major">Major</string>
-    <string name="id">Student ID</string>
+    <string name="student_id">Student ID</string>
     <string name="student_name">Student Name</string>
     <string name="purpose">Purpose</string>
 
@@ -144,9 +158,18 @@
     </string-array>
 
     <string name="develop">Develop by Viwath.</string>
-
+    <string name="upload_exel">Upload File</string>
 
     <string name="title">Title</string>
     <string name="author">Author</string>
     <string name="publication">publication Year</string>
+
+    <string name="book_id">Book ID</string>
+    <string name="book_title">Book Title</string>
+    <string name="college">College</string>
+    <string name="book_author">Author</string>
+    <string name="book_genre">Genre</string>
+    <string name="public_year">Publication Year</string>
+    <string name="book_quan">Book Quan</string>
+    <string name="submit">Submit</string>
 </resources>

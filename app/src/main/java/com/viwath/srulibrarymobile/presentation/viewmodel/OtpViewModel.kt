@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
-import com.viwath.srulibrarymobile.presentation.event.RequestOtpEvent
+import com.viwath.srulibrarymobile.presentation.event.OtpEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -15,18 +22,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RequestOtpViewModel @Inject constructor(
+class OtpViewModel @Inject constructor(
     private val authUseCase: AuthUseCase
 ): ViewModel(){
     private val _resultEvent = MutableSharedFlow<ResultEvent>()
     val event: SharedFlow<ResultEvent> get() = _resultEvent.asSharedFlow()
 
-    private val _requestEvent = MutableSharedFlow<RequestOtpEvent>()
-    val requestEvent: SharedFlow<RequestOtpEvent> get() = _requestEvent.asSharedFlow()
+    private val _otpEvent = MutableSharedFlow<OtpEvent>()
+    val otpEvent: SharedFlow<OtpEvent> get() = _otpEvent.asSharedFlow()
 
-    fun onEvent(event: RequestOtpEvent){
+    fun onEvent(event: OtpEvent){
         when(event){
-            is RequestOtpEvent.RequestRequestOtp -> {requestOtp(event.email)}
+            is OtpEvent.RequestOtp -> {requestOtp(event.email)}
+            is OtpEvent.VerifyOtp -> {verifyOtp(event.otp)}
             else -> Unit
         }
     }
@@ -35,15 +43,37 @@ class RequestOtpViewModel @Inject constructor(
         viewModelScope.launch{
             authUseCase.requestOtpUseCase(email).collect{ resource ->
                 when(resource) {
-                    is Resource.Loading<*> -> _requestEvent.emit(RequestOtpEvent.StartLoading)
+                    is Resource.Loading<*> -> _otpEvent.emit(OtpEvent.StartLoading)
                     is Resource.Error<*> -> {
-                        _requestEvent.emit(RequestOtpEvent.StopLoading)
+                        _otpEvent.emit(OtpEvent.StopLoading)
                         _resultEvent.emit(ResultEvent.ShowError(resource.message ?: "Unknown error"))
                     }
                     is Resource.Success<*> -> {
-                        _requestEvent.emit(RequestOtpEvent.StopLoading)
-                        _requestEvent.emit(RequestOtpEvent.Navigate)
-                        _resultEvent.emit(ResultEvent.ShowSnackbar("Request OTP successfully. Please check your email."))
+                        _otpEvent.emit(OtpEvent.StopLoading)
+                        _resultEvent.emit(ResultEvent.ShowSuccess("Request OTP successfully. Please check your email."))
+                        delay(500)
+                        _otpEvent.emit(OtpEvent.VerifyNavigate)
+                        _otpEvent.emit(OtpEvent.RestartCountdown)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun verifyOtp(otp: String){
+        viewModelScope.launch{
+            authUseCase.verifyOtpUseCase(otp).collect{ resource ->
+                when(resource){
+                    is Resource.Loading<*> -> _otpEvent.emit(OtpEvent.StartLoading)
+                    is Resource.Error<*> -> {
+                        _otpEvent.emit(OtpEvent.StopLoading)
+                        _resultEvent.emit(ResultEvent.ShowError(resource.message ?: "Unknown error"))
+                    }
+                    is Resource.Success<*> -> {
+                        _otpEvent.emit(OtpEvent.StopLoading)
+                        _resultEvent.emit(ResultEvent.ShowSuccess("Confirm OTP successfully."))
+                        delay(500)
+                        _otpEvent.emit(OtpEvent.ChangePasswordNavigate)
                     }
                 }
             }

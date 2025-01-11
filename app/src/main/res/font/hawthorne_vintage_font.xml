@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+   <font
+       android:fontStyle="normal"
+       android:fontWeight="400"
+       android:font="@font/hawthorne_vintage"/>
+</font-family>

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -108,5 +115,7 @@ dependencies {
 
     // flexbox
     implementation(libs.flexbox.layout)
+    //security-crypto
+    implementation(libs.security.crypto)
 
 }

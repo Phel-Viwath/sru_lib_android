@@ -1,13 +1,18 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
-import android.os.Build
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
 import com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment
@@ -29,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     private var activeFragmentTag: String? = null
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -126,6 +130,7 @@ class MainActivity : AppCompatActivity() {
     fun showBottomNav() {
         binding.bottomNavView.visibility = View.VISIBLE
     }
+
 
     companion object{
         private const val ACTIVE_FRAGMENT_TAG = "active_fragment"

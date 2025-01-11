@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.domain.usecase.auth_usecase
 
 import android.util.Log
@@ -12,7 +19,6 @@ import javax.inject.Inject
 class VerifyOtpUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {
-
     operator fun invoke(otp: String): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading())
         try {
@@ -20,13 +26,13 @@ class VerifyOtpUseCase @Inject constructor(
             emit(Resource.Success(response))
         }catch (e: IOException){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error(e.message.toString()))
         }catch (e: HttpException){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error(e.message()))
         }catch (e: Exception){
             Log.e("VerifyOtpUseCase", "invoke: ${e.message}", e.cause)
-            emit(Resource.Error(""))
+            emit(Resource.Error(e.message.toString()))
         }
     }
 

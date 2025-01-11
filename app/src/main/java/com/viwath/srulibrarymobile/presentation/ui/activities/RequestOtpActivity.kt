@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -11,21 +19,20 @@ import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.ActivityRequestOtpBinding
 import com.viwath.srulibrarymobile.presentation.event.OtpEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
-import com.viwath.srulibrarymobile.presentation.viewmodel.RequestOtpViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.OtpViewModel
+import com.viwath.srulibrarymobile.utils.IntentString.EMAIL
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class RequestOtpActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityRequestOtpBinding
     private lateinit var loading: Loading
+    private var email = ""
 
-    private val viewModel: RequestOtpViewModel by lazy {
-        ViewModelProvider(this)[RequestOtpViewModel::class.java]
+    private val viewModel: OtpViewModel by lazy {
+        ViewModelProvider(this)[OtpViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,18 +47,10 @@ class RequestOtpActivity : AppCompatActivity(){
         }
 
         binding.btRequestOtp.setOnClickListener {
-            val email = binding.edtEmail.text.toString().trim()
+            email = binding.edtEmail.text.toString().trim()
             if (email.isNotEmpty())
                 viewModel.onEvent(OtpEvent.RequestOtp(email))
             else showToast("Please enter a valid email.")
-
-        }
-        binding.btVerify.setOnClickListener{
-            val otp = binding.edtOtp.text.toString().trim()
-            if (otp.isNotEmpty())
-                viewModel.onEvent(OtpEvent.VerifyOtp(otp))
-            else showToast("Please enter a valid OTP.")
-
         }
 
         // event
@@ -61,26 +60,18 @@ class RequestOtpActivity : AppCompatActivity(){
 
     }
 
-    private suspend fun showLoading(){
-        withContext(Main){
-            loading.loadingStart()
-        }
-    }
-    private suspend fun stopLoading(){
-        withContext(Main){
-            loading.loadingDismiss()
-        }
-    }
-
     private fun observeOtpEvent(){
         lifecycleScope.launch{
             viewModel.otpEvent.collect{ event ->
                 when(event){
                     is OtpEvent.StartLoading -> showLoading()
                     is OtpEvent.StopLoading -> stopLoading()
-                    is OtpEvent.Navigate -> {
+                    is OtpEvent.VerifyNavigate -> {
                         stopLoading()
-                        startActivity(Intent(this@RequestOtpActivity, ChangePasswordActivity::class.java))
+                        startActivity(
+                            Intent(this@RequestOtpActivity, VerifyOtpActivity::class.java)
+                                .putExtra(EMAIL, email)
+                        )
                         this@RequestOtpActivity.finish()
                     }
                     else -> stopLoading()
@@ -89,11 +80,12 @@ class RequestOtpActivity : AppCompatActivity(){
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun observeEvent() {
         lifecycleScope.launch {
             viewModel.event.collect { event ->
                 when (event) {
-                    is ResultEvent.ShowSnackbar -> showSnackbar(event.message)
+                    is ResultEvent.ShowSuccess -> showSnackbar(event.message)
                     is ResultEvent.ShowError -> showToast(event.errorMsg)
                 }
             }
@@ -101,14 +93,26 @@ class RequestOtpActivity : AppCompatActivity(){
     }
 
     private fun showSnackbar(message: String) {
-        lifecycleScope.launch(Main){
-            Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+        runOnUiThread{
+            val rootLayout = binding.root
+            Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun showToast(message: String) {
-        lifecycleScope.launch(Main){
+        runOnUiThread{
             Toast.makeText(this@RequestOtpActivity, message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showLoading(){
+        runOnUiThread{
+            loading.loadingStart()
+        }
+    }
+    private fun stopLoading(){
+        runOnUiThread{
+            loading.loadingDismiss()
         }
     }
 

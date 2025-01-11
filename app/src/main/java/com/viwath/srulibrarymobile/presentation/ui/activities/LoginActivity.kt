@@ -1,22 +1,27 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.text.SpannableString
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.viwath.srulibrarymobile.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.common.result.AuthResult
+import com.viwath.srulibrarymobile.databinding.ActivityLoginBinding
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
-import com.viwath.srulibrarymobile.databinding.ActivityLoginBinding
+import com.viwath.srulibrarymobile.utils.IntentString.EMAIL
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -24,41 +29,43 @@ class LoginActivity : AppCompatActivity(){
 
     /// global variable or object
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var loading: Loading
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        loading = Loading(this)
 
-        val nightButtonBackground = R.drawable.night_button_bg
-        val lightButtonBackground = R.drawable.light_button_bg
+        val email = intent.getStringExtra(EMAIL)
+        if (!email.isNullOrEmpty())
+            binding.edtEmail.post{ binding.edtEmail.setText(email) }
+
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        binding.btLogin.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
         binding.line.setBackgroundColor(if (isDarkMode) Color.WHITE else Color.BLACK)
 
         binding.btCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-            this.finish()
         }
         binding.tvGoGetOtp.setOnClickListener {
             startActivity(Intent(this, RequestOtpActivity::class.java))
-            this.finish()
         }
 
         val state = viewModel.state
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             viewModel.authResult.collect {result ->
                 when(result){
                     is AuthResult.Unauthorized -> {
                         dialogMessage(
-                            "Please check your email. ${result.data}",
+                            "Please check your email or password.",
                             "Unauthorized"
                         )
                     }
                     is AuthResult.Authorize -> {
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        this@LoginActivity.finish()
                     }
                     is AuthResult.UnknownError -> {
                         dialogMessage(
@@ -82,18 +89,18 @@ class LoginActivity : AppCompatActivity(){
             }
         }
 
-        binding.edtUsername.setText(state.value.signInEmail)
+        binding.edtEmail.setText(state.value.signInEmail)
         binding.edtPassword.setText(state.value.signInPassword)
 
         binding.btLogin.setOnClickListener {
-            val username = binding.edtUsername.text
-            val password = binding.edtPassword.text
+            val email = binding.edtEmail.text.toString().trim()
+            val password = binding.edtPassword.text.toString().trim()
 
-            if (username.isNullOrBlank() || password.isNullOrBlank()){
+            if (email.isBlank() || password.isBlank()){
                 dialogMessage("Please enter username and password.", "Error!")
                 return@setOnClickListener
             }
-            viewModel.onEvent(AuthEvent.SignInUsernameChanged(username.toString()))
+            viewModel.onEvent(AuthEvent.SignInUsernameChanged(email.toString()))
             viewModel.onEvent(AuthEvent.SignInPasswordChanged(password.toString()))
             viewModel.onEvent(AuthEvent.SignIn)
         }
@@ -104,14 +111,24 @@ class LoginActivity : AppCompatActivity(){
             }
         }
 
+        lifecycleScope.launch{
+            viewModel.isLoading.collect{
+                runOnUiThread {
+                    if (it) loading.loadingStart()
+                    else loading.loadingDismiss()
+                }
+            }
+        }
+
     }
 
     private fun dialogMessage(message: String, title: String){
         runOnUiThread {
             if(!isFinishing && !isDestroyed)
-                AlertDialog.Builder(this)
+                MaterialAlertDialogBuilder(this)
                     .setMessage(message)
                     .setTitle(title)
+                    .setCancelable(true)
                     .setPositiveButton("OK"){ dialog, _ ->
                         dialog.dismiss()
                     }

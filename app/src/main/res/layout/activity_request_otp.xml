@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/layoutBackground"
+    android:id="@+id/linear_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="50dp"
+    android:paddingHorizontal="10dp"
     tools:context=".presentation.ui.activities.RequestOtpActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -20,102 +27,59 @@
 
     <TextView
         android:id="@+id/tvRegister"
+        android:fontFamily="@font/hawthorne_vintage"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="6dp"
         android:text="@string/please_enter_your_email_to_get_otp"
-        android:fontFamily="sans-serif"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="22sp" />
+        android:textSize="16sp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="18dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilUsername"
+        android:layout_marginTop="14dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <!-- TextInputLayout for Username -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilUsername"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hintTextColor="?android:attr/textColorPrimary"
-            app:boxStrokeColor="?android:attr/textColorPrimary"
-            app:endIconMode="clear_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btRequestOtp"
-            app:layout_constraintBottom_toTopOf="@+id/tilPassword">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/login_email_hint"
-                android:inputType="textEmailAddress"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp"
-                tools:ignore="ContentDescription" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btRequestOtp"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:text="@string/getOtp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="18sp"
-            app:cornerRadius="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/tilPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tilUsername"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- TextInputLayout for Password -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPassword"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="clear_text">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hintTextColor="?android:attr/textColorPrimary"
-            app:boxStrokeColor="?android:attr/textColorPrimary"
-            app:endIconMode="password_toggle"
-            app:layout_constraintTop_toBottomOf="@+id/tilUsername"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtOtp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/otp"
-                android:inputType="numberPassword"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:hint="@string/login_email_hint"
+            android:inputType="textEmailAddress"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            tools:ignore="ContentDescription" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvGoLogin"
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:text="@string/back_to_login"
         android:textSize="18sp"
         android:textColor="?android:attr/textColorHighlight"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btVerify"
+        android:id="@+id/btRequestOtp"
         style="@style/Widget.Material3.Button.ElevatedButton"
         app:cornerRadius="4dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/verify"
+        android:backgroundTint="@color/dark_blue"
+        android:layout_marginTop="6dp"
+        android:text="@string/sent_code"
         android:textSize="20sp"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+
 
 
 </LinearLayout>

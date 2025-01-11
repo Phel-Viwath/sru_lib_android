@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import android.util.Log
@@ -23,7 +30,10 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val useCase: AuthUseCase
 ): ViewModel(){
+
     var state = MutableStateFlow(AuthState())
+    var isLoading = MutableStateFlow(false)
+
     private val resultChannel = Channel<AuthResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
 
@@ -34,33 +44,23 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(event: AuthEvent) {
         when(event) {
-            is AuthEvent.SignUpUsernameChanged -> {
-                state.value = state.value.copy(signUpUsername = event.value)
-            }
-            is AuthEvent.SignUpEmailChanged -> {
-                state.value = state.value.copy(signUpEmail = event.value)
-            }
-            is AuthEvent.SignUpPasswordChanged -> {
-                state.value = state.value.copy(signUpPassword = event.value)
-            }
-            is AuthEvent.SignUp -> {
-                register()
-            }
+
+            is AuthEvent.SignUpUsernameChanged -> state.value = state.value.copy(signUpUsername = event.value)
+            is AuthEvent.SignUpEmailChanged -> state.value = state.value.copy(signUpEmail = event.value)
+            is AuthEvent.SignUpPasswordChanged -> state.value = state.value.copy(signUpPassword = event.value)
+            is AuthEvent.SignUp -> register()
+
             // SignIn
-            is AuthEvent.SignInUsernameChanged -> {
-                state.value = state.value.copy(signInEmail = event.value)
-            }
-            is AuthEvent.SignInPasswordChanged -> {
-                state.value = state.value.copy(signInPassword = event.value)
-            }
-            is AuthEvent.SignIn -> {
-                logIn()
-            }
+            is AuthEvent.SignInUsernameChanged -> state.value = state.value.copy(signInEmail = event.value)
+            is AuthEvent.SignInPasswordChanged -> state.value = state.value.copy(signInPassword = event.value)
+            is AuthEvent.SignIn -> logIn()
+
         }
     }
 
     private fun logIn() {
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 val result = async {
                     useCase.signinUseCase.invoke(
@@ -73,12 +73,16 @@ class AuthViewModel @Inject constructor(
                 resultChannel.send(result)
             }catch (e: InvalidAuthException){
                 exceptionChanel.send(e.message ?: "An unknown error occurred")
+                Log.d("AuthViewModel", "logIn: ${e.message}")
+            }finally {
+                isLoading.value = false
             }
         }
     }
 
     private fun register() {
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 val result = async {
                     useCase.registerUseCase.invoke(
@@ -92,6 +96,8 @@ class AuthViewModel @Inject constructor(
                 resultChannel.send(result)
             }catch (e: InvalidAuthException){
                 exceptionChanel.send(e.message ?: "An unknown error occurred")
+            }finally {
+                isLoading.value = false
             }
         }
     }
@@ -100,7 +106,6 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 val result = useCase.authenticateUseCase()
-                Log.d("AuthViewModel Result", "authenticateUseCase() returned: $result")
                 resultChannel.send(result)
             } catch (e: Exception) {
                 Log.e("AuthViewModel error", "authenticate() exception: ${e.message}", e)

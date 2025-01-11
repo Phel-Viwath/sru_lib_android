@@ -1,38 +1,42 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.text.SpannableString
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.common.result.AuthResult
+import com.viwath.srulibrarymobile.databinding.ActivityRegisterBinding
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
-import com.viwath.srulibrarymobile.databinding.ActivityRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var loading: Loading
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = Loading(this)
 
-        val nightButtonBackground = R.drawable.night_button_bg
-        val lightButtonBackground = R.drawable.light_button_bg
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        binding.btRegister.setBackgroundResource(if(isDarkMode) nightButtonBackground else lightButtonBackground)
+        //val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         val fullText = getString(R.string.register_login_hint)
         val boldText = "Sign In"
@@ -48,12 +52,12 @@ class RegisterActivity : AppCompatActivity(){
         binding.tvGoSignIn.text = spannable
         binding.tvGoSignIn.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
-            finish()
         }
 
+        // view model
         val state = viewModel.state
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             viewModel.authResult.collect {result ->
                 when(result){
                     is AuthResult.Unauthorized -> {
@@ -64,7 +68,7 @@ class RegisterActivity : AppCompatActivity(){
                     }
                     is AuthResult.Authorize -> {
                         startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-                        finish()
+                        this@RegisterActivity.finish()
                     }
                     is AuthResult.UnknownError -> {
                         dialogMessage(
@@ -112,17 +116,28 @@ class RegisterActivity : AppCompatActivity(){
                 dialogMessage(message = message, title = "Error!")
             }
         }
+
+        lifecycleScope.launch{
+            viewModel.isLoading.collect{
+                runOnUiThread {
+                    if (it) loading.loadingStart()
+                    else loading.loadingDismiss()
+                }
+            }
+        }
     }
 
     private fun dialogMessage(message: String, title: String){
         runOnUiThread {
             if (!isFinishing && !isDestroyed)
-                AlertDialog.Builder(this)
+                MaterialAlertDialogBuilder(this)
                     .setMessage(message)
                     .setTitle(title)
+                    .setCancelable(true)
                     .setPositiveButton("OK"){ dialog, _ ->
                         dialog.dismiss()
-                    }.create()
+                    }
+                    .create()
                     .show()
         }
     }

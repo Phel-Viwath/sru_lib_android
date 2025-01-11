@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.di
 
 import android.content.Context
@@ -24,10 +31,13 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBooksUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetCollegeUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetLanguageUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UploadBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
@@ -71,9 +81,16 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuthApi(): AuthApi {
+        val authOkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(240, TimeUnit.SECONDS)
+            .readTimeout(240, TimeUnit.SECONDS)
+            .writeTimeout(240, TimeUnit.SECONDS)
+            .build()
+
         return Retrofit.Builder()
             .baseUrl(Constant.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(authOkHttpClient)
             .build()
             .create(AuthApi::class.java)
     }
@@ -156,7 +173,10 @@ object AppModule {
             RemoveBookUseCase(repository),
             RecoverBookUseCase(repository),
             GetBookInTrashUseCase(repository),
-            GetSummaryUseCase(repository)
+            GetSummaryUseCase(repository),
+            GetLanguageUseCase(repository),
+            GetCollegeUseCase(repository),
+            UploadBookUseCase(repository)
         )
     }
 }

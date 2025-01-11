@@ -1,16 +1,23 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.annotation.RequiresApi
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +34,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("DEPRECATION")
-@RequiresApi(Build.VERSION_CODES.O)
 class QrEntryFragment: Fragment(){
 
     // binding
@@ -37,6 +43,15 @@ class QrEntryFragment: Fragment(){
     private lateinit var previewView: PreviewView
     private lateinit var cameraAction: CameraPreview
     private lateinit var permission: PermissionRequest
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startCameraWithHandler()
+        } else {
+            Snackbar.make(binding.root, "Camera permission is required to scan QR codes!", Snackbar.LENGTH_LONG).show()
+        }
+    }
     ///
     private var qrCodeResult: String? = null
     private var isResultHandled = false
@@ -75,8 +90,7 @@ class QrEntryFragment: Fragment(){
             binding.tvClickScan.visibility = View.GONE
             if (permission.hasCameraPermission())
                 startCameraWithHandler()
-            else
-                permission.requestPermission(0)
+            else cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
         binding.cameraPreview.setOnClickListener(commonClickListener)
@@ -117,20 +131,6 @@ class QrEntryFragment: Fragment(){
         }
         //// Observe View model
         observerViewModel()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permission.handlePermissionResult(requestCode, grantResults){
-            cameraAction.startCamera { result ->
-                qrCodeResult = result
-            }
-        }
     }
 
     override fun onDestroyView() {

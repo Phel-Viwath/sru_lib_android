@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.data.api
 
 import com.viwath.srulibrarymobile.domain.model.auth.AuthResponse
@@ -32,6 +39,6 @@ interface AuthApi {
     @POST("/api/v1/auth/verify")
     suspend fun verifyOtp(@Query("otp") otp: String): Response<Unit>
 
-    @PUT("/api/v1/auth//change-password")
+    @PUT("/api/v1/auth/change-password")
     suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<Unit>
 }

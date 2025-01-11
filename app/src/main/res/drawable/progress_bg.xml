@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <!--use rotate tag to rotate the drawable-->
 <rotate
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="0"
+    android:fromDegrees="360"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:toDegrees="360">
+    android:toDegrees="0">
 
     <!--shape tag is used to
         build a shape in XML-->

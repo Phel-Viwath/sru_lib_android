@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="16dp"
     android:paddingVertical="8dp"
-    style="@style/RecyclerBackground"
+    android:layout_marginTop="2dp"
+    android:id="@+id/recyclerBookContainer"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -19,22 +27,23 @@
 
     <TextView
         android:id="@+id/tvBookTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
-        android:text="@string/book"
-        android:textSize="18sp"
-        android:maxLines="1"
         android:ellipsize="end"
         android:maxEms="15"
+        android:maxLines="1"
+        android:text="@string/book"
         android:textColor="?android:attr/textColorPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvLanguage"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvLanguage"
         android:text="@string/khmer"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_marginStart="12dp"
         android:layout_width="wrap_content"
@@ -46,7 +55,7 @@
     <TextView
         android:id="@+id/tvBookQuan"
         android:text="@string/zero"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

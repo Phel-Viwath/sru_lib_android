@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.data.repository
 
 import android.util.Log
@@ -64,7 +71,7 @@ class AuthRepositoryImp @Inject constructor(
             if (response.isSuccessful) AuthResult.Authorize()
             else AuthResult.Unauthorized()
         } catch (e: Exception) {
-            Log.e("AuthRepository-Authenticate", "Error:", e)
+            Log.e("AuthRepository-Authenticate", "Error: ${e.message}", e.cause)
             handleError(e)
         }
     }

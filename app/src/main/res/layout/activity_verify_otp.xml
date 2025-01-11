@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="10dp"
+    android:orientation="vertical"
+    android:id="@+id/linearRootLayoutOtp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/sruLogo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/sru_image"
+        android:contentDescription="@string/develop" />
+
+    <TextView
+        android:layout_marginTop="6dp"
+        android:textSize="16sp"
+        android:fontFamily="@font/hawthorne_vintage"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="@string/please_check_your_email_to_get_otp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilOtp"
+        android:layout_marginTop="14dp"
+        app:cursorColor="?android:attr/textColorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="clear_text">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/otp"
+            android:inputType="numberPassword"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvExpDuration"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="end"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btVerifyOtp"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        app:cornerRadius="6dp"
+        android:backgroundTint="@color/dark_blue"
+        android:layout_marginTop="6dp"
+        android:text="@string/verify"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/line"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <TextView
+        android:layout_marginTop="6dp"
+        android:text="@string/receive_code"
+        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvResentCode"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="6dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@color/red"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/resent_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

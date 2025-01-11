@@ -1,3 +1,10 @@
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.SRULibraryMobile" parent="Base.Theme.SRULibraryMobile">
@@ -6,4 +13,13 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
     </style>
+
+    <style name="BoxBackgroundStyle" parent="Base.Theme.SRULibraryMobile">
+        <item name="android:background">@drawable/light_box_bg</item>
+    </style>
+
+    <style name="layoutBackground" parent="Base.Theme.SRULibraryMobile">
+        <item name="android:background">@color/light_background</item>
+    </style>
+
 </resources>

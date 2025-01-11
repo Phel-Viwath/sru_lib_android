@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * @Author Phel Viwath
+ * All rights reserved.
+ *
+ */
+
 package com.viwath.srulibrarymobile.data.api
 
 import android.util.Log
@@ -15,7 +22,6 @@ class AuthInterceptor @Inject constructor(
     private val tokenManager: TokenManager, // Inject TokenManager (TokenManager use to store and get token)
     private val authUseCase: Lazy<AuthUseCase>
 ): Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
@@ -35,13 +41,10 @@ class AuthInterceptor @Inject constructor(
                             .removeHeader("Authorization")
                             .addHeader("Authorization", "Bearer $newToken")
                             .build()
-                        //response.close()
                         response = chain.proceed(newRequest)
                     }
                 }
-
             }
-
         }
         return response
     }
