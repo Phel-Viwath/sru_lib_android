@@ -13,6 +13,7 @@ import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.model.Attend
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
@@ -21,7 +22,6 @@ import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import okhttp3.MultipartBody
 import retrofit2.Response
-import java.io.File
 import javax.inject.Inject
 
 class CoreRepositoryImp @Inject constructor(
@@ -104,7 +104,7 @@ class CoreRepositoryImp @Inject constructor(
         return body?.status ?: throw CoreException("Response body is null")
     }
 
-    override suspend fun addBooks(books: List<BookDto>): Boolean {
+    override suspend fun addBooks(books: List<Book>): Boolean {
         val response = api.addBooks(books)
         Log.d("CoreRepositoryImp", "addBooks: ${response.code()} ${response.message()}")
         return response.code() == 200
@@ -115,7 +115,7 @@ class CoreRepositoryImp @Inject constructor(
         return response
     }
 
-    override suspend fun updateBook(book: BookDto): Boolean {
+    override suspend fun updateBook(book: Book): Boolean {
         val response = api.updateBook(book)
         return response.isSuccessful
     }
@@ -149,6 +149,8 @@ class CoreRepositoryImp @Inject constructor(
 
     override suspend fun moveToTrash(bookId: String): Boolean {
         val response = api.movToTrash(bookId)
+        Log.d("CoreRepositoryImp", "moveToTrash: $bookId")
+        Log.d("CoreRepositoryImp", "moveToTrash: ${response.code()}")
         return response.isSuccessful
     }
 

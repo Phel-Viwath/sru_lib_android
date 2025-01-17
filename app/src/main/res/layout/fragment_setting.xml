@@ -87,7 +87,8 @@
         <!-- Dark Mode Option -->
         <Spinner
             android:id="@+id/themeSpinner"
-            android:spinnerMode="dropdown"
+            android:spinnerMode="dialog"
+            android:padding="13dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

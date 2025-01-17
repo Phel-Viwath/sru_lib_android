@@ -20,23 +20,38 @@
         android:layout_height="160dp"
         android:src="@drawable/sru_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="@+id/tvDevName"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/tvDevName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvDevName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:text="@string/develop"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvServerWakeupMessage"
+        app:layout_constraintEnd_toEndOf="@+id/tvServerWakeupMessage"
+        app:layout_constraintStart_toStartOf="@+id/tvServerWakeupMessage"
+        app:layout_constraintTop_toBottomOf="@id/appCompatImageView"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <TextView
+        android:id="@+id/tvServerWakeupMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="@string/serverNote"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

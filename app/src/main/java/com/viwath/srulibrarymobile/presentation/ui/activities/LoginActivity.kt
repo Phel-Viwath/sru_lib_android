@@ -100,7 +100,7 @@ class LoginActivity : AppCompatActivity(){
                 dialogMessage("Please enter username and password.", "Error!")
                 return@setOnClickListener
             }
-            viewModel.onEvent(AuthEvent.SignInUsernameChanged(email.toString()))
+            viewModel.onEvent(AuthEvent.SignInUsernameChanged(email))
             viewModel.onEvent(AuthEvent.SignInPasswordChanged(password.toString()))
             viewModel.onEvent(AuthEvent.SignIn)
         }

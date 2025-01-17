@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CheckExitingUseCase @Inject constructor(
     private val repository: CoreRepository
 ){
-    suspend operator fun invoke(id: String): Flow<Resource<String>> = flow {
+    operator fun invoke(id: String): Flow<Resource<String>> = flow {
         emit(Resource.Loading())
         try {
             val result = repository.checkExitingAttend(id)

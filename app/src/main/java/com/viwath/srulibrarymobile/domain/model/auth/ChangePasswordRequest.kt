@@ -7,7 +7,10 @@
 
 package com.viwath.srulibrarymobile.domain.model.auth
 
+import com.viwath.srulibrarymobile.domain.model.Email
+import com.viwath.srulibrarymobile.domain.model.Password
+
 data class ChangePasswordRequest(
-    val email: String,
-    val password: String
+    val email: Email,
+    val password: Password
 )

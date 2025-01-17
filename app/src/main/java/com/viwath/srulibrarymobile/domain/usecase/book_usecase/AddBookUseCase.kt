@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class AddBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {
-    operator fun invoke(bookDto: BookDto): Flow< Resource<Unit>> = flow {
+    operator fun invoke(bookDto: Book): Flow< Resource<Unit>> = flow {
         emit(Resource.Loading(Unit))
         try {
             val result = repository.addBooks(listOf(bookDto))

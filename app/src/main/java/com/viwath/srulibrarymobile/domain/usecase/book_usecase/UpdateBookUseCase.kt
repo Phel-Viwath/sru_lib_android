@@ -8,8 +8,10 @@
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -17,18 +19,19 @@ import javax.inject.Inject
 class UpdateBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ){
-    suspend operator fun invoke(bookDto: BookDto): Resource<Boolean> {
-        Resource.Loading(Unit)
-        return try {
-            val result = repository.updateBook(bookDto)
+    operator fun invoke(book: Book): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        try {
+            val result = repository.updateBook(book)
             if (result)
-                Resource.Success(true)
-            else
-                Resource.Error("Update error!")
+                emit(Resource.Success(true))
+            else {
+                emit(Resource.Error("Update error!"))
+            }
         }catch (e: HttpException){
-            Resource.Error(e.localizedMessage ?: "An HTTP error occurred.")
+            emit(Resource.Error(e.localizedMessage ?: "An HTTP error occurred."))
         }catch (e: IOException){
-            Resource.Error("Couldn't reach the server. Check your connection.")
+            emit(Resource.Error("Couldn't reach the server. Check your connection."))
         }
     }
 }

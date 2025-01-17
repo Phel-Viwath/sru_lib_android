@@ -10,6 +10,7 @@ package com.viwath.srulibrarymobile.data.api
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.model.Attend
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
@@ -65,13 +66,15 @@ interface CoreApi {
     @GET("/api/v1/book/about-book-data")
     suspend fun getSummaryBook(): Response<BookSummary>
     @POST("/api/v1/book")
-    suspend fun addBooks(@Body books: List<BookDto>): Response<Unit>
-    @GET("/api/v1/book")
+    suspend fun addBooks(@Body books: List<Book>): Response<Unit>
+    @GET("/api/v1/book/current-book")
     suspend fun getBooks(): List<BookDto>
     @PUT("/api/v1/book")
-    suspend fun updateBook(@Body book: BookDto): Response<BookDto>
-    @PUT("/api/v1/trash")
+    suspend fun updateBook(@Body book: Book): Response<BookDto>
+
+    @PUT("/api/v1/book/trash")
     suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
+
     @PUT("/api/v1/recover")
     suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
     @GET("/api/v1/in-trash")

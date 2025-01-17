@@ -51,8 +51,8 @@ class BookFragment : Fragment(R.layout.fragment_book){
             getString(R.string.backup)
         )
 
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val cardList = listOf(binding.cardTotalBook, binding.cardDonateBook, binding.cardBorrow, binding.cardExp, binding.cardBorrowToday, binding.cardReturn)
+//        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+//        val cardList = listOf(binding.cardTotalBook, binding.cardDonateBook, binding.cardBorrow, binding.cardExp, binding.cardBorrowToday, binding.cardReturn)
 
         binding.viewPagerBook.adapter = ViewPagerAdapter(fragmentList, requireActivity())
         TabLayoutMediator(binding.tabLayout, binding.viewPagerBook){tab, position ->

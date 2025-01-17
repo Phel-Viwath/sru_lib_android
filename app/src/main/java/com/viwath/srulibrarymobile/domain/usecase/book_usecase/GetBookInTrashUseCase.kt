@@ -9,10 +9,10 @@ package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject

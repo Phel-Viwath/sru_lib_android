@@ -25,8 +25,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,8 +39,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
-import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.databinding.FragmentBookTabBinding
+import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.presentation.event.BookTabEvent
@@ -51,6 +55,12 @@ import com.viwath.srulibrarymobile.utils.PermissionRequest
 import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.launch
 
+/**
+ * This Fragment displays a list of books and provides functionalities to add, update, and delete books.
+ * It interacts with a [BookTabViewModel] to manage the book data and handle events.
+ *
+ * The Fragment also handles file selection for book uploads, storage permissions, and
+ * displays UI elements such as a */
 @Suppress("DEPRECATION")
 class BookTabFragment : Fragment() {
 
@@ -101,6 +111,21 @@ class BookTabFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBookTabBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.edtSearch.isFocused){
+                        binding.edtSearch.clearFocus()
+                    }
+                    else{
+                        isEnabled = false
+                        activity?.onBackPressed()
+                    }
+                }
+            }
+        )
         return binding.root
     }
 
@@ -113,6 +138,8 @@ class BookTabFragment : Fragment() {
         setupUI()
         observeViewModel(isDarkMode)
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -141,12 +168,12 @@ class BookTabFragment : Fragment() {
         }
 
         binding.rootLayout.setOnTouchListener { _, _ ->
-            binding.edtSearch.clearFocus()
+            //binding.edtSearch.clearFocus()
             hideKeyboard()
             false
         }
 
-        binding.fabAddBook.setOnClickListener { showAddBookModal() }
+        binding.fabAddBook.setOnClickListener { showAddUpdateBookModal() }
     }
     /// viewModel state and event
     private fun observeViewModel(isDarkMode: Boolean) {
@@ -202,29 +229,39 @@ class BookTabFragment : Fragment() {
         }
 
     }
-    private fun setupRecyclerView(books: List<BookDto>, isDarkMode: Boolean) {
+    private fun setupRecyclerView(books: List<Book>, isDarkMode: Boolean) {
         binding.recyclerBook.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerBook.adapter = BookRecyclerViewAdapter(books, isDarkMode){
-            showToast(it.bookTitle)
+        binding.recyclerBook.adapter = BookRecyclerViewAdapter(requireContext() ,books, isDarkMode){ book, action ->
+           when(action){
+               "update" -> showAddUpdateBookModal(book)
+               "delete" -> dialogDelete(book.bookId)
+               "borrow" -> showToast("Borrow ${book.bookTitle}")
+           }
         }
     }
 
     private fun startLoading(): Unit = loading.loadingStart() // Start loading animation
     private fun stopLoading(): Unit = loading.loadingDismiss() // Stop loading animation
-    private fun showToast(message: String): Unit = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    private fun showToast(message: String): Unit = requireActivity().runOnUiThread{
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
     private fun hideKeyboard() {
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+        binding.edtSearch.clearFocus()
     }
 
-    private fun showAddBookModal() {
+    private fun showAddUpdateBookModal(book: Book? = null) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.modal_add_book, null)
+        val btUploadFile = dialogView.findViewById<MaterialButton>(R.id.btUploadFile)
+        if (book != null){
+            btUploadFile.isVisible = false
+        }
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
             .setCancelable(true)
             .create()
-
         this.dialog = dialog
 
         dialog.setOnShowListener{
@@ -237,8 +274,9 @@ class BookTabFragment : Fragment() {
 
         val inputs = ModalAddBook(dialogView)
         inputs.setupSpinners(requireContext(), _languages, _colleges) // Initialize dropdowns
-        val btUploadFile = dialogView.findViewById<MaterialButton>(R.id.btUploadFile)
-
+        book?.let {
+            inputs.populateBookData(it)
+        }
         dialogView.findViewById<MaterialButton>(R.id.btAddBook).setOnClickListener {
             if (fileUri != null){
                 val newFile = fileUri?.uriToFile(requireContext()) ?: return@setOnClickListener
@@ -254,16 +292,32 @@ class BookTabFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            viewModel.apply {
-                onEvent(BookTabEvent.BookIdChange(bookId))
-                onEvent(BookTabEvent.BookTittleChange(title))
-                onEvent(BookTabEvent.AuthorChange(author))
-                onEvent(BookTabEvent.GenreChange(genre))
-                onEvent(BookTabEvent.PublicYearChange(year))
-                onEvent(BookTabEvent.QuanChange(quan))
-                onEvent(BookTabEvent.CollegeChange(collegeId))
-                onEvent(BookTabEvent.LanguageChange(languageId))
-                onEvent(BookTabEvent.SaveBook)
+            if (book == null) {
+                // Add new book
+                viewModel.apply {
+                    onEvent(BookTabEvent.BookIdChange(bookId))
+                    onEvent(BookTabEvent.BookTittleChange(title))
+                    onEvent(BookTabEvent.AuthorChange(author))
+                    onEvent(BookTabEvent.GenreChange(genre))
+                    onEvent(BookTabEvent.PublicYearChange(year))
+                    onEvent(BookTabEvent.QuanChange(quan))
+                    onEvent(BookTabEvent.CollegeChange(collegeId))
+                    onEvent(BookTabEvent.LanguageChange(languageId))
+                    onEvent(BookTabEvent.SaveBook)
+                }
+            } else {
+                // Update existing book
+                viewModel.apply {
+                    onEvent(BookTabEvent.BookIdChange(bookId))
+                    onEvent(BookTabEvent.BookTittleChange(title))
+                    onEvent(BookTabEvent.AuthorChange(author))
+                    onEvent(BookTabEvent.GenreChange(genre))
+                    onEvent(BookTabEvent.PublicYearChange(year))
+                    onEvent(BookTabEvent.QuanChange(quan))
+                    onEvent(BookTabEvent.CollegeChange(collegeId))
+                    onEvent(BookTabEvent.LanguageChange(languageId))
+                    onEvent(BookTabEvent.UpdateBook)
+                }
             }
 
             dialog.dismiss()
@@ -322,6 +376,22 @@ class BookTabFragment : Fragment() {
 
     private fun dismissProgressDialog() {
         progressDialog?.dismiss()
+    }
+
+    private fun dialogDelete(bookId: BookId){
+        viewModel.onEvent(BookTabEvent.BookIdChange(bookId))
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete")
+            .setMessage("Are you sure you want to delete this book?")
+            .setCancelable(true)
+            .setPositiveButton("Delete"){d, _ ->
+                viewModel.onEvent(BookTabEvent.Remove)
+            }
+            .setNegativeButton("Cancel"){d, _ ->
+                d.dismiss()
+            }.create()
+            .show()
+
     }
 
 

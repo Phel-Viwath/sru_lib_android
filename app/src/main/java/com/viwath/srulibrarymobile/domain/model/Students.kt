@@ -8,11 +8,11 @@
 package com.viwath.srulibrarymobile.domain.model
 
 data class Students(
-    val studentId: Long?,
-    val studentName: String,
-    val gender: String,
-    val dateOfBirth: String,
-    val degreeLevel: String,
-    val majorName: String,
-    val generation: Int
+    val studentId: StudentId?,
+    val studentName: StudentName,
+    val gender: Gender,
+    val dateOfBirth: DateOfBirth,
+    val degreeLevel: DegreeLevel,
+    val majorName: MajorName,
+    val generation: Generation
 )

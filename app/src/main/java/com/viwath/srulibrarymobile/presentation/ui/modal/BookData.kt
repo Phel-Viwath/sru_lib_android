@@ -13,5 +13,5 @@ data class BookData(
     val author: String,
     val genre: String,
     val publicationYear: Int,
-    val quantity: Int
+    val quan: Int
 )

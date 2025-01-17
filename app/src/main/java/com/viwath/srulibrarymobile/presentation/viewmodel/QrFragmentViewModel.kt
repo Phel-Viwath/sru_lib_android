@@ -7,6 +7,7 @@
 
 package com.viwath.srulibrarymobile.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
@@ -16,8 +17,6 @@ import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ import javax.inject.Inject
 class QrFragmentViewModel @Inject constructor(
     private val useCase: EntryUseCase
 ): ViewModel(){
-    private val _state = MutableStateFlow<QrFragmentState>(QrFragmentState.Empty)
+    private val _state = MutableStateFlow<QrFragmentState>(QrFragmentState.Idle)
     val state: StateFlow<QrFragmentState> get() = _state
 
     init {
@@ -71,19 +70,21 @@ class QrFragmentViewModel @Inject constructor(
     }
 
     private fun getRecentEntryData(){
-        useCase.recentEntryUseCase().onEach { result ->
-            when(result){
-                is Resource.Loading -> {
-                    _state.value = QrFragmentState.Loading
-                }
-                is Resource.Success -> {
-                    _state.value = QrFragmentState.EntryState(result.data)
-                }
-                is Resource.Error -> {
-                    _state.value = QrFragmentState.Error(result.message)
+        viewModelScope.launch{
+            useCase.recentEntryUseCase().collect { result ->
+                when(result){
+                    is Resource.Loading -> {
+                        _state.value = QrFragmentState.Loading
+                    }
+                    is Resource.Success -> {
+                        _state.value = QrFragmentState.EntryState(result.data)
+                    }
+                    is Resource.Error -> {
+                        _state.value = QrFragmentState.Error(result.message)
+                    }
                 }
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     private fun checkExitingTime(studentId: String){
@@ -93,7 +94,9 @@ class QrFragmentViewModel @Inject constructor(
                     is Resource.Loading -> _state.value = QrFragmentState.Loading
                     is Resource.Error -> _state.value = QrFragmentState.Error(it.message ?: "Unknown error.")
                     is Resource.Success -> {
-                        if (it.data == "new attend!" || it.data == "exited"){
+                        val isNewAttend = it.data == "new attend!" || it.data == "exited"
+                        Log.d("QrFragmentViewModel", "checkExitingTime: $isNewAttend")
+                        if (isNewAttend){
                             loadStudent(studentId.toLong())
                         }
                         else{

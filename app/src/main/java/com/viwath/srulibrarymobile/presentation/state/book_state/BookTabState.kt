@@ -7,7 +7,7 @@
 
 package com.viwath.srulibrarymobile.presentation.state.book_state
 
-import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import java.io.File
@@ -16,7 +16,7 @@ data class BookTabState(
     val isLoading: Boolean = false,
     val error: String = "",
     //load book
-    val books: List<BookDto> = emptyList(),
+    val books: List<Book> = emptyList(),
     // load language and college
     val college: List<College> = emptyList(),
     val language: List<Language> = emptyList(),

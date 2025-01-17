@@ -14,8 +14,11 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.google.android.material.textfield.TextInputEditText
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.CollegeId
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.LanguageId
 
 class ModalAddBook(view: View) {
     private val edtBookId: TextInputEditText = view.findViewById(R.id.edtBookId)
@@ -27,11 +30,18 @@ class ModalAddBook(view: View) {
     private val spinnerLanguage: Spinner = view.findViewById(R.id.spinnerLanguage)
     private val spinnerCollege: Spinner = view.findViewById(R.id.spinnerCollege)
 
+    private val _languages: MutableList<Language> = mutableListOf()
+    private val _college: MutableList<College> = mutableListOf()
+
     private var collegeId: String = ""
     private var languageId: String = ""
 
     // Setup dropdown menus for languages and colleges
     fun setupSpinners(context: Context, languages: List<Language>, colleges: List<College>) {
+        _languages.clear()
+        _college.clear()
+        _languages.addAll(languages)
+        _college.addAll(colleges)
         val spinnerLayout = android.R.layout.simple_spinner_dropdown_item
 
         val languageAdapter = ArrayAdapter(context, spinnerLayout, languages.map { it.languageName })
@@ -44,7 +54,6 @@ class ModalAddBook(view: View) {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 languageId = languages[position].languageId // Save selected language ID
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -52,7 +61,6 @@ class ModalAddBook(view: View) {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 collegeId = colleges[position].collegeId // Save selected college ID
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -67,8 +75,28 @@ class ModalAddBook(view: View) {
         return BookData(bookId, title, author, genre, year, quan)
     }
 
-    fun getSelectedIds(): Pair<String, String> {
+    fun getSelectedIds(): Pair<CollegeId, LanguageId> {
         return Pair(collegeId, languageId)
+    }
+
+    fun populateBookData(book: Book){
+        edtBookId.setText(book.bookId)
+        edtTitle.setText(book.bookTitle)
+        edtAuthor.setText(book.author ?: "") // Handle nullable author
+        edtGenre.setText(book.genre)
+        edtPublicYear.setText(book.publicationYear?.toString() ?: "") // Handle nullable publication year
+        edtQuan.setText("${book.bookQuan}")
+        collegeId = book.collegeId
+        languageId = book.languageId
+
+        val languagePosition = (spinnerLanguage.adapter as ArrayAdapter<String>).getPosition(
+            _languages.find { it.languageId == book.languageId }?.languageName ?: ""
+        )
+        spinnerLanguage.setSelection(languagePosition)
+        val collegePosition = (spinnerCollege.adapter as ArrayAdapter<String>).getPosition(
+            _college.find { it.collegeId == book.collegeId }?.collegeName ?: ""
+        )
+        spinnerCollege.setSelection(collegePosition)
     }
 
 }

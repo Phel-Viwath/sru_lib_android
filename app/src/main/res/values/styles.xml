@@ -12,4 +12,8 @@
         <item name="cornerSize">20dp</item>
         <item name="color">@color/white</item>
     </style>
+
+    <style name="BottomNavTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11sp</item>  <!-- Reduce text size -->
+    </style>
 </resources>

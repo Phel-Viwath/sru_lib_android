@@ -565,13 +565,6 @@
                     </HorizontalScrollView>
 
                 </LinearLayout>
-                <!--   space -->
-                <LinearLayout
-                    android:id="@+id/linearSpace"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:orientation="vertical"
-                    android:background="@android:color/transparent"/>
                 <!--  Parent  -->
             </LinearLayout>
         </ScrollView>

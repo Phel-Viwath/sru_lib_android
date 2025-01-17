@@ -94,7 +94,7 @@ class EntryRecycleViewAdapter(
         dialogView.findViewById<TextView>(R.id.tvGeneration).text = "${item.generation}"
         dialogView.findViewById<TextView>(R.id.tvEntryTime).text = item.entryTimes
         dialogView.findViewById<TextView>(R.id.tvExitingTime).text = item.exitingTimes ?: "N/A"
-        dialogView.findViewById<TextView>(R.id.tvPurpose).text = item.purpose
+        dialogView.findViewById<TextView>(R.id.tvPurpose).setTruncateText(item.purpose)
         dialogView.findViewById<TextView>(R.id.tvStatus).text = item.status
         if(item.status == "OUT"){
             dialogView.findViewById<TextView>(R.id.tvStatus).setTextColor(Color.RED)
@@ -106,6 +106,10 @@ class EntryRecycleViewAdapter(
         dialog.setBackground(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(true)
         dialog.show()
+    }
+
+    private fun TextView.setTruncateText(text: String, maxLength: Int = 15) {
+        this.text = if (text.length > 15) text.substring(0, maxLength) + "..." else text
     }
 
     companion object {

@@ -12,6 +12,8 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentQrBinding
 import com.viwath.srulibrarymobile.presentation.event.QrEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
@@ -33,6 +36,21 @@ import com.viwath.srulibrarymobile.utils.PermissionRequest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * QrEntryFragment is a Fragment responsible for handling QR code scanning and student attendance entry.
+ * It allows users to scan a QR code, retrieve student information, select the purpose of the visit,
+ * and save the attendance record.
+ *
+ * This fragment utilizes:
+ *   - CameraX for camera preview and QR code scanning.
+ *   - ViewModel for managing UI state and business logic.
+ *   - Data Binding for connecting UI elements to data.
+ *   - Coroutines for handling asynchronous tasks.
+ *   - Android's permission system for camera access.
+ *   - UI elements for displaying loading indicators, success messages, and error alerts.
+ *   - Custom classes like CameraPreview, Loading, and PermissionRequest to handle
+ *     camera functionality, loading states, and permission handling respectively.
+ */
 @Suppress("DEPRECATION")
 class QrEntryFragment: Fragment(){
 
@@ -43,6 +61,7 @@ class QrEntryFragment: Fragment(){
     private lateinit var previewView: PreviewView
     private lateinit var cameraAction: CameraPreview
     private lateinit var permission: PermissionRequest
+    private lateinit var loading: Loading
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -78,6 +97,7 @@ class QrEntryFragment: Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loading = Loading(requireActivity())
 
         // check if dark mode or not
         val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -127,7 +147,11 @@ class QrEntryFragment: Fragment(){
 
         /// Refresh layout
         binding.swipeRefresh.setOnRefreshListener {
-            resetLayout()
+            Handler(Looper.getMainLooper()).postDelayed({
+                viewModel
+                resetLayout()
+            }, 1000)
+
         }
         //// Observe View model
         observerViewModel()
@@ -138,6 +162,7 @@ class QrEntryFragment: Fragment(){
         if (::cameraAction.isInitialized){
             cameraAction.stopCamera()
         }
+        loading.loadingDismiss()
     }
     //// End override method
 
@@ -168,13 +193,10 @@ class QrEntryFragment: Fragment(){
     private fun observerViewModel(){
         viewModel.state.onEach { state ->
             when(state){
-                is QrFragmentState.Empty -> {
-                    //binding.swipeRefresh.isRefreshing = true
-                }
-                is QrFragmentState.Loading -> {
-                    //binding.swipeRefresh.isRefreshing = true
-                }
+                is QrFragmentState.Idle -> {}
+                is QrFragmentState.Loading -> startLoading()
                 is QrFragmentState.StudentLoaded -> {
+                    stopLoading()
                     binding.edtId.setText(studentId.toString())
                     binding.edtStuName.setText(state.student.studentName)
                     binding.edtMajor.setText(state.student.majorName)
@@ -182,10 +204,10 @@ class QrEntryFragment: Fragment(){
                     binding.edtId.isEnabled = false
                     binding.edtStuName.isEnabled = false
                     binding.edtMajor.isEnabled = false
-
                     binding.swipeRefresh.isRefreshing = false
                 }
                 is QrFragmentState.Error -> {
+                    stopLoading()
                     binding.swipeRefresh.isRefreshing = false
                     Log.d("QRFragment", "observerViewModel: ${state.message}")
                     AlertDialog.Builder(requireContext())
@@ -199,11 +221,13 @@ class QrEntryFragment: Fragment(){
                         .show()
                 }
                 is QrFragmentState.AttentionSaved -> {
+                    stopLoading()
                     binding.swipeRefresh.isRefreshing = false
                     showSuccessMessage()
                     onButtonClearClick()
                 }
                 is QrFragmentState.EntryState -> state.entry?.let {
+                    stopLoading()
                     binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
                     binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
                     binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
@@ -289,9 +313,14 @@ class QrEntryFragment: Fragment(){
         studentId = null
         previewView.visibility = View.GONE
         previewView.visibility = View.VISIBLE
-        if (permission.hasCameraPermission()) {
-            startCameraWithHandler()
-        }
     }
+
+    private fun startLoading(): Unit = requireActivity().runOnUiThread{
+        loading.loadingStart()
+    }
+    private fun stopLoading(): Unit = requireActivity().runOnUiThread{
+        loading.loadingDismiss()
+    }
+
 
 }

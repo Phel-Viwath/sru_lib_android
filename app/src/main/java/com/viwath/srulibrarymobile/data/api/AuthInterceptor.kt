@@ -10,45 +10,87 @@ package com.viwath.srulibrarymobile.data.api
 import android.util.Log
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.utils.TokenManager
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-@OptIn(DelicateCoroutinesApi::class)
 class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager, // Inject TokenManager (TokenManager use to store and get token)
+    private val tokenManager: TokenManager,
     private val authUseCase: Lazy<AuthUseCase>
-): Interceptor {
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-        val requestBuilder = originalRequest.newBuilder()
-        tokenManager.getAccessToken()?.let { token ->
-            requestBuilder.addHeader("Authorization", "Bearer $token")
-        }
-        var response = chain.proceed(requestBuilder.build())
-        if (response.code == 401){
-            response.close()
-            synchronized(this){
-                GlobalScope.launch {
-                    val newAccessToken = authUseCase.value.refreshTokenUseCase()
-                    Log.d("AuthInterceptor", "access token: $newAccessToken")
-                    if (newAccessToken){
-                        val newToken = tokenManager.getAccessToken() ?: return@launch
-                        val newRequest = requestBuilder
-                            .removeHeader("Authorization")
-                            .addHeader("Authorization", "Bearer $newToken")
-                            .build()
-                        response = chain.proceed(newRequest)
-                    }
+        Log.d("AuthInterceptor", "intercept: Called")
+        return runBlocking {
+            val originalRequest = chain.request()
+            val requestBuilder = originalRequest.newBuilder()
+
+            // Try with existing token first
+            tokenManager.getAccessToken()?.let { token ->
+                requestBuilder.addHeader("Authorization", "Bearer $token")
+            }
+
+            var response = chain.proceed(requestBuilder.build())
+
+            // Handle 401 by refreshing token and retrying once
+            if (response.code == 401) {
+                response.close()
+
+                // Refresh token synchronously
+                val newAccessToken = authUseCase.value.refreshTokenUseCase()
+                Log.d("AuthInterceptor", "access token: $newAccessToken")
+
+                if (newAccessToken) {
+                    val newToken = tokenManager.getAccessToken()
+                        ?: throw IllegalStateException("Token refresh succeeded but no token found")
+
+                    // Create new request with new token
+                    val newRequest = originalRequest.newBuilder()
+                        .removeHeader("Authorization")
+                        .addHeader("Authorization", "Bearer $newToken")
+                        .build()
+
+                    // Return new response
+                    return@runBlocking chain.proceed(newRequest)
                 }
             }
+
+            response
         }
-        return response
     }
 }
+
+//class AuthInterceptor @Inject constructor(
+//    private val tokenManager: TokenManager, // Inject TokenManager (TokenManager use to store and get token)
+//    private val authUseCase: Lazy<AuthUseCase>
+//): Interceptor {
+//    override fun intercept(chain: Interceptor.Chain): Response {
+//        val originalRequest = chain.request()
+//        val requestBuilder = originalRequest.newBuilder()
+//        tokenManager.getAccessToken()?.let { token ->
+//            requestBuilder.addHeader("Authorization", "Bearer $token")
+//        }
+//        var response = chain.proceed(requestBuilder.build())
+//        if (response.code == 401){
+//            response.close()
+//            synchronized(this){
+//                GlobalScope.launch {
+//                    val newAccessToken = authUseCase.value.refreshTokenUseCase()
+//                    Log.d("AuthInterceptor", "access token: $newAccessToken")
+//                    if (newAccessToken){
+//                        val newToken = tokenManager.getAccessToken() ?: return@launch
+//                        val newRequest = requestBuilder
+//                            .removeHeader("Authorization")
+//                            .addHeader("Authorization", "Bearer $newToken")
+//                            .build()
+//                        response = chain.proceed(newRequest)
+//                    }
+//                }
+//            }
+//        }
+//        return response
+//    }
+//}
 
 //class AuthInterceptor @Inject constructor(
 //    private val tokenManager: TokenManager,

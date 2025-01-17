@@ -7,30 +7,32 @@
 
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
-import com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment
-import com.viwath.srulibrarymobile.presentation.ui.fragment.DashboardFragment
-import com.viwath.srulibrarymobile.presentation.ui.fragment.QrEntryFragment
-import com.viwath.srulibrarymobile.presentation.ui.fragment.SettingFragment
-import com.viwath.srulibrarymobile.presentation.ui.fragment.StudentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * The main activity of the application.
+ *
+ * This activity serves as the entry point for the application and manages the navigation
+ * between different fragments using the Navigation component. It utilizes a bottom
+ * navigation view to provide easy access to the main sections of the app.
+ *
+ * @property binding The view binding for the activity's layout.
+ * @property navController The navigation controller for managing fragment transitions.
+ * @property activeFragmentTag The tag of the currently active fragment, used for state restoration.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var dashboardFragment: DashboardFragment
-    private lateinit var qrEntryFragment: QrEntryFragment
-    private lateinit var bookFragment: BookFragment
-    private lateinit var settingFragment: SettingFragment
-    private lateinit var studentFragment: StudentFragment
+    private lateinit var navController: NavController
 
     private var activeFragmentTag: String? = null
 
@@ -39,46 +41,32 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // init fragment
-        dashboardFragment = DashboardFragment()
-        qrEntryFragment = QrEntryFragment()
-        bookFragment = BookFragment()
-        settingFragment = SettingFragment()
-        studentFragment = StudentFragment()
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        binding.bottomNavView.background = null
-
-        if (savedInstanceState == null){
-            loadFragment(dashboardFragment, DashboardFragment::class.java.simpleName)
-            Log.d("SavedInstanceState", "onCreate: $activeFragmentTag")
-        }else{
-            activeFragmentTag = savedInstanceState.getString(ACTIVE_FRAGMENT_TAG)
-            activeFragmentTag?.let { restoreFragment(it) }
-        }
+        binding.bottomNavView.setupWithNavController(navController)
 
         binding.bottomNavView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.btDashboard -> {
-                    loadFragment(dashboardFragment, DashboardFragment::class.java.simpleName)
+                R.id.nav_dashboard -> {
+                    navController.navigate(R.id.nav_dashboard)
                     true
                 }
-                R.id.btQrEntry -> {
-                    loadFragment(qrEntryFragment, QrEntryFragment::class.java.simpleName)
+                R.id.nav_entry -> {
+                    navController.navigate(R.id.nav_entry)
                     true
                 }
-                R.id.btSetting -> {
-                    // Load setting fragment
-                    loadFragment(settingFragment, SettingFragment::class.java.simpleName)
+                R.id.nav_book -> {
+                    navController.navigate(R.id.nav_book)
                     true
                 }
-                R.id.btStudent -> {
-                    // Load student fragment
-                    loadFragment(studentFragment, StudentFragment::class.java.simpleName)
+                R.id.nav_student -> {
+                    navController.navigate(R.id.nav_student)
                     true
                 }
-                R.id.btBook -> {
-                    // Load book fragment
-                    loadFragment(bookFragment, BookFragment::class.java.simpleName)
+                R.id.nav_setting -> {
+                    navController.navigate(R.id.nav_setting)
                     true
                 }
                 else -> false
@@ -91,36 +79,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(ACTIVE_FRAGMENT_TAG, activeFragmentTag)
-    }
-
-    // load fragment
-    private fun loadFragment(fragment: Fragment, tag: String){
-        if (activeFragmentTag != tag) {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentFrame, fragment, tag)
-                addToBackStack(null)
-                commit()
-            }
-            activeFragmentTag = tag
-        }
-    }
-
-    // restore fragment
-    private fun restoreFragment(tag: String){
-        val fragment = supportFragmentManager.findFragmentByTag(tag)
-        if (fragment != null){
-            loadFragment(fragment, tag)
-        }else {
-            // Create a new fragment instance if it's missing
-            val newFragment = when (tag) {
-                DashboardFragment::class.java.simpleName -> dashboardFragment
-                QrEntryFragment::class.java.simpleName -> qrEntryFragment
-                BookFragment::class.java.simpleName -> bookFragment
-                SettingFragment::class.java.simpleName -> settingFragment
-                else -> dashboardFragment // Fallback to dashboard
-            }
-            loadFragment(newFragment, tag)
-        }
     }
 
     fun hideBottomNav() {

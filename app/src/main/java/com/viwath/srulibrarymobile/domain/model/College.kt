@@ -8,6 +8,6 @@
 package com.viwath.srulibrarymobile.domain.model
 
 data class College (
-     val collegeId: String,
-     val collegeName: String
+     val collegeId: CollegeId,
+     val collegeName: CollegeName
 )

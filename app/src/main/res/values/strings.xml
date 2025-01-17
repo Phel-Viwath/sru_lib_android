@@ -158,6 +158,7 @@
     </string-array>
 
     <string name="develop">Develop by Viwath.</string>
+    <string name="serverNote">Please wait 1 to 2 minutes for the server to wake up. Thank you for your patience!</string>
     <string name="upload_exel">Upload File</string>
 
     <string name="title">Title</string>
@@ -172,4 +173,8 @@
     <string name="public_year">Publication Year</string>
     <string name="book_quan">Book Quan</string>
     <string name="submit">Submit</string>
+
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="borrow">Borrow</string>
 </resources>

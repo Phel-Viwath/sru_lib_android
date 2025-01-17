@@ -7,6 +7,8 @@
 
 package com.viwath.srulibrarymobile.domain.model.auth
 
+import com.viwath.srulibrarymobile.domain.model.RefreshToken
+
 data class RefreshToken (
-    val refreshToken: String
+    val refreshToken: RefreshToken
 )

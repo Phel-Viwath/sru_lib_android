@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2025.
-  ~ @Author Phel Viwath
-  ~ All rights reserved.
-  ~
-  -->
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,6 +15,7 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -155,13 +149,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/grid_layout"
-                    android:padding="@dimen/fab_margin"
+                    android:padding="16dp"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <RelativeLayout
                         android:id="@+id/relativeCamera"
-                        android:padding="@dimen/fab_margin"
+                        android:padding="8dp"
                         android:background="@drawable/night_box_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -186,7 +180,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="200dp">
                             <androidx.camera.view.PreviewView
-                                android:id="@+id/camera_preview"
+                                android:id="@+id/cameraPreview"
                                 android:background="@drawable/glass_background"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"/>
@@ -226,13 +220,13 @@
 
                 <LinearLayout
                     android:id="@+id/linearStudentDetail"
-                    android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:layout_margin="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/linearCameraFrame"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/night_box_bg"
-                    android:padding="@dimen/fab_margin"
+                    android:padding="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -362,23 +356,8 @@
                             android:layout_columnWeight="1"
                             android:text="@string/cancel" />
                     </GridLayout>
-
                 </LinearLayout>
-                <!--   space -->
-                <LinearLayout
-                    app:layout_constraintTop_toBottomOf="@+id/linearStudentDetail"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:id="@+id/linearSpace"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:orientation="vertical"
-                    android:background="@android:color/transparent"/>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

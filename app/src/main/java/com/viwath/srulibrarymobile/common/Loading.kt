@@ -21,6 +21,7 @@ class Loading(private val activity: Activity) {
         val view = inflater.inflate(R.layout.layout_loading, null)
         builder.setView(view)
         dialog = builder.create()
+        dialog?.setCancelable(false)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog?.show()
     }

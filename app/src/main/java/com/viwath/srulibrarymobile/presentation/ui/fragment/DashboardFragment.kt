@@ -21,10 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
@@ -40,7 +36,6 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
@@ -52,6 +47,7 @@ import com.viwath.srulibrarymobile.domain.model.dashboard.TotalMajorVisitor
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.StudentState
 import com.viwath.srulibrarymobile.presentation.ui.adapter.EntryRecycleViewAdapter
+import com.viwath.srulibrarymobile.presentation.ui.modal.ModalEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,10 +86,11 @@ class DashboardFragment : Fragment() {
         /// swipe refresh
         binding.swipeRefresh.setColorSchemeResources(R.color.red, R.color.green, R.color.orange)
         binding.swipeRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.swipeRefresh.setColorSchemeResources(android.R.color.transparent)
         binding.swipeRefresh.setOnRefreshListener {
             Handler(Looper.getMainLooper()).postDelayed({
                 viewModel.getDashboard()
-            }, 3000)
+            }, 1000)
         }
 
         ////////////////
@@ -368,58 +365,34 @@ class DashboardFragment : Fragment() {
     //////////
     @SuppressLint("SetTextI18n")
     private fun showModal(context: Context, isDarkMode: Boolean){
-        // purpose option
-        val purposes = mutableListOf<String>()
-        val usePC = "Use PC"
-        val reading = "Reading"
-        val assignment = "Assignment"
-        val other = "Other"
 
-        val view = LayoutInflater.from(context).inflate( R.layout.modal_entry, null)
+        val dialogView = LayoutInflater.from(context).inflate( R.layout.modal_entry, null)
         // change view background
-        view.setBackgroundColor(if (isDarkMode) Color.BLACK else Color.WHITE)
+        dialogView.setBackgroundColor(if (isDarkMode) Color.BLACK else Color.WHITE)
         // create dialog
         val dialog = MaterialAlertDialogBuilder(context)
-            .setView(view)
+            .setView(dialogView)
             .setCancelable(true)
             .create()
 
+        val input = ModalEntry(dialogView)
+
         //button
-        val btnFind = view.findViewById<ImageButton>(R.id.btFind)
-        val btEntry = view.findViewById<Button>(R.id.btn_submit)
-        btnFind.setImageResource(if (isDarkMode) R.drawable.ic_light_search_24 else R.drawable.ic_night_search_24)
-        // TextView and EditText
-        val edtStudentId = view.findViewById<EditText>(R.id.et_student_id)
-        val tvStudentName = view.findViewById<TextView>(R.id.tv_student_name)
-        val tvMajorName = view.findViewById<TextView>(R.id.tv_major_name)
-        val tvGeneration = view.findViewById<TextView>(R.id.tv_generation)
-        // radio button
-        val cbReading = view.findViewById<MaterialCheckBox>(R.id.rb_read_book)
-        val cbAssignment = view.findViewById<MaterialCheckBox>(R.id.rb_assignment)
-        val cbUsePc= view.findViewById<MaterialCheckBox>(R.id.rb_use_pc)
-        val cbOther = view.findViewById<MaterialCheckBox>(R.id.rb_other)
-
-
-        btnFind.setOnClickListener {
-            val studentId = edtStudentId.text.toString().toLongOrNull()
+        input.btnFind.setImageResource(if (isDarkMode) R.drawable.ic_light_search_24 else R.drawable.ic_night_search_24)
+        input.btnFind.setOnClickListener {
+            val studentId = input.getStudentId()
             if (studentId != null){
                 // search
                 viewModel.onEntryEvent(DashboardEntryEvent.GetStudent(studentId.toString()))
             }
         }
-
-        btEntry.setOnClickListener {
-            val studentId = edtStudentId.text.toString()
-            if (cbReading.isChecked) purposes.add(reading)
-            if (cbAssignment.isChecked) purposes.add(assignment)
-            if (cbUsePc.isChecked) purposes.add(usePC)
-            if (cbOther.isChecked) purposes.add(other)
-            val purpose = purposes.joinToString(", ")
-
+        input.btEntry.setOnClickListener {
+            val studentId = input.entryPurpose().first
+            val purpose = input.entryPurpose().second ?: ""
             if (purpose.isEmpty())
                 Toast.makeText(context, "Purpose is empty", Toast.LENGTH_LONG).show()
             else {
-                viewModel.onEntryEvent(DashboardEntryEvent.SaveAttend(studentId, purpose))
+                viewModel.onEntryEvent(DashboardEntryEvent.SaveAttend(studentId.toString(), purpose))
             }
         }
 
@@ -431,17 +404,15 @@ class DashboardFragment : Fragment() {
                     is StudentState.GetStudentSuccess -> {
                         stopLoading()
                         with(result.students){
-                            tvStudentName.text = "Name: $studentName"
-                            tvGeneration.text = "Generation: $generation"
-                            tvMajorName.text = "Major: $majorName"
+                            input.setSearchResult(studentName, majorName, generation)
                         }
                         withContext(Dispatchers.Main){
-                            btEntry.isEnabled = true
+                            input.btEntry.isEnabled = true
                         }
                     }
                     is StudentState.GetStudentError -> {
                         stopLoading()
-                        Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
                     is StudentState.SaveAttendLoading -> startLoading()
                     is StudentState.SaveAttendSuccess -> {
@@ -451,7 +422,7 @@ class DashboardFragment : Fragment() {
                     }
                     is StudentState.SaveAttendError -> {
                         stopLoading()
-                        Snackbar.make(view, result.errorMsg, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
 
                 }
@@ -468,5 +439,7 @@ class DashboardFragment : Fragment() {
     private fun stopLoading() = CoroutineScope(Dispatchers.Main).launch {
         loading.loadingDismiss()
     }
+
+
 
 }

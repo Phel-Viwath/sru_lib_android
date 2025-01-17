@@ -6,29 +6,35 @@
   ~
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:icon="@drawable/ic_white_dashboard_36"
-        android:id="@+id/btDashboard"
-        android:title="@string/btDashboard"/>
+        android:id="@+id/nav_dashboard"
+        android:title="@string/btDashboard"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:icon="@drawable/round_qr_code_scanner_24"
-        android:id="@+id/btQrEntry"
-        android:title="@string/entry"/>
+        android:id="@+id/nav_entry"
+        android:title="@string/entry"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:icon="@drawable/ic_book_24"
-        android:id="@+id/btBook"
-        android:title="@string/book"/>
+        android:id="@+id/nav_book"
+        android:title="@string/book"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:icon="@drawable/ic_person_24"
-        android:id="@+id/btStudent"
-        android:title="@string/student"/>
+        android:id="@+id/nav_student"
+        android:title="@string/student"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:icon="@drawable/ic_settings_24"
-        android:id="@+id/btSetting"
-        android:title="@string/setting"/>
+        android:id="@+id/nav_setting"
+        android:title="@string/setting"
+        app:showAsAction="ifRoom"/>
 </menu>

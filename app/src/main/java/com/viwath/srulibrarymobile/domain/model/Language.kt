@@ -8,6 +8,6 @@
 package com.viwath.srulibrarymobile.domain.model
 
 data class Language(
-    val languageId: String,
-    val languageName: String
+    val languageId: LanguageId,
+    val languageName: LanguageName
 )

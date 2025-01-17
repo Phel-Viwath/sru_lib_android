@@ -67,9 +67,4 @@ class PermissionRequest(private val fragment: Fragment) {
             onPermissionDenied()
         }
     }
-
-    companion object {
-        const val CAMERA_PERMISSION_CODE = 100
-        const val STORAGE_PERMISSION_CODE = 101
-    }
 }

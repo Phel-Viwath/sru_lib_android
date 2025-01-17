@@ -7,8 +7,12 @@
 
 package com.viwath.srulibrarymobile.domain.model.auth
 
+import com.viwath.srulibrarymobile.domain.model.Email
+import com.viwath.srulibrarymobile.domain.model.Password
+import com.viwath.srulibrarymobile.domain.model.Username
+
 data class RegisterRequest(
-    val email: String,
-    val username: String,
-    val password: String
+    val email: Email,
+    val username: Username,
+    val password: Password
 )

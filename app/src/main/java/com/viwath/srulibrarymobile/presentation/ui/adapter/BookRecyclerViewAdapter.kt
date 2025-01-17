@@ -7,19 +7,25 @@
 
 package com.viwath.srulibrarymobile.presentation.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 
 class BookRecyclerViewAdapter(
-    private var books: List<BookDto>,
+    private val context: Context,
+    private var books: List<Book>,
     private val isDarkMode: Boolean,
-    private val onItemClicked: (book: BookDto) -> Unit
+    private val onMenuItemClicked: (book: Book, action: String) -> Unit
 ): RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder>(){
 
     inner class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -27,6 +33,7 @@ class BookRecyclerViewAdapter(
         val tvBookQuan: TextView = view.findViewById(R.id.tvBookQuan)
         val tvLanguage: TextView = view.findViewById(R.id.tvLanguage)
         val rootView: ConstraintLayout = view.findViewById(R.id.recyclerBookContainer)
+        val menuIcon: ImageView = itemView.findViewById(R.id.menuIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -40,17 +47,33 @@ class BookRecyclerViewAdapter(
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
         val root = holder.rootView
-        if (isDarkMode)
+        val menuIcon = holder.menuIcon
+        if (isDarkMode){
             root.setBackgroundResource(R.drawable.night_recycler_book_background)
-        else
+            menuIcon.setImageResource(R.drawable.ic_more_vert_light_24)
+        }
+        else{
             root.setBackgroundResource(R.drawable.light_recycler_book_background)
+            menuIcon.setImageResource(R.drawable.ic_more_vert_night_24)
+        }
 
         //holder.tvTitle.text = book.bookTitle
         holder.tvTitle.setTruncateText(book.bookTitle)
         holder.tvBookQuan.text = "${book.bookQuan}"
         holder.tvLanguage.text = if (book.languageId === "kh") "Language.Khmer" else "Language.English"
-        holder.itemView.setOnClickListener {
-            onItemClicked(book)
+        menuIcon.setOnClickListener {
+            val popUpMenu = PopupMenu(context, holder.menuIcon)
+            val inflater: MenuInflater = popUpMenu.menuInflater
+            inflater.inflate(R.menu.menu_book_option, popUpMenu.menu)
+            popUpMenu.setOnMenuItemClickListener{ menuItem: MenuItem ->
+                when(menuItem.itemId){
+                    R.id.action_update -> onMenuItemClicked(book, "update")
+                    R.id.action_delete -> onMenuItemClicked(book, "delete")
+                    R.id.action_borrow -> onMenuItemClicked(book, "borrow")
+                }
+                true
+            }
+            popUpMenu.show()
         }
     }
 

@@ -7,19 +7,17 @@
 
 package com.viwath.srulibrarymobile.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.presentation.event.BookTabEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import com.viwath.srulibrarymobile.presentation.state.book_state.BookTabState
 import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +27,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,7 +60,7 @@ class BookTabViewModel @Inject constructor(
         when(event){
             is BookTabEvent.SaveBook -> { saveBook() }
             is BookTabEvent.Remove -> { removeBook() }
-            is BookTabEvent.UpdateBook -> { }
+            is BookTabEvent.UpdateBook -> { updateBook() }
             is BookTabEvent.Borrow -> { }
             is BookTabEvent.UploadBook -> { uploadBook() }
             //
@@ -76,7 +73,6 @@ class BookTabViewModel @Inject constructor(
             is BookTabEvent.LanguageChange -> updateState { copy(languageId = event.languageId) }
             is BookTabEvent.GenreChange -> updateState { copy(genre = event.genre) }
             is BookTabEvent.FileChange -> updateState { copy(file = event.file) }
-
         }
     }
 
@@ -109,28 +105,20 @@ class BookTabViewModel @Inject constructor(
     }
 
     private fun saveBook(){
-        val bookId = _state.value.bookId
-        val bookTitle = _state.value.bookTitle
-        val bookQuan = _state.value.bookQuan
-        val publicYear = _state.value.publicYear
-        val author = _state.value.author
-        val language = _state.value.languageId
-        val college = _state.value.collegeId
-        val genre = _state.value.genre
-
-        if (bookId.isEmpty() || bookTitle.isEmpty() || college.isEmpty() || bookQuan <= 0 || genre.isEmpty()){
-            emitEvent(ResultEvent.ShowError("Please fill in all required fields."))
+        val (isValid, errorMessage) = validateBookData()
+        if (!isValid) {
+            emitEvent(ResultEvent.ShowError(errorMessage))
             return
         }
-        val newBook = BookDto(
-            bookId = bookId,
-            bookTitle = bookTitle,
-            bookQuan = bookQuan,
-            publicationYear = publicYear,
-            author = author,
-            languageId = language,
-            collegeId = college,
-            genre = genre,
+        val newBook = Book(
+            bookId = _state.value.bookId,
+            bookTitle = _state.value.bookTitle,
+            bookQuan = _state.value.bookQuan,
+            publicationYear = _state.value.publicYear,
+            author = _state.value.author,
+            languageId = _state.value.languageId,
+            collegeId = _state.value.collegeId,
+            genre = _state.value.genre,
             receiveDate = null
         )
         viewModelScope.launch {
@@ -156,16 +144,18 @@ class BookTabViewModel @Inject constructor(
             return
         }
         viewModelScope.launch{
-            useCase.uploadBookUseCase(file)
-                .collect{state ->
-                    _uploadState.value = state
-                }
+            useCase.uploadBookUseCase(file).collect{state ->
+                _uploadState.value = state
+            }
         }
     }
 
     private fun removeBook(){
+        val bookId = _state.value.bookId
+        if (bookId.isEmpty())
+            emitEvent(ResultEvent.ShowError("Id id empty."))
         viewModelScope.launch {
-            useCase.removeBookUseCase("").collectResource(
+            useCase.removeBookUseCase(bookId).collectResource(
                 onLoading = { updateState { copy(isLoading = true) } },
                 onSuccess = {
                     updateState { copy(isLoading = false) }
@@ -176,6 +166,59 @@ class BookTabViewModel @Inject constructor(
                     emitEvent(ResultEvent.ShowError(error))
                 }
             )
+        }
+    }
+
+    private fun updateBook(){
+        val (isValid, errorMessage) = validateBookData()
+        if (!isValid){
+            emitEvent(ResultEvent.ShowError(errorMessage))
+            return
+        }
+
+        val newBook = Book(
+            bookId = _state.value.bookId,
+            bookTitle = _state.value.bookTitle,
+            bookQuan = _state.value.bookQuan,
+            publicationYear = _state.value.publicYear,
+            author = _state.value.author,
+            languageId = _state.value.languageId,
+            collegeId = _state.value.collegeId,
+            genre = _state.value.genre,
+            receiveDate = null
+        )
+
+        viewModelScope.launch(Dispatchers.IO){
+            useCase.updateBookUseCase(newBook).collectResource(
+                onLoading = {
+                    updateState { copy(isLoading = true) }
+                },
+                onError = {
+                    updateState { copy(isLoading = false) }
+                    emitEvent(ResultEvent.ShowError(it))
+                },
+                onSuccess = {
+                    updateState { copy(isLoading = false) }
+                    emitEvent(ResultEvent.ShowSuccess("Book updated successfully."))
+                }
+            )
+        }
+    }
+
+    private fun validateBookData(): Pair<Boolean, String>{
+        val bookId = _state.value.bookId
+        val bookTitle = _state.value.bookTitle
+        val bookQuan = _state.value.bookQuan
+        val genre = _state.value.genre
+        val college = _state.value.collegeId
+
+        return when {
+            bookId.isEmpty() -> false to "Book ID is required."
+            bookTitle.isEmpty() -> false to "Book title is required."
+            college.isEmpty() -> false to "College is required."
+            bookQuan <= 0 -> false to "Quantity must be greater than 0."
+            genre.isEmpty() -> false to "Genre is required."
+            else -> true to ""
         }
     }
 
@@ -195,6 +238,5 @@ class BookTabViewModel @Inject constructor(
             }
         }
     }
-
 
 }

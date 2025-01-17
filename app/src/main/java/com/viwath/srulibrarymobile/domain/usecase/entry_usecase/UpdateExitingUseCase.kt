@@ -16,7 +16,7 @@ import javax.inject.Inject
 class UpdateExitingUseCase @Inject constructor(
     private val repository: CoreRepository
 ){
-    suspend operator fun invoke(id: Long) : Flow<Resource<Boolean>> = flow {
+    operator fun invoke(id: Long) : Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading())
         try {
             val success = repository.updateExitingTime(id)
