@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/layoutBackground"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilStudentId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_light_search_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtStudentId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/student_id"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBorrowQuan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@+id/tilStudentId"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBookQuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/borrow_quan"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBookId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="none"
+        app:layout_constraintTop_toBottomOf="@+id/tilBorrowQuan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBookId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/book_id"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="none"
+        app:layout_constraintTop_toBottomOf="@+id/tilBookId"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBookTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/book_title"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilAvailableQuan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorColor="?android:attr/textColorPrimary"
+        app:hintTextColor="?android:attr/textColorPrimary"
+        app:boxStrokeColor="?android:attr/textColorPrimary"
+        app:endIconMode="none"
+        app:layout_constraintTop_toBottomOf="@+id/tilBookTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtAvailableQuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/available_book"
+            android:inputType="text"
+            android:textColor="?android:attr/textColorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvNote"
+        android:layout_marginTop="10dp"
+        android:text="@string/borrowNote"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tilAvailableQuan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btBorrow"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:text="@string/borrow"
+        app:cornerRadius="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvNote"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

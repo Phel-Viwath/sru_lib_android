@@ -14,6 +14,7 @@ import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.model.entry.EntryStatus
@@ -65,22 +66,31 @@ interface CoreApi {
     
     @GET("/api/v1/book/about-book-data")
     suspend fun getSummaryBook(): Response<BookSummary>
+
     @POST("/api/v1/book")
     suspend fun addBooks(@Body books: List<Book>): Response<Unit>
+
     @GET("/api/v1/book/current-book")
     suspend fun getBooks(): List<BookDto>
+
     @PUT("/api/v1/book")
     suspend fun updateBook(@Body book: Book): Response<BookDto>
 
     @PUT("/api/v1/book/trash")
     suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
 
+    @POST("/api/v1/borrow")
+    suspend fun borrow(@Body borrowRequest: BorrowRequest): Response<Unit>
+
     @PUT("/api/v1/recover")
     suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
+
     @GET("/api/v1/in-trash")
     suspend fun bookInTrash(): Response<List<BookDto>>
+
     @GET("/api/v1/language")
     suspend fun bookLanguage(): Response<List<Language>>
+
     @GET("/api/v1/college")
     suspend fun college(): Response<List<College>>
 

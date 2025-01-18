@@ -16,7 +16,6 @@ import com.viwath.srulibrarymobile.data.api.AuthInterceptor
 import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
 import com.viwath.srulibrarymobile.data.repository.CoreRepositoryImp
-import com.viwath.srulibrarymobile.utils.TokenManager
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
@@ -38,12 +37,15 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCas
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UploadBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.SaveAttendUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.UpdateExitingUseCase
+import com.viwath.srulibrarymobile.utils.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -176,7 +178,16 @@ object AppModule {
             GetSummaryUseCase(repository),
             GetLanguageUseCase(repository),
             GetCollegeUseCase(repository),
-            UploadBookUseCase(repository)
+            UploadBookUseCase(repository),
+            GetStudentByIDUseCase(repository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideBorrowUseCase(
+        repository: CoreRepository
+    ): BorrowUseCase = BorrowUseCase(
+            BorrowBookUseCase(repository)
+    )
 }

@@ -157,8 +157,11 @@
         <item>System Default</item>
     </string-array>
 
+    <string name="refresh">Refresh</string>
+
     <string name="develop">Develop by Viwath.</string>
     <string name="serverNote">Please wait 1 to 2 minutes for the server to wake up. Thank you for your patience!</string>
+    <string name="borrowNote">You can borrow 2 book per 2 weeks.</string>
     <string name="upload_exel">Upload File</string>
 
     <string name="title">Title</string>
@@ -172,6 +175,8 @@
     <string name="book_genre">Genre</string>
     <string name="public_year">Publication Year</string>
     <string name="book_quan">Book Quan</string>
+    <string name="borrow_quan">Borrow Quan</string>
+    <string name="available_book">Available Book</string>
     <string name="submit">Submit</string>
 
     <string name="update">Update</string>

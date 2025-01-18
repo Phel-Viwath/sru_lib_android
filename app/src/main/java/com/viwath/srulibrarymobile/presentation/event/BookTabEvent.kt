@@ -7,6 +7,8 @@
 
 package com.viwath.srulibrarymobile.presentation.event
 
+import com.viwath.srulibrarymobile.domain.model.StudentId
+import com.viwath.srulibrarymobile.domain.model.Students
 import java.io.File
 
 sealed class BookTabEvent {
@@ -15,6 +17,7 @@ sealed class BookTabEvent {
     data object Borrow : BookTabEvent()
     data object UpdateBook: BookTabEvent()
     data object UploadBook: BookTabEvent()
+    data object GetStudent: BookTabEvent()
 
     // add book
     data class BookIdChange(val bookId: String): BookTabEvent()
@@ -25,6 +28,8 @@ sealed class BookTabEvent {
     data class GenreChange(val genre: String): BookTabEvent()
     data class LanguageChange(val languageId: String): BookTabEvent()
     data class CollegeChange(val collegeId: String): BookTabEvent()
+
     data class FileChange(val file: File): BookTabEvent()
 
+    data class StudentIdChange(val studentId: StudentId): BookTabEvent()
 }

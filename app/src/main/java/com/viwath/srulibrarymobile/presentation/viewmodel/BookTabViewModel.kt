@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
 import com.viwath.srulibrarymobile.presentation.event.BookTabEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import com.viwath.srulibrarymobile.presentation.state.book_state.BookTabState
@@ -19,6 +21,7 @@ import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,12 +30,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BookTabViewModel @Inject constructor(
-    private val useCase: BookUseCase
+    private val useCase: BookUseCase,
+    private val borrowUseCase: BorrowUseCase
 ): ViewModel(){
     private val _state = MutableStateFlow(BookTabState())
     val state: StateFlow<BookTabState> get() = _state
@@ -43,11 +48,14 @@ class BookTabViewModel @Inject constructor(
     private val _uploadState = MutableStateFlow<UploadState>(UploadState.Idle)
     val uploadState = _uploadState.asStateFlow()
 
+    private val _findStudentChannel = Channel<Boolean>()
+    val findStudentChannel get() = _findStudentChannel.receiveAsFlow()
+
     init {
         viewModelScope.launch { loadInitData() }
     }
 
-    private suspend fun loadInitData() = coroutineScope{
+    suspend fun loadInitData() = coroutineScope{
             val bookDeferred = async{loadListBook()}
             val languageDeferred = async{ loadLanguage() }
             val collegeDeferred = async{ loadCollege() }
@@ -58,12 +66,15 @@ class BookTabViewModel @Inject constructor(
 
     fun onEvent(event: BookTabEvent){
         when(event){
+            // button event
             is BookTabEvent.SaveBook -> { saveBook() }
             is BookTabEvent.Remove -> { removeBook() }
             is BookTabEvent.UpdateBook -> { updateBook() }
-            is BookTabEvent.Borrow -> { }
+            is BookTabEvent.Borrow -> { borrowBook() }
             is BookTabEvent.UploadBook -> { uploadBook() }
-            //
+            is BookTabEvent.GetStudent -> { getStudentById() }
+
+            // edit text change
             is BookTabEvent.BookIdChange -> updateState { copy(bookId = event.bookId) }
             is BookTabEvent.QuanChange -> updateState { copy(bookQuan = event.quan) }
             is BookTabEvent.AuthorChange -> updateState { copy(author = event.author ?: "") }
@@ -73,6 +84,8 @@ class BookTabViewModel @Inject constructor(
             is BookTabEvent.LanguageChange -> updateState { copy(languageId = event.languageId) }
             is BookTabEvent.GenreChange -> updateState { copy(genre = event.genre) }
             is BookTabEvent.FileChange -> updateState { copy(file = event.file) }
+
+            is BookTabEvent.StudentIdChange -> updateState { copy(studentId = event.studentId) }
         }
     }
 
@@ -102,6 +115,32 @@ class BookTabViewModel @Inject constructor(
             onSuccess = {college -> updateState { copy(isLoading = false, college = college) }},
             onError = {error -> updateState { copy(isLoading = false, error = error) }}
         )
+    }
+
+    private fun getStudentById(){
+        val studentId = _state.value.studentId
+        if (studentId <= 0){
+            emitEvent(ResultEvent.ShowError("Student ID fail."))
+        }
+        viewModelScope.launch{
+            useCase.getStudentByIDUseCase(studentId).collectResource(
+                onLoading = {updateState { copy(isLoading = true) }},
+                onError = {
+                    updateState { copy(isLoading = false) }
+                    viewModelScope.launch{
+                        _findStudentChannel.send(false)
+                    }
+                    emitEvent(ResultEvent.ShowError(it))
+                },
+                onSuccess = {
+                    updateState { copy(isLoading = false) }
+                    viewModelScope.launch{
+                        _findStudentChannel.send(true)
+                    }
+                    emitEvent(ResultEvent.ShowSuccess("Student founded."))
+                }
+            )
+        }
     }
 
     private fun saveBook(){
@@ -200,6 +239,29 @@ class BookTabViewModel @Inject constructor(
                 onSuccess = {
                     updateState { copy(isLoading = false) }
                     emitEvent(ResultEvent.ShowSuccess("Book updated successfully."))
+                }
+            )
+        }
+    }
+
+    private fun borrowBook(){
+        val studentId = _state.value.studentId
+        val bookId = _state.value.bookId
+        val bookQuan = _state.value.bookQuan
+        if (studentId <= 0 || bookQuan <= 0 || bookId.isEmpty()){
+            emitEvent(ResultEvent.ShowError("Invalid value!"))
+        }
+        val borrowRequest = BorrowRequest(bookId, studentId, bookQuan)
+        viewModelScope.launch{
+            borrowUseCase.borrowBookUseCase(borrowRequest).collectResource(
+                onLoading = { updateState { copy(isLoading = true) } },
+                onError = {
+                    updateState { copy(isLoading = false) }
+                    emitEvent(ResultEvent.ShowError(it))
+                },
+                onSuccess = {
+                    updateState { copy(isLoading = false) }
+                    emitEvent(ResultEvent.ShowSuccess("Book borrowed successfully."))
                 }
             )
         }

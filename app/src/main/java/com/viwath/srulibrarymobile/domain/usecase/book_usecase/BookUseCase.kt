@@ -7,6 +7,8 @@
 
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
+import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUseCase
+
 data class BookUseCase(
     val addBookUseCase: AddBookUseCase,
     val getBooksUseCase: GetBooksUseCase,
@@ -17,5 +19,6 @@ data class BookUseCase(
     val getSummaryUseCase: GetSummaryUseCase,
     val getLanguageUseCase: GetLanguageUseCase,
     val getCollegeUseCase: GetCollegeUseCase,
-    val uploadBookUseCase: UploadBookUseCase
+    val uploadBookUseCase: UploadBookUseCase,
+    val getStudentByIDUseCase: GetStudentByIDUseCase
 )

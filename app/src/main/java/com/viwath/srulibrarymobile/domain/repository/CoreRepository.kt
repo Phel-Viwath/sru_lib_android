@@ -8,12 +8,13 @@
 package com.viwath.srulibrarymobile.domain.repository
 
 import com.viwath.srulibrarymobile.data.dto.BookDto
-import com.viwath.srulibrarymobile.domain.model.Attend
-import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.data.dto.BookSummary
+import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import okhttp3.MultipartBody
@@ -27,6 +28,7 @@ interface CoreRepository {
     suspend fun updateExitingTime(studentId: Long): Boolean
     suspend fun checkExitingAttend(id: String): String
 
+    // book
     suspend fun addBooks(books: List<Book>): Boolean
     suspend fun uploadBook(file: MultipartBody.Part): Response<Unit>
     suspend fun updateBook(book: Book): Boolean
@@ -37,4 +39,7 @@ interface CoreRepository {
     suspend fun recoverBook(bookId: String): Boolean
     suspend fun bookLanguages(): List<Language>
     suspend fun college(): List<College>
+
+    // borrow
+    suspend fun borrowBook(borrow: BorrowRequest): Boolean
 }

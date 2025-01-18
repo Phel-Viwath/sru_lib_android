@@ -48,6 +48,18 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ImageView
+            android:id="@+id/imgRefresh"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_night_24"
+            android:contentDescription="@string/refresh"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinnerFilter"
             android:text="@string/add_book"

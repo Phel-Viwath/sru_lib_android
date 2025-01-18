@@ -17,6 +17,7 @@ import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
@@ -171,6 +172,11 @@ class CoreRepositoryImp @Inject constructor(
         return if (response.isSuccessful)
             response.body() ?: emptyList()
         else throw CoreException("Error get college")
+    }
+
+    override suspend fun borrowBook(borrow: BorrowRequest): Boolean {
+        val response = api.borrow(borrow)
+        return response.isSuccessful
     }
 
 }
