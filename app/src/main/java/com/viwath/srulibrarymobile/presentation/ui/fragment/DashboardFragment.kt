@@ -47,7 +47,7 @@ import com.viwath.srulibrarymobile.domain.model.dashboard.TotalMajorVisitor
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.StudentState
 import com.viwath.srulibrarymobile.presentation.ui.adapter.EntryRecycleViewAdapter
-import com.viwath.srulibrarymobile.presentation.ui.modal.ModalEntry
+import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,7 +185,7 @@ class DashboardFragment : Fragment() {
 
         // button entry
         binding.btEntry.setOnClickListener {
-            showModal(requireContext(), isDarkMode)
+            showDialogEntry(requireContext(), isDarkMode)
         }
 
         // set card animation
@@ -364,9 +364,9 @@ class DashboardFragment : Fragment() {
 
     //////////
     @SuppressLint("SetTextI18n")
-    private fun showModal(context: Context, isDarkMode: Boolean){
+    private fun showDialogEntry(context: Context, isDarkMode: Boolean){
 
-        val dialogView = LayoutInflater.from(context).inflate( R.layout.modal_entry, null)
+        val dialogView = LayoutInflater.from(context).inflate( R.layout.dialog_entry, null)
         // change view background
         dialogView.setBackgroundColor(if (isDarkMode) Color.BLACK else Color.WHITE)
         // create dialog
@@ -375,7 +375,7 @@ class DashboardFragment : Fragment() {
             .setCancelable(true)
             .create()
 
-        val input = ModalEntry(dialogView)
+        val input = DialogEntry(dialogView)
 
         //button
         input.btnFind.setImageResource(if (isDarkMode) R.drawable.ic_light_search_24 else R.drawable.ic_night_search_24)

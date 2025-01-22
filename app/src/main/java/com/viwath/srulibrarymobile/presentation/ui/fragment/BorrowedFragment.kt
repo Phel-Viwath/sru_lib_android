@@ -11,14 +11,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.databinding.FragmentBorrowedBinding
+import com.viwath.srulibrarymobile.databinding.FragmentBorrowedTabBinding
 
-class BorrowedFragment: Fragment(R.layout.fragment_borrowed) {
-    private var _binding: FragmentBorrowedBinding? = null
+class BorrowedFragment: Fragment(R.layout.fragment_borrowed_tab) {
+    private var _binding: FragmentBorrowedTabBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentBorrowedBinding.bind(view)
+        _binding = FragmentBorrowedTabBinding.bind(view)
     }
 }

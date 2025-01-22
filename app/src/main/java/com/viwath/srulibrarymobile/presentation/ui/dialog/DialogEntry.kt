@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.presentation.ui.modal
+package com.viwath.srulibrarymobile.presentation.ui.dialog
 
 import android.annotation.SuppressLint
 import android.view.View
@@ -21,7 +21,7 @@ import com.viwath.srulibrarymobile.domain.model.Purpose
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.StudentName
 
-class ModalEntry(view: View) {
+class DialogEntry(view: View) {
     val purposes = mutableListOf<String>()
     val usePC = "Use PC"
     val reading = "Reading"

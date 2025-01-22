@@ -29,7 +29,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilSearchBook"
+            android:id="@+id/layoutSearch"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,15 +38,12 @@
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_light_search_24"
             android:textColor="?android:attr/textColorPrimary"
-            app:hintTextColor="?android:attr/textColorPrimary"
-            app:boxStrokeColor="?android:attr/textColorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtSearch"
-                android:textColor="?android:attr/textColorPrimary"
+                android:id="@+id/edtSearchDonation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -59,19 +56,20 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_refresh_night_24"
             android:contentDescription="@string/refresh"
-            app:layout_constraintTop_toBottomOf="@+id/tilSearchBook"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinnerFilter"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="160dp"
-            android:layout_height="50dp"
+            android:id="@+id/spinner"
+            android:text="@string/add_book"
             android:spinnerMode="dialog"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilSearchBook" />
+            android:layout_width="160dp"
+            android:layout_height="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -83,18 +81,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerBook"
+            android:id="@+id/recyclerBookDonation"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddBook"
+        android:id="@+id/fabAddDonation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add_24"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginEnd="20dp"
         android:contentDescription="@string/book"
         app:layout_constraintBottom_toBottomOf="parent"

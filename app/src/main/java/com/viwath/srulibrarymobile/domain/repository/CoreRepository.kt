@@ -39,6 +39,7 @@ interface CoreRepository {
     suspend fun recoverBook(bookId: String): Boolean
     suspend fun bookLanguages(): List<Language>
     suspend fun college(): List<College>
+    suspend fun searchBook(keyword: String): List<BookDto>
 
     // borrow
     suspend fun borrowBook(borrow: BorrowRequest): Boolean

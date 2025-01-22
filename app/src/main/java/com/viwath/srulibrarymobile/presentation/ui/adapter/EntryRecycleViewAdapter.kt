@@ -75,7 +75,7 @@ class EntryRecycleViewAdapter(
     @SuppressLint("InflateParams", "SetTextI18n")
     private fun showModal(context: Context, item: AttendDetail){
         val dialog = MaterialAlertDialogBuilder(context)
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.modal_layout, null)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null)
 
         dialogView.findViewById<TextView>(R.id.lbId).text = "Student ID:"
         dialogView.findViewById<TextView>(R.id.lbName).text = "Student Name:"

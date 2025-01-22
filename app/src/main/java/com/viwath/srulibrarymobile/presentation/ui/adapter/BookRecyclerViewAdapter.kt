@@ -25,7 +25,8 @@ class BookRecyclerViewAdapter(
     private val context: Context,
     private var books: List<Book>,
     private val isDarkMode: Boolean,
-    private val onMenuItemClicked: (book: Book, action: String) -> Unit
+    private val onMenuItemClicked: (book: Book, action: String) -> Unit,
+    private val onItemClicked: (book: Book) -> Unit
 ): RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder>(){
 
     inner class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -38,7 +39,7 @@ class BookRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.book_item, parent, false)
+            .inflate(R.layout.item_book, parent, false)
         return BookViewHolder(view)
     }
 
@@ -60,7 +61,7 @@ class BookRecyclerViewAdapter(
         //holder.tvTitle.text = book.bookTitle
         holder.tvTitle.setTruncateText(book.bookTitle)
         holder.tvBookQuan.text = "${book.bookQuan}"
-        holder.tvLanguage.text = if (book.languageId === "kh") "Language.Khmer" else "Language.English"
+        holder.tvLanguage.text = if (book.languageId === "kh") "Khmer. ${book.bookId}" else "English. ${book.bookId}"
         menuIcon.setOnClickListener {
             val popUpMenu = PopupMenu(context, holder.menuIcon)
             val inflater: MenuInflater = popUpMenu.menuInflater
@@ -75,6 +76,7 @@ class BookRecyclerViewAdapter(
             }
             popUpMenu.show()
         }
+        holder.itemView.setOnClickListener{ onItemClicked(book) }
     }
 
     private fun TextView.setTruncateText(text: String, maxLength: Int = 15) {

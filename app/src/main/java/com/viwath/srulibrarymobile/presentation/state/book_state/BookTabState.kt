@@ -9,6 +9,7 @@ package com.viwath.srulibrarymobile.presentation.state.book_state
 
 import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import java.io.File
@@ -33,7 +34,10 @@ data class BookTabState(
     // upload state
     val file: File? = null,
     // student id for borrow
-    val studentId: StudentId = 0
+    val studentId: StudentId = 0,
+    // filter
+    val genreFilter: Genre = "",
+    val searchKeywordChange: String = ""
 )
 
 

@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.presentation.ui.modal
+package com.viwath.srulibrarymobile.presentation.ui.dialog
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -20,7 +20,7 @@ import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.BookQuantity
 import com.viwath.srulibrarymobile.domain.model.StudentId
 
-class ModalBorrow(view: View) {
+class DialogBorrow(view: View) {
     var book: Book? = null
 
     val tilStudentId: TextInputLayout = view.findViewById(R.id.tilStudentId)

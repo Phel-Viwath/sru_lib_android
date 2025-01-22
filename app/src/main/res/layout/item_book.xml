@@ -6,7 +6,8 @@
   ~
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="16dp"
@@ -20,7 +21,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="@string/book"
-        android:src="@drawable/questions_book"
+        android:src="@drawable/img_questions_book"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

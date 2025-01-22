@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dialog_background_with_border_light"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingHorizontal="16dp"
+    android:paddingBottom="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tvId"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/book_id"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/book_title"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvId" />
+
+    <TextView
+        android:id="@+id/tvQuan"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/book_quan"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <TextView
+        android:id="@+id/tvLanguage"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/language"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvQuan" />
+
+    <TextView
+        android:id="@+id/tvCollege"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/college"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLanguage" />
+
+    <TextView
+        android:id="@+id/tvAuthor"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/author"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCollege" />
+
+
+    <TextView
+        android:id="@+id/tvPublicYear"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/public_year"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAuthor" />
+
+    <TextView
+        android:id="@+id/tvGenre"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/book_genre"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPublicYear" />
+
+    <TextView
+        android:id="@+id/tvReceiveDate"
+        android:paddingTop="10dp"
+        android:paddingBottom="4dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/underline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/receive_date"
+        android:textSize="16sp"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGenre" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

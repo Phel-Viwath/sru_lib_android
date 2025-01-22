@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.presentation.ui.modal
+package com.viwath.srulibrarymobile.presentation.ui.dialog
 
 data class BookData(
     val bookId: String,

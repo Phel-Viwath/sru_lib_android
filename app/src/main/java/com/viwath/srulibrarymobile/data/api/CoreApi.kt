@@ -76,6 +76,9 @@ interface CoreApi {
     @PUT("/api/v1/book")
     suspend fun updateBook(@Body book: Book): Response<BookDto>
 
+    @GET("/api/v1/book/search")
+    suspend fun searchBook(@Query("keyword") keyword: String): Response<List<BookDto>>
+
     @PUT("/api/v1/book/trash")
     suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
@@ -39,6 +40,12 @@ class BookTabViewModel @Inject constructor(
     private val useCase: BookUseCase,
     private val borrowUseCase: BorrowUseCase
 ): ViewModel(){
+
+    // store current book
+    private val _booksList: MutableList<Book> = mutableListOf()
+    private var _genres = MutableStateFlow<List<Genre>>(emptyList())
+    val genres: StateFlow<List<Genre>> get() = _genres
+
     private val _state = MutableStateFlow(BookTabState())
     val state: StateFlow<BookTabState> get() = _state
 
@@ -51,12 +58,14 @@ class BookTabViewModel @Inject constructor(
     private val _findStudentChannel = Channel<Boolean>()
     val findStudentChannel get() = _findStudentChannel.receiveAsFlow()
 
+    private var isInitialLoad = true
+
     init {
         viewModelScope.launch { loadInitData() }
     }
 
-    suspend fun loadInitData() = coroutineScope{
-            val bookDeferred = async{loadListBook()}
+    suspend fun loadInitData() = coroutineScope {
+            val bookDeferred = async{ loadListBook() }
             val languageDeferred = async{ loadLanguage() }
             val collegeDeferred = async{ loadCollege() }
             bookDeferred.await()
@@ -73,6 +82,14 @@ class BookTabViewModel @Inject constructor(
             is BookTabEvent.Borrow -> { borrowBook() }
             is BookTabEvent.UploadBook -> { uploadBook() }
             is BookTabEvent.GetStudent -> { getStudentById() }
+            is BookTabEvent.FilterGenre -> {
+                if (!isInitialLoad) {
+                    filterByGenre()
+                }
+                isInitialLoad = false
+            }
+            is BookTabEvent.Search -> { searchBook() }
+            is BookTabEvent.FilterByIdOrTitle -> { filterBookByIdOrTitle() }
 
             // edit text change
             is BookTabEvent.BookIdChange -> updateState { copy(bookId = event.bookId) }
@@ -86,7 +103,16 @@ class BookTabViewModel @Inject constructor(
             is BookTabEvent.FileChange -> updateState { copy(file = event.file) }
 
             is BookTabEvent.StudentIdChange -> updateState { copy(studentId = event.studentId) }
+            is BookTabEvent.FilterGenreChange -> updateState { copy(genreFilter = event.filter) }
+            is BookTabEvent.SearchChange -> updateState { copy(searchKeywordChange = event.search) }
+
         }
+    }
+
+    private fun filterBookByIdOrTitle() {
+        val keyword = _state.value.searchKeywordChange
+        val sortedList = _booksList.filter { it.bookId.contains(keyword) || it.bookTitle.contains(keyword) }
+        updateState { copy(books = sortedList) }
     }
 
     private fun updateState(update: BookTabState.() -> BookTabState) {
@@ -96,7 +122,13 @@ class BookTabViewModel @Inject constructor(
     private suspend fun loadListBook(){
         useCase.getBooksUseCase().collectResource(
             onLoading = {updateState { copy(isLoading = true) }},
-            onSuccess = {book -> updateState { copy(isLoading = false, books = book) }},
+            onSuccess = { book ->
+                val listData = listOf("All") + book.getGenres()
+                _genres.value = listData
+                _booksList.clear()
+                _booksList.addAll(book)
+                updateState { copy(isLoading = false, books = book) }
+            },
             onError = {error -> updateState { copy(isLoading = false, error = error) }}
         )
     }
@@ -266,6 +298,37 @@ class BookTabViewModel @Inject constructor(
             )
         }
     }
+
+    private fun filterByGenre(){
+        val genre = _state.value.genreFilter
+        if (genre == "All"){
+            viewModelScope.launch{
+                loadListBook()
+            }
+        }
+        else{
+            val filteredBook = _booksList.filter { it.genre == genre }
+            updateState { copy(isLoading = false, books = filteredBook) }
+        }
+    }
+
+    private fun searchBook(){
+        val keyword = _state.value.searchKeywordChange
+        viewModelScope.launch{
+            useCase.searchBookUseCase(keyword).collectResource(
+                onLoading = { updateState { copy(isLoading = true) } },
+                onError = {
+                    updateState { copy(isLoading = false) }
+                    emitEvent(ResultEvent.ShowError(it))
+                },
+                onSuccess = {
+                    updateState { copy(isLoading = false, books = it) }
+                }
+            )
+        }
+    }
+
+    private fun List<Book>.getGenres(): List<Genre> = this.map { it.genre }.distinct()
 
     private fun validateBookData(): Pair<Boolean, String>{
         val bookId = _state.value.bookId

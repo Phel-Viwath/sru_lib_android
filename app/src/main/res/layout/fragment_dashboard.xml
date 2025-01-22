@@ -112,7 +112,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/walk"
+                                    android:src="@drawable/img_walk"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -168,7 +168,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/borrow_book"
+                                    android:src="@drawable/img_borrow_book"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -224,7 +224,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/books_stack"
+                                    android:src="@drawable/img_books_stack"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>
@@ -280,7 +280,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/people"
+                                    android:src="@drawable/img_people"
                                     android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:contentDescription="@string/walk_icon"/>

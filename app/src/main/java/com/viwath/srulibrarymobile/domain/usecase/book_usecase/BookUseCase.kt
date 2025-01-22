@@ -20,5 +20,6 @@ data class BookUseCase(
     val getLanguageUseCase: GetLanguageUseCase,
     val getCollegeUseCase: GetCollegeUseCase,
     val uploadBookUseCase: UploadBookUseCase,
-    val getStudentByIDUseCase: GetStudentByIDUseCase
+    val getStudentByIDUseCase: GetStudentByIDUseCase,
+    val searchBookUseCase: SearchBookUseCase
 )

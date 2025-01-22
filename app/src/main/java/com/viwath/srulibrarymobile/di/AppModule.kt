@@ -35,6 +35,7 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetLanguageUseCas
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.SearchBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UploadBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowBookUseCase
@@ -179,7 +180,8 @@ object AppModule {
             GetLanguageUseCase(repository),
             GetCollegeUseCase(repository),
             UploadBookUseCase(repository),
-            GetStudentByIDUseCase(repository)
+            GetStudentByIDUseCase(repository),
+            SearchBookUseCase(repository)
         )
     }
 

@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.presentation.ui.modal
+package com.viwath.srulibrarymobile.presentation.ui.dialog
 
 import android.content.Context
 import android.view.View
@@ -20,7 +20,7 @@ import com.viwath.srulibrarymobile.domain.model.CollegeId
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.LanguageId
 
-class ModalAddBook(view: View) {
+class DialogAddBook(view: View) {
     private val edtBookId: TextInputEditText = view.findViewById(R.id.edtBookId)
     private val edtTitle: TextInputEditText = view.findViewById(R.id.edtBookTitle)
     private val edtAuthor: TextInputEditText = view.findViewById(R.id.edtAuthor)

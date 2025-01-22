@@ -18,7 +18,7 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/sruLogo"
-        android:src="@drawable/sru_image"
+        android:src="@drawable/img_sru_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"

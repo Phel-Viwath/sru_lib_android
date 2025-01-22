@@ -142,6 +142,8 @@
     <string name="return_today">Return Today</string>
 
     <string name="zero">0</string>
+
+    <string name="overdue">Over Due</string>
     
     <string name="add_book">Add Books</string>
     <string name="borrowed">Borrowed</string>
@@ -166,11 +168,13 @@
 
     <string name="title">Title</string>
     <string name="author">Author</string>
+    <string name="receive_date">Receive Date</string>
     <string name="publication">publication Year</string>
 
     <string name="book_id">Book ID</string>
     <string name="book_title">Book Title</string>
     <string name="college">College</string>
+    <string name="language">Language</string>
     <string name="book_author">Author</string>
     <string name="book_genre">Genre</string>
     <string name="public_year">Publication Year</string>

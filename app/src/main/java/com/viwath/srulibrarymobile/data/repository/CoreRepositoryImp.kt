@@ -174,6 +174,13 @@ class CoreRepositoryImp @Inject constructor(
         else throw CoreException("Error get college")
     }
 
+    override suspend fun searchBook(keyword: String): List<BookDto> {
+        val response = api.searchBook(keyword)
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error search book")
+    }
+
     override suspend fun borrowBook(borrow: BorrowRequest): Boolean {
         val response = api.borrow(borrow)
         return response.isSuccessful

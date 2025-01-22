@@ -23,6 +23,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -30,6 +32,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -49,8 +52,9 @@ import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
 import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.BookRecyclerViewAdapter
-import com.viwath.srulibrarymobile.presentation.ui.modal.ModalAddBook
-import com.viwath.srulibrarymobile.presentation.ui.modal.ModalBorrow
+import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogAddBook
+import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogBookDetail
+import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogBorrow
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookTabViewModel
 import com.viwath.srulibrarymobile.utils.PermissionRequest
 import com.viwath.srulibrarymobile.utils.uriToFile
@@ -71,10 +75,10 @@ class BookTabFragment : Fragment() {
     // dialog
     private var dialogAddUpdate: Dialog? = null
     private var progressDialog: Dialog? = null
-    private var dialogBorrow: Dialog? = null
+    private var borrowDialog: Dialog? = null
 
-    private lateinit var modalBorrow: ModalBorrow
-    private lateinit var modalAddBook: ModalAddBook
+    private lateinit var dialogBorrow: DialogBorrow
+    private lateinit var dialogAddBook: DialogAddBook
 
     private lateinit var loading: Loading
     private lateinit var permission: PermissionRequest
@@ -84,6 +88,9 @@ class BookTabFragment : Fragment() {
 
     private val _languages: MutableList<Language> = mutableListOf()
     private val _colleges: MutableList<College> = mutableListOf()
+    private val _genres: MutableList<String> = mutableListOf()
+
+    private val spinnerLayout = android.R.layout.simple_spinner_dropdown_item
 
     /**
      * [storagePermissionLauncher] is a [androidx.activity.result.ActivityResultLauncher] used to request the read storage permission.
@@ -167,13 +174,14 @@ class BookTabFragment : Fragment() {
         permission = PermissionRequest(this)
         setupUI(isDarkMode)
         observeViewModel(isDarkMode)
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         dialogAddUpdate?.dismiss()
-        dialogBorrow?.dismiss()
-        dialogBorrow = null
+        borrowDialog?.dismiss()
+        borrowDialog = null
         dialogAddUpdate = null
     }
 
@@ -211,6 +219,7 @@ class BookTabFragment : Fragment() {
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun setupUI(isDarkMode: Boolean) {
+
         binding.edtSearch.setOnFocusChangeListener { _, hasFocus ->
             (requireActivity() as? MainActivity)?.apply {
                 if (hasFocus) hideBottomNav() else showBottomNav()
@@ -220,22 +229,46 @@ class BookTabFragment : Fragment() {
             hideKeyboard()
             false
         }
-        binding.fabAddBook.setOnClickListener { showAddUpdateBookModal() }
+        binding.fabAddBook.setOnClickListener { showDialogAddUpdateBook() }
         binding.imgRefresh.apply {
-            setBackgroundResource(if (isDarkMode) R.drawable.ic_refresh_light_24 else R.drawable.ic_refresh_night_24)
-        }
-        binding.imgRefresh.setOnClickListener{
-            lifecycleScope.launch {
-                if (binding.edtSearch.isFocused)
-                    binding.edtSearch.clearFocus()
-                hideKeyboard()
-                viewModel.loadInitData()
+            setImageResource(if (isDarkMode) R.drawable.ic_refresh_light_24 else R.drawable.ic_refresh_night_24)
+            setOnClickListener{
+                binding.spinnerFilter.setSelection(0)
+                lifecycleScope.launch {
+                    if (binding.edtSearch.isFocused)
+                        binding.edtSearch.clearFocus()
+                    hideKeyboard()
+                    viewModel.loadInitData()
+                }
+                val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
+                animator.duration = 1000
+                animator.start()
             }
-            val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
-            animator.duration = 1000
-            animator.start()
+        }
+        binding.spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (parent?.selectedItem != null) {
+                    val selectedItem = _genres[position]
+                    viewModel.apply {
+                        onEvent(BookTabEvent.FilterGenreChange(selectedItem))
+                        onEvent(BookTabEvent.FilterGenre)
+                    }
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        binding.tilSearchBook.setEndIconOnClickListener{
+            val keyword = binding.edtSearch.text.toString().trim()
+            viewModel.apply {
+                onEvent(BookTabEvent.SearchChange(keyword))
+                onEvent(BookTabEvent.Search)
+            }
+        }
+        binding.edtSearch.doOnTextChanged {text, _, _, _ ->
+            viewModel.onEvent(BookTabEvent.SearchChange(text.toString().trim()))
+            viewModel.onEvent(BookTabEvent.FilterByIdOrTitle)
+        }
     }
     /**
      * Observes the ViewModel's state, events, upload state, and student search results.
@@ -304,24 +337,44 @@ class BookTabFragment : Fragment() {
         // handle student search
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.findStudentChannel.collect { isFound ->
-                modalBorrow.btBorrow.isEnabled = isFound
+                dialogBorrow.btBorrow.isEnabled = isFound
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch{
+            viewModel.genres.collect{
+                if (it.isNotEmpty()){
+                    _genres.clear()
+                    _genres.addAll(it)
+                    ArrayAdapter(requireContext(), spinnerLayout, it).also { adapter ->
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.spinnerFilter.adapter = adapter
+                    }
+                }
             }
         }
 
     }
+
     private fun setupRecyclerView(books: List<Book>, isDarkMode: Boolean) {
         binding.recyclerBook.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerBook.adapter = BookRecyclerViewAdapter(requireContext() ,books, isDarkMode){ book, action ->
-           when(action){
-               "update" -> showAddUpdateBookModal(book)
-               "delete" -> dialogDelete(book.bookId, isDarkMode)
-               "borrow" -> dialogBorrow(book)
-           }
-        }
+        binding.recyclerBook.adapter = BookRecyclerViewAdapter(
+            requireContext() ,books, isDarkMode,
+            onMenuItemClicked = { book, action ->
+                when(action){
+                    "update" -> showDialogAddUpdateBook(book)
+                    "delete" -> dialogDelete(book.bookId, isDarkMode)
+                    "borrow" -> dialogBorrow(book)
+                }
+            },
+            onItemClicked = { book ->
+                book.showDialogBookDetail(isDarkMode)
+            }
+        )
     }
 
-    private fun showAddUpdateBookModal(book: Book? = null) {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.modal_add_book, null)
+    private fun showDialogAddUpdateBook(book: Book? = null) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_book, null)
         val btUploadFile = dialogView.findViewById<MaterialButton>(R.id.btUploadFile)
         if (book != null){
             btUploadFile.isVisible = false
@@ -340,10 +393,10 @@ class BookTabFragment : Fragment() {
             (requireActivity() as? MainActivity)?.showBottomNav()
         }
 
-        modalAddBook = ModalAddBook(dialogView)
-        modalAddBook.setupSpinners(requireContext(), _languages, _colleges) // Initialize dropdowns
+        dialogAddBook = DialogAddBook(dialogView)
+        dialogAddBook.setupSpinners(requireContext(), _languages, _colleges) // Initialize dropdowns
         book?.let {
-            modalAddBook.populateBookData(it)
+            dialogAddBook.populateBookData(it)
         }
         dialogView.findViewById<MaterialButton>(R.id.btAddBook).setOnClickListener {
             if (fileUri != null){
@@ -352,8 +405,8 @@ class BookTabFragment : Fragment() {
                 viewModel.onEvent(BookTabEvent.UploadBook)
                 return@setOnClickListener
             }
-            val (bookId, title, author, genre, year, quan) = modalAddBook.getBookData()
-            val (collegeId, languageId) = modalAddBook.getSelectedIds()
+            val (bookId, title, author, genre, year, quan) = dialogAddBook.getBookData()
+            val (collegeId, languageId) = dialogAddBook.getSelectedIds()
 
             if (bookId.isBlank() || title.isBlank() || collegeId.isBlank() || quan <= 0 || genre.isBlank()) {
                 showToast("Please fill in all required fields.")
@@ -408,7 +461,7 @@ class BookTabFragment : Fragment() {
     private fun showProgressDialog(progress: Int, uploaded: Long, total: Long) {
         if (progressDialog == null) {
             val dialogView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.upload_progress_dialog, null)
+                .inflate(R.layout.dialog_upload_progress, null)
 
             progressDialog = MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
@@ -436,7 +489,7 @@ class BookTabFragment : Fragment() {
             .setTitle("Delete")
             .setMessage("Are you sure you want to delete this book?")
             .setCancelable(true)
-            .setPositiveButton("Delete"){d, _ ->
+            .setPositiveButton("Delete"){_, _ ->
                 viewModel.onEvent(BookTabEvent.Remove)
             }
             .setNegativeButton("Cancel"){d, _ ->
@@ -456,39 +509,40 @@ class BookTabFragment : Fragment() {
 
     private fun dialogBorrow(book: Book){
         val view = LayoutInflater.from(requireContext())
-            .inflate(R.layout.modal_borrow, null)
-        val dialogBorrow = MaterialAlertDialogBuilder(requireContext())
+            .inflate(R.layout.dialog_borrow, null)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(view)
             .setCancelable(true)
             .create()
-        this.dialogBorrow = dialogBorrow
-        dialogBorrow.setOnShowListener{
-            dialogBorrow.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.material_dialog_background))
+        this.borrowDialog = dialog
+
+        dialog.setOnShowListener{
+            dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.material_dialog_background))
             (requireActivity() as? MainActivity)?.hideBottomNav()
         }
-        dialogBorrow.setOnDismissListener{
+        dialog.setOnDismissListener{
             (requireActivity() as? MainActivity)?.showBottomNav()
         }
-        modalBorrow = ModalBorrow(view)
-        modalBorrow.populateBookData(book)
-        modalBorrow.btBorrow.isEnabled = false
+        dialogBorrow = DialogBorrow(view)
+        dialogBorrow.populateBookData(book)
+        dialogBorrow.btBorrow.isEnabled = false
 
-        modalBorrow.onSearchClick { studentId ->
+        dialogBorrow.onSearchClick { studentId ->
             viewModel.apply {
                 onEvent(BookTabEvent.StudentIdChange(studentId))
                 onEvent(BookTabEvent.GetStudent)
             }
         }
-        modalBorrow.onBorrowClick { studentId, quan , bookId->
+        dialogBorrow.onBorrowClick { studentId, quan, bookId->
             viewModel.apply {
                 onEvent(BookTabEvent.StudentIdChange(studentId))
                 onEvent(BookTabEvent.QuanChange(quan))
                 onEvent(BookTabEvent.BookIdChange(bookId))
                 onEvent(BookTabEvent.Borrow)
-                dialogBorrow.dismiss()
+                dialog.dismiss()
             }
         }
-        dialogBorrow.show()
+        dialog.show()
     }
 
     private fun checkAndRequestStoragePermission() {
@@ -516,5 +570,23 @@ class BookTabFragment : Fragment() {
         else -> "$size B"
     }
 
+    private fun Book.showDialogBookDetail(isDarkMode: Boolean) {
+        val view = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_book_detail, null)
+        view.rootView.setBackgroundResource(
+            if (isDarkMode) R.drawable.dialog_background_with_border_night
+            else R.drawable.dialog_background_with_border_light
+        )
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(view)
+            .setCancelable(true)
+            .create()
+        dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background_with_border_light))
+        val dialogBook = DialogBookDetail(view)
+        dialogBook.populateData(this)
+        dialog.show()
+    }
+
 
 }
+
