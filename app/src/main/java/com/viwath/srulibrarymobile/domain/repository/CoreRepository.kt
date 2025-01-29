@@ -9,6 +9,8 @@ package com.viwath.srulibrarymobile.domain.repository
 
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
+import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
+import com.viwath.srulibrarymobile.data.dto.BorrowDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
@@ -42,5 +44,6 @@ interface CoreRepository {
     suspend fun searchBook(keyword: String): List<BookDto>
 
     // borrow
-    suspend fun borrowBook(borrow: BorrowRequest): Boolean
+    suspend fun borrowBook(borrow: BorrowRequest): Response<Unit>
+    suspend fun getBorrows(): List<BorrowDetailDto>
 }

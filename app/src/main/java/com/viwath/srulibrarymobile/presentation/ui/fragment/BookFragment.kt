@@ -7,7 +7,6 @@
 
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookBinding
+import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.ViewPagerAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,15 +32,17 @@ class BookFragment : Fragment(R.layout.fragment_book){
     private val binding get() = _binding!!
     private lateinit var loading: Loading
     private val viewModel: BookFragmentViewModel by activityViewModels()
+    private lateinit var mainActivity: MainActivity
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBookBinding.bind(view)
         loading = Loading(requireActivity())
+        mainActivity = (requireActivity() as MainActivity)
 
         val fragmentList = listOf(
             BookTabFragment(),
-            BorrowedFragment(),
+            BorrowedTabFragment(),
             DonationFragment(),
             BackupBookFragment()
         )
@@ -93,11 +95,19 @@ class BookFragment : Fragment(R.layout.fragment_book){
     }
 
 
-    private fun startLoading() = CoroutineScope(Dispatchers.Main).launch{
-        loading.loadingStart()
+    fun startLoading(){
+        mainActivity.startLoading()
     }
 
-    private fun stopLoading() = CoroutineScope(Dispatchers.Main).launch {
-        loading.loadingDismiss()
+    fun stopLoading(){
+        mainActivity.stopLoading()
+    }
+
+    fun showSnackBar(message: String){
+        mainActivity.showSnackBar(message)
+    }
+
+    fun showToast(message: String){
+        mainActivity.showToast(message)
     }
 }

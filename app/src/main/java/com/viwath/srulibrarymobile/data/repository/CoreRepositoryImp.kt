@@ -12,11 +12,14 @@ import com.viwath.srulibrarymobile.common.exception.CoreException
 import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
+import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
+import com.viwath.srulibrarymobile.data.dto.BorrowDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
@@ -181,9 +184,16 @@ class CoreRepositoryImp @Inject constructor(
         else throw CoreException("Error search book")
     }
 
-    override suspend fun borrowBook(borrow: BorrowRequest): Boolean {
+    override suspend fun borrowBook(borrow: BorrowRequest):Response<Unit> {
         val response = api.borrow(borrow)
-        return response.isSuccessful
+        return response
+    }
+
+    override suspend fun getBorrows(): List<BorrowDetailDto> {
+        val response = api.borrow()
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error get borrow")
     }
 
 }

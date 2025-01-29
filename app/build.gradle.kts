@@ -36,6 +36,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -118,5 +119,7 @@ dependencies {
     implementation(libs.flexbox.layout)
     //security-crypto
     implementation(libs.security.crypto)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
 }

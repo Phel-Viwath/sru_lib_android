@@ -52,3 +52,9 @@ typealias Email = String
 typealias Password = String
 typealias Role = String
 typealias Message = String
+
+// Borrow (borrow model)
+typealias BorrowId = Long
+typealias BorrowDate = String
+typealias GiveBackDate = String
+typealias IsBringBack = Boolean

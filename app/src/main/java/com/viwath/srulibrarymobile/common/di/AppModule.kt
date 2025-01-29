@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.di
+package com.viwath.srulibrarymobile.common.di
 
 import android.content.Context
 import com.google.gson.Gson
@@ -40,6 +40,7 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UploadBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetBorrowsUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
@@ -190,6 +191,7 @@ object AppModule {
     fun provideBorrowUseCase(
         repository: CoreRepository
     ): BorrowUseCase = BorrowUseCase(
-            BorrowBookUseCase(repository)
+        BorrowBookUseCase(repository),
+        GetBorrowsUseCase(repository)
     )
 }

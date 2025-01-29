@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.domain.model.Book
@@ -33,7 +32,6 @@ class BookRecyclerViewAdapter(
         val tvTitle: TextView = view.findViewById(R.id.tvBookTitle)
         val tvBookQuan: TextView = view.findViewById(R.id.tvBookQuan)
         val tvLanguage: TextView = view.findViewById(R.id.tvLanguage)
-        val rootView: ConstraintLayout = view.findViewById(R.id.recyclerBookContainer)
         val menuIcon: ImageView = itemView.findViewById(R.id.menuIcon)
     }
 
@@ -47,14 +45,11 @@ class BookRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
-        val root = holder.rootView
         val menuIcon = holder.menuIcon
         if (isDarkMode){
-            root.setBackgroundResource(R.drawable.night_recycler_book_background)
             menuIcon.setImageResource(R.drawable.ic_more_vert_light_24)
         }
         else{
-            root.setBackgroundResource(R.drawable.light_recycler_book_background)
             menuIcon.setImageResource(R.drawable.ic_more_vert_night_24)
         }
 

@@ -9,6 +9,7 @@ package com.viwath.srulibrarymobile.data.api
 
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
+import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
 import com.viwath.srulibrarymobile.domain.model.College
@@ -82,9 +83,6 @@ interface CoreApi {
     @PUT("/api/v1/book/trash")
     suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
 
-    @POST("/api/v1/borrow")
-    suspend fun borrow(@Body borrowRequest: BorrowRequest): Response<Unit>
-
     @PUT("/api/v1/recover")
     suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
 
@@ -96,5 +94,17 @@ interface CoreApi {
 
     @GET("/api/v1/college")
     suspend fun college(): Response<List<College>>
+
+    /*
+    * Borrow api
+    * */
+    @POST("/api/v1/borrow")
+    suspend fun borrow(@Body borrowRequest: BorrowRequest): Response<Unit>
+
+    @GET("api/v1/borrow/detail-active")
+    suspend fun borrow(): Response<List<BorrowDetailDto>>
+
+    @PUT("api/v1/borrow/extend-borrow")
+    suspend fun extendBorrow(@Query("id") id: Long): Response<Unit>
 
 }
