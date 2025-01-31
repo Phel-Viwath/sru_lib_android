@@ -17,8 +17,14 @@ object DateTimeUtil {
         return LocalDate.parse(this)
     }
 
-    fun borrowOverDueDate(borrowDate: LocalDate): Boolean {
+    fun borrowOverDueDate(borrowDate: LocalDate, isExtend: Boolean): Boolean {
         val currentDate = LocalDate.now()
-        return borrowDate.plusDays(14) <= currentDate
+        val dueDate = if (!isExtend) borrowDate.plusDays(14) else borrowDate.plusDays(21)
+        return dueDate <= currentDate
+    }
+
+    fun String.extendBorrowDate(): String{
+        val date = this.toLocalDate()
+        return date.plusDays(7).toString()
     }
 }

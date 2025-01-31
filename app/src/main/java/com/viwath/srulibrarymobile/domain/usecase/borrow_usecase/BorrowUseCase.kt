@@ -8,6 +8,10 @@
 package com.viwath.srulibrarymobile.domain.usecase.borrow_usecase
 
 data class BorrowUseCase(
+    val getAllBorrowUseCase: GetAllBorrowUseCase,
     val borrowBookUseCase: BorrowBookUseCase,
-    val getBorrowsUseCase: GetBorrowsUseCase
+    val getActiveBorrowsDetailUseCase: GetActiveBorrowsDetailUseCase,
+    val searchBorrowUseCase: SearchBorrowUseCase,
+    val extendBorrowUseCase: ExtendBorrowUseCase,
+    val returnBookUseCase: ReturnBookUseCase
 )

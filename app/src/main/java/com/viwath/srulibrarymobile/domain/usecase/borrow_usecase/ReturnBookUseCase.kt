@@ -7,23 +7,29 @@
 
 package com.viwath.srulibrarymobile.domain.usecase.borrow_usecase
 
+import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
-import com.viwath.srulibrarymobile.domain.model.borrow.toBorrow
+import com.viwath.srulibrarymobile.domain.model.BookId
+import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class GetBorrowsUseCase(
+class ReturnBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Borrow>>> = flow{
+    operator fun invoke(studentId: StudentId, bookId: BookId): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            val borrows = repository.getBorrows().map { it.toBorrow() }
-            emit(Resource.Success(borrows))
+            val response = repository.returnBook(studentId, bookId)
+            Log.d("ReturnBookUseCase", "invoke: ${response.code()} ${response.message()}")
+            if (response.isSuccessful)
+                emit(Resource.Success(Unit))
+            else
+                emit(Resource.Error(response.code().toString() + response.message()))
         }catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "An error occurred"))
         } catch (e: HttpException){

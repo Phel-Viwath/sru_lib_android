@@ -40,7 +40,11 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UpdateBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.UploadBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
-import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetBorrowsUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.ExtendBorrowUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetActiveBorrowsDetailUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetAllBorrowUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.ReturnBookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.SearchBorrowUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
@@ -191,7 +195,11 @@ object AppModule {
     fun provideBorrowUseCase(
         repository: CoreRepository
     ): BorrowUseCase = BorrowUseCase(
+        GetAllBorrowUseCase(repository),
         BorrowBookUseCase(repository),
-        GetBorrowsUseCase(repository)
+        GetActiveBorrowsDetailUseCase(repository),
+        SearchBorrowUseCase(repository),
+        ExtendBorrowUseCase(repository),
+        ReturnBookUseCase(repository)
     )
 }

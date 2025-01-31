@@ -12,8 +12,10 @@ import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
@@ -99,12 +101,21 @@ interface CoreApi {
     * Borrow api
     * */
     @POST("/api/v1/borrow")
-    suspend fun borrow(@Body borrowRequest: BorrowRequest): Response<Unit>
+    suspend fun activeBorrowDetails(@Body borrowRequest: BorrowRequest): Response<Unit>
+
+    @GET("api/v1/borrow/detail")
+    suspend fun getAllBorrowDetails(): Response<List<BorrowDetailDto>>
 
     @GET("api/v1/borrow/detail-active")
-    suspend fun borrow(): Response<List<BorrowDetailDto>>
+    suspend fun activeBorrowDetails(): Response<List<BorrowDetailDto>>
+
+    @GET("api/v1/borrow/search")
+    suspend fun searchBorrow(@Query("keyword") keyword: String): Response<List<BorrowDetailDto>>
 
     @PUT("api/v1/borrow/extend-borrow")
     suspend fun extendBorrow(@Query("id") id: Long): Response<Unit>
+
+    @PUT("/api/v1/borrow")
+    suspend fun returnBook(@Query("studentId") studentId: StudentId, @Query("bookId") bookId: BookId): Response<Unit>
 
 }

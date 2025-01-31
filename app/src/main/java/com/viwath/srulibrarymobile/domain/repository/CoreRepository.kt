@@ -10,11 +10,13 @@ package com.viwath.srulibrarymobile.domain.repository
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
-import com.viwath.srulibrarymobile.data.dto.BorrowDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.BookId
+import com.viwath.srulibrarymobile.domain.model.BorrowId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
@@ -45,5 +47,9 @@ interface CoreRepository {
 
     // borrow
     suspend fun borrowBook(borrow: BorrowRequest): Response<Unit>
-    suspend fun getBorrows(): List<BorrowDetailDto>
+    suspend fun getAllBorrowsDetail(): List<BorrowDetailDto>
+    suspend fun getActiveBorrowsDetail(): List<BorrowDetailDto>
+    suspend fun searchBorrow(keyword: String): List<BorrowDetailDto>
+    suspend fun extendBorrow(id: BorrowId): Response<Unit>
+    suspend fun returnBook(studentId: StudentId, bookId: BookId): Response<Unit>
 }

@@ -13,13 +13,14 @@ import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
-import com.viwath.srulibrarymobile.data.dto.BorrowDto
 import com.viwath.srulibrarymobile.domain.model.Attend
 import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.BookId
+import com.viwath.srulibrarymobile.domain.model.BorrowId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
-import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
@@ -185,15 +186,42 @@ class CoreRepositoryImp @Inject constructor(
     }
 
     override suspend fun borrowBook(borrow: BorrowRequest):Response<Unit> {
-        val response = api.borrow(borrow)
+        val response = api.activeBorrowDetails(borrow)
         return response
     }
 
-    override suspend fun getBorrows(): List<BorrowDetailDto> {
-        val response = api.borrow()
+    override suspend fun getAllBorrowsDetail(): List<BorrowDetailDto> {
+        val response = api.getAllBorrowDetails()
         return if (response.isSuccessful)
             response.body() ?: emptyList()
         else throw CoreException("Error get borrow")
+    }
+
+    override suspend fun getActiveBorrowsDetail(): List<BorrowDetailDto> {
+        val response = api.activeBorrowDetails()
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error get borrow")
+    }
+
+    override suspend fun searchBorrow(keyword: String): List<BorrowDetailDto> {
+        val response = api.searchBorrow(keyword)
+        return if (response.isSuccessful)
+            response.body() ?: emptyList()
+        else throw CoreException("Error search borrow")
+    }
+
+    override suspend fun extendBorrow(id: BorrowId): Response<Unit> {
+        val response = api.extendBorrow(id)
+        return response
+    }
+
+    override suspend fun returnBook(
+        studentId: StudentId,
+        bookId: BookId
+    ): Response<Unit> {
+        val response = api.returnBook(studentId, bookId)
+        return response
     }
 
 }

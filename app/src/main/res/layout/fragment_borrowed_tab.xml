@@ -22,7 +22,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutSearch"
+            android:id="@+id/tilSearchBorrow"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,16 +51,29 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_refresh_night_24"
             android:contentDescription="@string/refresh"
-            app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
+            app:layout_constraintTop_toBottomOf="@+id/tilSearchBorrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkboxFilterBorrow"
             android:text="@string/overdue"
+            app:buttonIconTint="?android:attr/textColorPrimary"
             android:textColor="?android:attr/textColorPrimary"
             android:checked="false"
-            app:layout_constraintTop_toBottomOf="@+id/layoutSearch"
+            app:layout_constraintTop_toBottomOf="@+id/tilSearchBorrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/checkboxGetAllBorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkboxGetAllBorrow"
+            android:text="@string/all"
+            app:buttonIconTint="?android:attr/textColorPrimary"
+            android:textColor="?android:attr/textColorPrimary"
+            android:checked="false"
+            app:layout_constraintTop_toBottomOf="@+id/tilSearchBorrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"

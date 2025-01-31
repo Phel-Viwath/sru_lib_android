@@ -25,7 +25,8 @@ import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 class BorrowRecyclerAdapter(
     private val borrow: List<Borrow>,
     private val isDarkMode: Boolean,
-    private val context: Context
+    private val context: Context,
+    private val onItemClicked: (borrow: Borrow) -> Unit
 ) : RecyclerView.Adapter<BorrowRecyclerAdapter.ViewAdapter>(){
 
     inner class ViewAdapter(view: View): RecyclerView.ViewHolder(view){
@@ -113,16 +114,15 @@ class BorrowRecyclerAdapter(
         }
 
         // action click
-        val onItemClickListener = View.OnClickListener{
+        holder.itemView.setOnClickListener{
+            onItemClicked(borrowList)
+        }
+        holder.arrowButton.setOnClickListener{
             val wasExpanded = borrowList.isExpanded
-
             collapseAllItemsExcept(position)
             borrowList.isExpanded = !wasExpanded
             notifyItemChanged(position)
         }
-
-        holder.itemView.setOnClickListener(onItemClickListener)
-        holder.arrowButton.setOnClickListener(onItemClickListener)
 
     }
     

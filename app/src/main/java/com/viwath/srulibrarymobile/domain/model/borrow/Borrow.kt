@@ -28,6 +28,7 @@ data class Borrow(
     val borrowDate: BorrowDate,
     val giveBackDate: GiveBackDate,
     val isBringBack: IsBringBack,
+    val isExtend: Boolean,
     var isExpanded: Boolean = false
 )
 
@@ -41,5 +42,6 @@ fun BorrowDetailDto.toBorrow(): Borrow = Borrow(
     borrowDate = borrowDate,
     giveBackDate = giveBackDate,
     isBringBack = isBringBack,
+    isExtend = isExtend,
     isExpanded = false
 )

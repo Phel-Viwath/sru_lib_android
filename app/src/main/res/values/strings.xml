@@ -145,7 +145,8 @@
     <string name="zero">0</string>
 
     <string name="overdue">Over Due</string>
-    
+    <string name="all">All</string>
+
     <string name="add_book">Add Books</string>
     <string name="borrowed">Borrowed</string>
     <string name="donation">Donation</string>
@@ -174,7 +175,10 @@
 
     <string name="borrow_date">Borrow Date</string>
     <string name="return_date">Return Date</string>
+    <string name="new_return_date">New Return Date</string>
     <string name="returned">Returned</string>
+    <string name="returns">Return</string>
+    <string name="extend">Extend</string>
 
     <string name="book_id">Book ID</string>
     <string name="book_title">Book Title</string>

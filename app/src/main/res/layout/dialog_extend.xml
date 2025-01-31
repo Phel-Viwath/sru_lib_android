@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RelativeOverlap">
+            <RadioButton
+                android:id="@+id/radioReturn"
+                android:checked="true"
+                android:buttonTint="@color/red"
+                android:text="@string/returns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/radioExtend"
+                android:text="@string/extend"
+                android:buttonTint="?android:attr/textColorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RadioGroup>
+        
+        <ImageButton
+            android:id="@+id/btExitDialog"
+            android:src="@drawable/ic_close_dark_24"
+            android:backgroundTint="@color/zxing_transparent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/lin"
+        android:paddingHorizontal="10dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/relative"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+       <GridLayout
+           android:columnCount="2"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/tvBookId"
+               android:text="@string/book_id"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="0"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvBookIdValue"
+               android:text="@string/zero"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="0"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvBookTitle"
+               android:text="@string/book_title"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvBookTitleValue"
+               android:text="@string/book_title"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvStudentId"
+               android:text="@string/student_id"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="2"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvStudentIdValue"
+               android:text="@string/student_id"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="2"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvStudentName"
+               android:text="@string/book_title"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="3"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvStudentNameValue"
+               android:text="@string/book_title"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="3"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvBorrowDate"
+               android:text="@string/borrow_date"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="4"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvBorrowDateValue"
+               android:text="@string/date"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="4"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvReturnDate"
+               android:text="@string/return_date"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="5"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvReturnDateValue"
+               android:text="@string/date"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="5"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/tvNewReturnDate"
+               android:text="@string/new_return_date"
+               android:visibility="gone"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="0"
+               android:layout_row="6"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tvNewReturnDateValue"
+               android:text="@string/date"
+               android:visibility="gone"
+               android:textColor="?android:attr/textColorPrimary"
+               android:textSize="14sp"
+               android:layout_column="1"
+               android:layout_row="6"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+       </GridLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btReturnOrExtend"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            app:cornerRadius="8dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="10dp"
+            android:text="@string/returns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
