@@ -11,13 +11,18 @@ import android.app.Application
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.viwath.srulibrarymobile.utils.SettingPreferences
+import com.viwath.srulibrarymobile.utils.connectivity.NetworkConnectivityObserver
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class LibApp : Application(){
     private lateinit var settingPreferences: SettingPreferences
+    private lateinit var connectivityObserver: NetworkConnectivityObserver
     override fun onCreate() {
         super.onCreate()
+        ///
+        connectivityObserver = NetworkConnectivityObserver(this)
+        ///
         settingPreferences = SettingPreferences(applicationContext)
         val themeMode = settingPreferences.getSavedTheme()
         val theme = when(themeMode){
