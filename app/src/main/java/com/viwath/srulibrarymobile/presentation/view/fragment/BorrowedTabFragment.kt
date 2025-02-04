@@ -73,7 +73,7 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
             viewModel.resultEvent.collect { event ->
                 when (event) {
                     is ResultEvent.ShowSuccess -> {
-                        mainActivity.showSnackBar(event.message)
+                        mainActivity.showSnackbar(event.message)
                     }
                     is ResultEvent.ShowError -> {
                         mainActivity.showToast(event.errorMsg)

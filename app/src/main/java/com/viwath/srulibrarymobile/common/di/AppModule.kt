@@ -52,6 +52,8 @@ import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUs
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.SaveAttendUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.UpdateExitingUseCase
 import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.connectivity.ConnectivityObserver
+import com.viwath.srulibrarymobile.utils.connectivity.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -202,4 +204,10 @@ object AppModule {
         ExtendBorrowUseCase(repository),
         ReturnBookUseCase(repository)
     )
+
+    @Provides
+    @Singleton
+    fun provideNetworkObserver(@ApplicationContext context: Context): ConnectivityObserver{
+        return NetworkConnectivityObserver(context)
+    }
 }

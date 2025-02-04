@@ -22,17 +22,19 @@ import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentQrBinding
 import com.viwath.srulibrarymobile.presentation.event.QrEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
+import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
+import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.QrFragmentViewModel
 import com.viwath.srulibrarymobile.utils.CameraPreview
 import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.connectivity.Status
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -61,7 +63,7 @@ class QrEntryFragment: Fragment(){
     private lateinit var previewView: PreviewView
     private lateinit var cameraAction: CameraPreview
     private lateinit var permission: PermissionRequest
-    private lateinit var loading: Loading
+    private lateinit var mainActivity: MainActivity
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -79,9 +81,8 @@ class QrEntryFragment: Fragment(){
     private var isChecked = false
 
     // View Model
-    private val viewModel: QrFragmentViewModel by lazy {
-        ViewModelProvider(requireActivity())[QrFragmentViewModel::class.java]
-    }
+    private val viewModel: QrFragmentViewModel by activityViewModels()
+    private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,7 +98,7 @@ class QrEntryFragment: Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loading = Loading(requireActivity())
+        mainActivity = (requireActivity() as MainActivity)
 
         // check if dark mode or not
         val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -154,7 +155,13 @@ class QrEntryFragment: Fragment(){
 
         }
         //// Observe View model
-        observerViewModel()
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { status ->
+            when(status){
+                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
+                else -> observerViewModel()
+            }
+        }
+
     }
 
     override fun onDestroyView() {
@@ -162,7 +169,7 @@ class QrEntryFragment: Fragment(){
         if (::cameraAction.isInitialized){
             cameraAction.stopCamera()
         }
-        loading.loadingDismiss()
+        mainActivity.stopLoading()
     }
     //// End override method
 
@@ -194,9 +201,9 @@ class QrEntryFragment: Fragment(){
         viewModel.state.onEach { state ->
             when(state){
                 is QrFragmentState.Idle -> {}
-                is QrFragmentState.Loading -> startLoading()
+                is QrFragmentState.Loading -> mainActivity.startLoading()
                 is QrFragmentState.StudentLoaded -> {
-                    stopLoading()
+                    mainActivity.stopLoading()
                     binding.edtId.setText(studentId.toString())
                     binding.edtStuName.setText(state.student.studentName)
                     binding.edtMajor.setText(state.student.majorName)
@@ -207,7 +214,7 @@ class QrEntryFragment: Fragment(){
                     binding.swipeRefresh.isRefreshing = false
                 }
                 is QrFragmentState.Error -> {
-                    stopLoading()
+                    mainActivity.stopLoading()
                     binding.swipeRefresh.isRefreshing = false
                     Log.d("QRFragment", "observerViewModel: ${state.message}")
                     AlertDialog.Builder(requireContext())
@@ -221,13 +228,13 @@ class QrEntryFragment: Fragment(){
                         .show()
                 }
                 is QrFragmentState.AttentionSaved -> {
-                    stopLoading()
+                    mainActivity.stopLoading()
                     binding.swipeRefresh.isRefreshing = false
                     showSuccessMessage()
                     onButtonClearClick()
                 }
                 is QrFragmentState.EntryState -> state.entry?.let {
-                    stopLoading()
+                    mainActivity.stopLoading()
                     binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
                     binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
                     binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
@@ -314,13 +321,5 @@ class QrEntryFragment: Fragment(){
         previewView.visibility = View.GONE
         previewView.visibility = View.VISIBLE
     }
-
-    private fun startLoading(): Unit = requireActivity().runOnUiThread{
-        loading.loadingStart()
-    }
-    private fun stopLoading(): Unit = requireActivity().runOnUiThread{
-        loading.loadingDismiss()
-    }
-
 
 }

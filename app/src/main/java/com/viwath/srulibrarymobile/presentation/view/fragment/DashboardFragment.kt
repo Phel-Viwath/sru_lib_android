@@ -26,7 +26,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.data.BarData
@@ -50,7 +49,7 @@ import com.viwath.srulibrarymobile.presentation.view.adapter.EntryRecycleViewAda
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
-import com.viwath.srulibrarymobile.utils.connectivity.ConnectivityObserver
+import com.viwath.srulibrarymobile.utils.connectivity.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,6 +62,7 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
     private var isCardEnlarged = false
     private var currentExpandCard: CardView? = null
+    private var isDarkMode: Boolean = false
 
     // Define View Model
     private val viewModel: DashboardViewModel by activityViewModels()
@@ -82,12 +82,31 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = (requireActivity() as MainActivity)
-        observeConnectivityState()
 
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         setUpTheme(isDarkMode)
+        setUpUi(isDarkMode)
 
-        /// swipe refresh
+        // observe network status
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ status ->
+            when(status){
+                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
+                else -> observeViewModel(isDarkMode)
+            }
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.state.removeObservers(this)
+        _binding = null
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun setUpUi(isDarkMode: Boolean){
         binding.swipeRefresh.setColorSchemeResources(R.color.red, R.color.green, R.color.orange)
         binding.swipeRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(requireContext(), R.color.black))
         binding.swipeRefresh.setColorSchemeResources(android.R.color.transparent)
@@ -101,6 +120,22 @@ class DashboardFragment : Fragment() {
 
         //// load data
         binding.greetingText.text = "Hello, ${viewModel.username}"
+
+        // button entry
+        binding.btEntry.setOnClickListener {
+            showDialogEntry(requireContext(), isDarkMode)
+        }
+
+        // set card animation
+        val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
+        cardList.forEach { cardView ->
+            setupCardAnimation(cardView)
+        }
+
+    }
+
+    private fun observeViewModel(isDarkMode: Boolean){
+        viewModel.state.removeObservers(viewLifecycleOwner)
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when{
                 state.isLoading -> mainActivity.startLoading()
@@ -182,39 +217,6 @@ class DashboardFragment : Fragment() {
                     mainActivity.stopLoading()
                     Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
                     binding.swipeRefresh.isRefreshing = false
-                }
-            }
-        }
-
-        // button entry
-        binding.btEntry.setOnClickListener {
-            showDialogEntry(requireContext(), isDarkMode)
-        }
-
-        // set card animation
-        val cardList = listOf(binding.card1, binding.card2, binding.card3, binding.card4)
-        cardList.forEach { cardView ->
-            setupCardAnimation(cardView)
-        }
-
-    }
-
-    private fun observeConnectivityState(){
-        viewLifecycleOwner.lifecycleScope.launch{
-            connectivityViewModel.networkState.collect{ status ->
-                when(status){
-                    ConnectivityObserver.Status.Unavailable -> {
-                        mainActivity.showSnackBar("No Internet Connection")
-                    }
-                    ConnectivityObserver.Status.Available -> {
-                        mainActivity.showSnackBar("Internet Available")
-                    }
-                    ConnectivityObserver.Status.Lost -> {
-                        mainActivity.showSnackBar("Internet Lost")
-                    }
-                    ConnectivityObserver.Status.Losing -> {
-                        mainActivity.showSnackBar("Internet Connection Weak")
-                    }
                 }
             }
         }

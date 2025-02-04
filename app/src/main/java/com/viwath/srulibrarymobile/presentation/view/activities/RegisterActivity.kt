@@ -20,6 +20,7 @@ import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.databinding.ActivityRegisterBinding
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,7 @@ class RegisterActivity : AppCompatActivity(){
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var loading: Loading
     private val viewModel: AuthViewModel by viewModels()
+    private val connectivityViewModel: ConnectivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

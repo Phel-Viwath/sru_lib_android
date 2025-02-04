@@ -101,11 +101,4 @@ class BookFragment : Fragment(R.layout.fragment_book){
         mainActivity.stopLoading()
     }
 
-    fun showSnackBar(message: String){
-        mainActivity.showSnackBar(message)
-    }
-
-    fun showToast(message: String){
-        mainActivity.showToast(message)
-    }
 }

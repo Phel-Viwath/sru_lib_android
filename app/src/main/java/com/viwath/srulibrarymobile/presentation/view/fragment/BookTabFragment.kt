@@ -18,7 +18,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +55,9 @@ import com.viwath.srulibrarymobile.presentation.view.dialog.DialogAddBook
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogBookDetail
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogBorrow
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookTabViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.connectivity.Status
 import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.launch
 
@@ -72,6 +73,8 @@ class BookTabFragment : Fragment() {
     private var _binding: FragmentBookTabBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var mainActivity: MainActivity
+
     // dialog
     private var dialogAddUpdate: Dialog? = null
     private var progressDialog: Dialog? = null
@@ -85,6 +88,7 @@ class BookTabFragment : Fragment() {
     private var fileUri: Uri? = null
 
     private val viewModel: BookTabViewModel by activityViewModels()
+    private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
 
     private val _languages: MutableList<Language> = mutableListOf()
     private val _colleges: MutableList<College> = mutableListOf()
@@ -135,14 +139,11 @@ class BookTabFragment : Fragment() {
                     .setCancelable(true)
                     .create()
                     .show()
-                Log.d("BookTabFragment", "File selected: $filePath")
             } else {
                 showToast("Unable to retrieve the file name.")
-                Log.d("BookTabFragment", "Unable to retrieve the file name.")
             }
         } else {
             showToast("No file selected.")
-            Log.d("BookTabFragment", "No file selected.")
         }
     }
 
@@ -169,11 +170,18 @@ class BookTabFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity = (requireActivity() as MainActivity)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         loading = Loading(requireActivity())
         permission = PermissionRequest(this)
         setupUI(isDarkMode)
-        observeViewModel(isDarkMode)
+
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ status ->
+            when(status){
+                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
+                else -> observeViewModel(isDarkMode)
+            }
+        }
 
     }
 

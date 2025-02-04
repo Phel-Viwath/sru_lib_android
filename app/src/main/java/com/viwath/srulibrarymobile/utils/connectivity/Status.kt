@@ -7,8 +7,10 @@
 
 package com.viwath.srulibrarymobile.utils.connectivity
 
-import kotlinx.coroutines.flow.Flow
-
-interface ConnectivityObserver{
-    fun networkObserve(): Flow<Status>
+enum class Status{
+    CONNECTED,
+    CONNECTED_WIFI,
+    CONNECTED_MOBILE,
+    CONNECTED_UNMETERED,
+    DISCONNECTED
 }

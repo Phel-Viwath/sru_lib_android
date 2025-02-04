@@ -11,8 +11,8 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
 constraintlayout = "2.2.0"
-navigationFragmentKtx = "2.8.5"
-navigationUiKtx = "2.8.5"
+navigationFragmentKtx = "2.8.6"
+navigationUiKtx = "2.8.6"
 # Coroutines version
 kotlinxCoroutinesCore = "1.8.1"
 kotlinxCoroutinesAndroid = "1.8.1"
@@ -30,7 +30,7 @@ androidChart = "3.0.3"
 # Glass morphism
 fkBlurViewAndroid = "1.0.1"
 # google meterail design
-materialVersion = "1.13.0-alpha09"
+materialVersion = "1.13.0-alpha10"
 # Circle progress bar
 circleprogress = "1.2.1"
 # Swipe refresh layout version
