@@ -20,10 +20,21 @@ import com.viwath.srulibrarymobile.databinding.FragmentBookBinding
 import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.view.adapter.ViewPagerAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
+/**
+ * The BookFragment displays the main book-related screen in the application.
+ *
+ * It uses a ViewPager to manage multiple child fragments, each representing a different
+ * book-related category (e.g., Add Book, Borrowed, Donation, Backup). It also displays
+ * summary statistics about books, donations, borrowed items, etc.
+ *
+ * @property _binding The binding instance for the fragment's layout. Nullable before onViewCreated.
+ * @property binding The non-null binding instance for the fragment's layout.
+ * @property loading A Loading instance for showing/hiding loading indicators.
+ * @property viewModel The shared ViewModel for managing book-related data.
+ * @property mainActivity The parent MainActivity instance.
+ */
 class BookFragment : Fragment(R.layout.fragment_book){
 
     private var _binding: FragmentBookBinding?= null

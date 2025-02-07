@@ -39,7 +39,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentDashboardBinding
-import com.viwath.srulibrarymobile.domain.model.AttendDetail
+import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
 import com.viwath.srulibrarymobile.domain.model.dashboard.Day
 import com.viwath.srulibrarymobile.domain.model.dashboard.TotalMajorVisitor
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
@@ -49,11 +49,13 @@ import com.viwath.srulibrarymobile.presentation.view.adapter.EntryRecycleViewAda
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * The DashboardFragment class is responsible for displaying the main dashboard screen of the application.
+ * It fetches data from the */
 @Suppress("DEPRECATION")
 class DashboardFragment : Fragment() {
 
@@ -87,12 +89,14 @@ class DashboardFragment : Fragment() {
         isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         setUpTheme(isDarkMode)
         setUpUi(isDarkMode)
+        observeViewModel(isDarkMode)
+
 
         // observe network status
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ status ->
-            when(status){
-                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
-                else -> observeViewModel(isDarkMode)
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
+            when(isConnected){
+                false -> mainActivity.showTopSnackbar("No Internet Connection", true)
+                true -> observeViewModel(isDarkMode)
             }
         }
     }

@@ -10,15 +10,16 @@ package com.viwath.srulibrarymobile.data.api
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
-import com.viwath.srulibrarymobile.domain.model.Attend
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.data.dto.DonationDto
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
+import com.viwath.srulibrarymobile.domain.model.entry.Attend
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import com.viwath.srulibrarymobile.domain.model.entry.EntryStatus
 import okhttp3.MultipartBody
@@ -32,6 +33,19 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * CoreApi interface defines the API endpoints for the library management system.
+ *
+ * This interface uses Retrofit annotations to define HTTP requests and their corresponding parameters.
+ * It provides methods for interacting with various parts of the system, including:
+ * - Dashboard: Fetching dashboard data.
+ * - Entry/Attendance: Managing student entry and attendance.
+ * - Books: Managing book information, including upload, retrieval, addition, updates, and search.
+ * - Trash: Managing books moved to and recovered from the trash.
+ * - Language and College: Fetching available book languages and college lists.
+ * - Borrowing: Managing book borrowing, including adding, fetching, extending, and searching.
+ * - Donation: Managing book donations.
+ */
 interface CoreApi {
 
     /// core api
@@ -117,5 +131,14 @@ interface CoreApi {
 
     @PUT("/api/v1/borrow")
     suspend fun returnBook(@Query("studentId") studentId: StudentId, @Query("bookId") bookId: BookId): Response<Unit>
+
+    @GET("/api/v1/donation")
+    suspend fun getAllDonation(): Response<List<DonationDto>>
+
+    @POST("/api/v1/donation")
+    suspend fun addDonation(@Body donationDto: DonationDto): Response<Unit>
+
+    @PUT("api/v1/donation")
+    suspend fun updateDonation(@Body donationDto: DonationDto): Response<Unit>
 
 }

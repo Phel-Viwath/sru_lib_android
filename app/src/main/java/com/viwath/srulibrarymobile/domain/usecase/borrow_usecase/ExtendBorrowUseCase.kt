@@ -16,6 +16,13 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * `ExtendBorrowUseCase` is a use case responsible for extending the duration of a borrowed item.
+ *
+ * It interacts with the [CoreRepository] to perform the extension operation.
+ *
+ * @property repository The [CoreRepository] instance used to communicate with the data layer.
+ */
 class ExtendBorrowUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

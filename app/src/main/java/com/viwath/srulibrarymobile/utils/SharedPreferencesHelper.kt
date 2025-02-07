@@ -12,6 +12,14 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
+/**
+ * A helper class for managing SharedPreferences, providing both regular and encrypted storage options.
+ *
+ * This class uses the AndroidX Security library to provide encrypted storage for sensitive data.
+ * It follows the Singleton pattern to ensure a single instance is used throughout the application.
+ *
+ * @param context The application context. Used to access SharedPreferences.
+ */
 class SharedPreferencesHelper private constructor(
     context: Context
 ) {

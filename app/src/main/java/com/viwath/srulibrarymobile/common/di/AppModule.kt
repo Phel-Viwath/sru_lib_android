@@ -45,6 +45,10 @@ import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetActiveBorrow
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.GetAllBorrowUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.ReturnBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.SearchBorrowUseCase
+import com.viwath.srulibrarymobile.domain.usecase.donation_usecase.AddDonationUseCase
+import com.viwath.srulibrarymobile.domain.usecase.donation_usecase.DonationUseCase
+import com.viwath.srulibrarymobile.domain.usecase.donation_usecase.GetAllDonationUseCase
+import com.viwath.srulibrarymobile.domain.usecase.donation_usecase.UpdateDonationUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.CheckExitingUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUseCase
@@ -66,17 +70,37 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Provider
 import javax.inject.Singleton
 
+/**
+ * Main dependency injection module for the SRU Library Mobile application.
+ * This module provides singleton instances of various components used throughout the application.
+ *
+ * @Module Indicates this is a Dagger module
+ * @InstallIn(SingletonComponent::class) Specifies that these dependencies live for the entire application lifecycle
+ */
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    // Inject API
+    /**
+     * Network & API Related Dependencies
+     */
+
+    /**
+     * Provides a configured Gson instance for JSON parsing
+     * @return Gson instance with lenient parsing enabled
+     */
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder()
         .setLenient() // Allows some leniency with JSON parsing
         .create()
 
-    //// Auth API
+    /**
+     * Provides the main API interface for core application features
+     * @param okHttpClient Configured OkHttpClient with authentication interceptor
+     * @param gson Gson instance for JSON parsing
+     * @return CoreApi implementation
+     */
     @Provides
     @Singleton
     fun provideRemoteApi(okHttpClient: OkHttpClient, gson: Gson): CoreApi {
@@ -88,6 +112,11 @@ object AppModule {
             .create(CoreApi::class.java)
     }
 
+    /**
+     * Provides the authentication API interface
+     * Configured with extended timeouts (240 seconds) for handling lengthy authentication operations
+     * @return AuthApi implementation
+     */
     @Provides
     @Singleton
     fun provideAuthApi(): AuthApi {
@@ -104,7 +133,12 @@ object AppModule {
             .build()
             .create(AuthApi::class.java)
     }
-    ///////////// OK Http client
+
+    /**
+     * Provides configured OkHttpClient with authentication interceptor and extended timeouts
+     * @param authInterceptor Interceptor for handling authentication
+     * @return Configured OkHttpClient
+     */
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
@@ -116,29 +150,45 @@ object AppModule {
             .build()
     }
 
-    // Inject Auth Repository
+    /**
+     * Repository Dependencies
+     */
+
+    /**
+     * Provides the authentication repository implementation
+     * @param authApi Authentication API interface
+     * @param tokenManager Manager for handling authentication tokens
+     * @return AuthRepository implementation
+     */
     @Provides
     @Singleton
     fun provideAuthRepository(authApi: AuthApi, tokenManager: TokenManager): AuthRepository {
         return AuthRepositoryImp(authApi, tokenManager)
     }
 
-    // Inject Core Repository
+
+    /**
+     * Provides the core repository implementation
+     * @param api Core API interface
+     * @return CoreRepository implementation
+     */
     @Provides
     @Singleton
     fun provideCoreRepository(api: CoreApi): CoreRepository {
         return CoreRepositoryImp(api)
     }
 
-    // Auth interceptor
-    @Provides
-    @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager, authUseCase: Provider<AuthUseCase>): AuthInterceptor {
-        return AuthInterceptor(tokenManager, lazy { authUseCase.get() })
-    }
 
+    /**
+     * Use Case Dependencies
+     */
 
-    /// Qr scan use case
+    /**
+     * Provides entry/QR scanning related use cases
+     * Handles student attendance and entry/exit management
+     * @param repository Core repository instance
+     * @return EntryUseCase containing all entry-related use cases
+     */
     @Provides
     @Singleton
     fun provideQrUseCase(repository: CoreRepository): EntryUseCase {
@@ -151,7 +201,12 @@ object AppModule {
         )
     }
 
-    // provide Auth use case
+    /**
+     * Provides authentication related use cases
+     * Handles user registration, signin, and token management
+     * @param repository Auth repository instance
+     * @return AuthUseCase containing all authentication-related use cases
+     */
     @Provides
     @Singleton
     fun provideAuthUseCase(repository: AuthRepository): AuthUseCase {
@@ -166,13 +221,13 @@ object AppModule {
         )
     }
 
-    // token manger
-    @Provides
-    @Singleton
-    fun provideTokenManger(@ApplicationContext context: Context): TokenManager {
-        return TokenManager(context)
-    }
 
+    /**
+     * Provides book management related use cases
+     * Handles CRUD operations for books, including trash management
+     * @param repository Core repository instance
+     * @return BookUseCase containing all book-related use cases
+     */
     @Provides
     @Singleton
     fun provideBookUseCase(repository: CoreRepository): BookUseCase{
@@ -192,6 +247,12 @@ object AppModule {
         )
     }
 
+    /**
+     * Provides book borrowing related use cases
+     * Handles borrowing, returning, and extending book loans
+     * @param repository Core repository instance
+     * @return BorrowUseCase containing all borrowing-related use cases
+     */
     @Provides
     @Singleton
     fun provideBorrowUseCase(
@@ -205,9 +266,70 @@ object AppModule {
         ReturnBookUseCase(repository)
     )
 
+    /**
+     * Provides book donation related use cases
+     * Handles donation management and tracking
+     * @param repository Core repository instance
+     * @return DonationUseCase containing all donation-related use cases
+     */
+    @Provides
+    @Singleton
+    fun provideDonationUseCase(repository: CoreRepository): DonationUseCase{
+        return DonationUseCase(
+            GetAllDonationUseCase(repository),
+            AddDonationUseCase(repository),
+            UpdateDonationUseCase(repository)
+        )
+    }
+
+    /**
+     * Utility Dependencies
+     */
+
+    /**
+     * Provides network connectivity observer
+     * Monitors the application's network state
+     * @param context Application context
+     * @return ConnectivityObserver implementation
+     */
     @Provides
     @Singleton
     fun provideNetworkObserver(@ApplicationContext context: Context): ConnectivityObserver{
         return NetworkConnectivityObserver(context)
     }
+
+
+    /**
+     * Provides the authentication interceptor for HTTP requests
+     * The interceptor is responsible for adding authentication tokens to requests and handling token refresh
+     *
+     * @param tokenManager Manager for retrieving and storing authentication tokens
+     * @param authUseCase Provider of authentication use cases, lazily initialized to avoid circular dependencies
+     * @return AuthInterceptor instance
+     *
+     * Note: Uses Provider<AuthUseCase> with lazy initialization to prevent circular dependency issues
+     * that could occur between AuthInterceptor and AuthUseCase
+     */
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(tokenManager: TokenManager, authUseCase: Provider<AuthUseCase>): AuthInterceptor {
+        return AuthInterceptor(tokenManager, lazy { authUseCase.get() })
+    }
+
+
+    /**
+     * Provides the token manager responsible for handling authentication tokens
+     * The token manager handles storing and retrieving tokens securely using Android's context
+     *
+     * @param context Application context needed for accessing secure storage
+     * @return TokenManager instance
+     *
+     * Note: Uses @ApplicationContext to ensure the correct context is injected for token storage
+     */
+    @Provides
+    @Singleton
+    fun provideTokenManger(@ApplicationContext context: Context): TokenManager {
+        return TokenManager(context)
+    }
+
 }

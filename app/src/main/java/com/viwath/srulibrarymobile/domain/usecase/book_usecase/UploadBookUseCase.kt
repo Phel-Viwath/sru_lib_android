@@ -28,6 +28,19 @@ import retrofit2.HttpException
 import java.io.File
 import javax.inject.Inject
 
+/**
+ * Use case responsible for uploading a book file to the server.
+ *
+ * This class handles the entire process of uploading a file, including:
+ * - Validating the file's existence and readability.
+ * - Creating a request body with the appropriate content type.
+ * - Reporting upload progress to the caller.
+ * - Sending the file to the server via the [CoreRepository].
+ * - Handling various potential errors during the upload process (e.g., HTTP errors, network issues).
+ * - Emitting different states of the upload process through a [Flow] of [UploadState].
+ *
+ * @property repository The [CoreRepository] instance used to communicate with the server.
+ */
 class UploadBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

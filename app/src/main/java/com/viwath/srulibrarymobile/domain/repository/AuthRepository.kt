@@ -12,6 +12,12 @@ import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.domain.model.auth.ChangePasswordRequest
 
+/**
+ * Interface defining the contract for authentication-related operations.
+ *
+ * This repository handles user registration, login, authentication, token refresh,
+ * OTP requests and verification, and password changes.
+ */
 interface AuthRepository {
     suspend fun register(request: RegisterRequest): AuthResult<Unit>
     suspend fun logIn(request: LogInRequest): AuthResult<Unit>

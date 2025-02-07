@@ -20,6 +20,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the QR code scanning fragment.
+ *
+ * This ViewModel handles the business logic for the QR code scanning functionality,
+ * including loading student data, saving attendance, retrieving recent entries,
+ * and checking student exit/entry status.
+ *
+ * @property useCase The [EntryUseCase] responsible for handling data operations.
+ */
 @HiltViewModel
 class QrFragmentViewModel @Inject constructor(
     private val useCase: EntryUseCase

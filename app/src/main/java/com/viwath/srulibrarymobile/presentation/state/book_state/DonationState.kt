@@ -8,12 +8,11 @@
 package com.viwath.srulibrarymobile.presentation.state.book_state
 
 import com.viwath.srulibrarymobile.data.dto.BookDto
+import com.viwath.srulibrarymobile.data.dto.DonationDto
+import com.viwath.srulibrarymobile.domain.model.Donation
 
-sealed class DonationState {
-    data class DisplayDonation(val books: List<BookDto> = emptyList()): DonationState()
-    data object AddDonationSuccess: DonationState()
-    data object RemoveSuccess: DonationState()
-    data object Loading: DonationState()
-    data class Error(val errorMsg: String = ""): DonationState()
+data class DonationState (
+    val isLoading: Boolean = false,
+    val donationList: List<DonationDto> = emptyList(),
 
-}
+)

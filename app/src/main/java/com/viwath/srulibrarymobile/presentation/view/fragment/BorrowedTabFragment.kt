@@ -27,12 +27,29 @@ import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.view.adapter.BorrowRecyclerAdapter
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogExtendOrReturn
 import com.viwath.srulibrarymobile.presentation.viewmodel.BorrowTabViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment responsible for displaying and managing the list of borrowed items.
+ *
+ * This fragment allows users to view their borrowed items, filter them, search for specific items,
+ * and initiate the process of returning or extending a borrowed item's due date.
+ *
+ * @constructor Creates a [BorrowedTabFragment] instance.
+ * @property viewModel The [BorrowTabViewModel] instance used to interact with the data layer.
+ * @property connectivityViewModel The [ConnectivityViewModel] instance used to observe network connectivity.
+ * @property mainActivity The parent [MainActivity] instance.
+ * @property dialogExtendOrReturn A custom dialog [DialogExtendOrReturn] for returning or extending an item.
+ */
 class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
     private var _binding: FragmentBorrowedTabBinding? = null
     private val binding get() = _binding!!
+
+    // view model
     private val viewModel: BorrowTabViewModel by activityViewModels()
+    private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
+
     private lateinit var mainActivity: MainActivity
     private lateinit var dialogExtendOrReturn: DialogExtendOrReturn
 
@@ -42,7 +59,11 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         mainActivity = (requireActivity() as MainActivity)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        observerViewModel(isDarkMode)
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected)
+                observerViewModel(isDarkMode)
+        }
+
         setUpUi(isDarkMode)
     }
 

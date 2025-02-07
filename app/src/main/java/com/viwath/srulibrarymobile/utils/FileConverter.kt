@@ -12,6 +12,32 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import java.io.File
 
+/**
+ * Converts a given [Uri] to a temporary [File] object.
+ *
+ * This function takes a [Uri] representing a file (e.g., from content providers) and creates a temporary
+ * [File] in the application's cache directory. The content from the [Uri] is copied into this temporary file.
+ *
+ * @param context The application context, needed to access the content resolver and cache directory.
+ * @return A [File] object representing the temporary file containing the data from the [Uri], or `null` if:
+ *         - The file name could not be extracted from the [Uri].
+ *         - There was an error opening the input stream from the [Uri].
+ *         - There was a problem writing the data to the temporary file.
+ * @throws FileNotFoundException if the input stream from the [Uri] cannot be opened.
+ *
+ * Example Usage:
+ * ```
+ * val uri: Uri = ... // Some Uri
+ * val file = uri.uriToFile(applicationContext)
+ * if (file != null) {
+ *     // Use the file
+ *     println("File path: ${file.absolutePath}")
+ * } else {
+ *     // Handle error
+ *     println("Failed to convert Uri to File")
+ * }
+ * ```
+ */
 fun Uri.uriToFile(context: Context): File?{
     val contentResolver = context.contentResolver
     val fileName = getFileNameFromUri(context, this) ?: return null

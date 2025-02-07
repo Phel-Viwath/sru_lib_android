@@ -14,6 +14,14 @@ import kotlinx.coroutines.withTimeout
 import okio.IOException
 import javax.inject.Inject
 
+/**
+ * `RefreshTokenUseCase` is a use case class responsible for refreshing the user's authentication token.
+ *
+ * It utilizes an [AuthRepository] to communicate with the data layer for refreshing the token.
+ * The operation is performed with a timeout to prevent indefinite blocking in case of network issues.
+ *
+ * @property repository An instance of [AuthRepository] used for refreshing the token.
+ */
 class RefreshTokenUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {

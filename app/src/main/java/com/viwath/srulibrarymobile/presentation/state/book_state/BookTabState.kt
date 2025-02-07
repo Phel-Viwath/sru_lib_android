@@ -7,7 +7,7 @@
 
 package com.viwath.srulibrarymobile.presentation.state.book_state
 
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.Language

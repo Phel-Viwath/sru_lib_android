@@ -28,6 +28,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [BorrowTabViewModel]
+ *
+ * This ViewModel is responsible for managing the state and logic related to the "Borrow Tab" feature
+ * in the application. It handles interactions with the [BorrowUseCase] to perform operations
+ * such as loading, filtering, searching, extending, and returning borrowed books.
+ *
+ * @property useCase An instance of [BorrowUseCase] that provides the business logic for
+ *                  borrow-related operations.
+ */
 @HiltViewModel
 class BorrowTabViewModel @Inject constructor(
     private val useCase: BorrowUseCase

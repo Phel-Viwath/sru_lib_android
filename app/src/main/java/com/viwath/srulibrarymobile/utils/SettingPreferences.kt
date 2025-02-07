@@ -9,6 +9,13 @@ package com.viwath.srulibrarymobile.utils
 
 import android.content.Context
 
+/**
+ * `SettingPreferences` is a class responsible for managing application settings,
+ * specifically for storing and retrieving the user's preferred theme.
+ * It utilizes `SharedPreferencesHelper` for underlying data persistence.
+ *
+ * @property context The application context, used for accessing shared preferences.
+ */
 class SettingPreferences(context: Context) {
 
     private val prefers = SharedPreferencesHelper.getInstance(context)

@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
@@ -35,6 +35,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [BookTabViewModel] is a ViewModel class responsible for managing the UI-related data
+ * and business logic for the book management screen. It interacts with use cases
+ * to perform actions such as loading, saving, updating, removing, borrowing, and
+ * searching for books.
+ *
+ * @property useCase The [BookUseCase] instance for interacting with book-related data.
+ * @property borrowUseCase The [BorrowUseCase] instance for handling book borrowing operations.
+ */
 @HiltViewModel
 class BookTabViewModel @Inject constructor(
     private val useCase: BookUseCase,

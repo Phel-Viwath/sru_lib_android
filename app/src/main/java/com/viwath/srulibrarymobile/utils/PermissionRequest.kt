@@ -13,6 +13,14 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
+/**
+ * Helper class for handling permission requests in an Android Fragment.
+ *
+ * This class provides methods to check if certain permissions are granted
+ * and can be extended to request and handle permission results.
+ *
+ * @property fragment The Fragment instance associated with the permission request.
+ */
 class PermissionRequest(private val fragment: Fragment) {
 
     fun hasCameraPermission(): Boolean {

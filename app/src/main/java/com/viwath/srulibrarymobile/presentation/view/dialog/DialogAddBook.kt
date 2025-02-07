@@ -14,12 +14,20 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.google.android.material.textfield.TextInputEditText
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.CollegeId
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.LanguageId
 
+/**
+ * `DialogAddBook` is a utility class designed to manage the data entry and retrieval
+ * for adding or editing book information in a UI dialog. It handles user input for
+ * various book attributes, dropdown selection for language and college, and the
+ * population of fields with existing book data.
+ *
+ * @param view The root view of the dialog containing the UI elements for book data entry.
+ */
 class DialogAddBook(view: View) {
     private val edtBookId: TextInputEditText = view.findViewById(R.id.edtBookId)
     private val edtTitle: TextInputEditText = view.findViewById(R.id.edtBookTitle)

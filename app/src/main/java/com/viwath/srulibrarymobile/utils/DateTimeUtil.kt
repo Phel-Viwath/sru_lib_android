@@ -10,6 +10,10 @@ package com.viwath.srulibrarymobile.utils
 import java.time.LocalDate
 
 
+/**
+ * `DateTimeUtil` is a utility object that provides helpful functions for working with dates,
+ * specifically for library-related date calculations.
+ */
 object DateTimeUtil {
 
     fun String.toLocalDate(): LocalDate {

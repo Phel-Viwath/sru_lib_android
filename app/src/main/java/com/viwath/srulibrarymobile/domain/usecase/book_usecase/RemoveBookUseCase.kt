@@ -13,6 +13,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+/**
+ * Use case for removing a book from the library by moving it to the trash.
+ *
+ * This class encapsulates the logic for removing a book based on its ID.
+ * It interacts with the [CoreRepository] to perform the move-to-trash operation.
+ *
+ * @property repository The [CoreRepository] instance responsible for data access.
+ */
 class RemoveBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ){

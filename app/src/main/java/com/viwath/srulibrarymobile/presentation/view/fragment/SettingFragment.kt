@@ -24,6 +24,17 @@ import com.viwath.srulibrarymobile.presentation.view.activities.LoginActivity
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.utils.SettingPreferences
 
+/**
+ * SettingFragment is a Fragment that allows the user to customize their application settings.
+ *
+ * This includes options to:
+ * - Change the application's theme (Light, Dark, System Default).
+ * - View their username and user type/role.
+ * - Log out of the application.
+ *
+ * It utilizes a `SettingPreferences` object to store and retrieve the user's chosen theme.
+ * The Fragment also interacts with a `SettingViewModel` to handle user data and logout functionality.
+ */
 class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null

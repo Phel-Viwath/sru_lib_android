@@ -7,7 +7,7 @@
 
 package com.viwath.srulibrarymobile.domain.model.dashboard
 
-import com.viwath.srulibrarymobile.domain.model.AttendDetail
+import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
 
 data class Dashboard(
     val cardData: List<CardData>,

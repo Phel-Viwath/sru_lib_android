@@ -12,6 +12,15 @@ import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import javax.inject.Inject
 
+/**
+ * `AuthenticateUseCase` is a use case responsible for handling the authentication logic.
+ * It interacts with the `AuthRepository` to perform authentication and refresh token operations.
+ *
+ * This use case abstracts the complexities of authentication and token refreshing
+ * from the higher-level components (e.g., ViewModels).
+ *
+ * @property repository An instance of `AuthRepository` for interacting with authentication-related data.
+ */
 class AuthenticateUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {

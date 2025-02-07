@@ -22,6 +22,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Book Fragment, responsible for managing and providing data
+ * related to book summaries.
+ *
+ * This ViewModel interacts with the [BookUseCase] to fetch and update book summary information.
+ * It exposes a [StateFlow] ([state]) to the UI, allowing for reactive updates
+ * based on changes in the summary data.
+ *
+ * @property useCase An instance of [BookUseCase] to interact with the data layer for book summary operations.
+ */
 @HiltViewModel
 class BookFragmentViewModel @Inject constructor(
     private val useCase: BookUseCase

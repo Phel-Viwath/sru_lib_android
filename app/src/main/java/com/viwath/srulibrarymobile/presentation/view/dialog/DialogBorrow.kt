@@ -15,11 +15,20 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.BookQuantity
 import com.viwath.srulibrarymobile.domain.model.StudentId
 
+/**
+ * Represents a dialog for borrowing a book.
+ * This class handles the UI interactions for the borrow dialog, including:
+ * - Populating book information.
+ * - Handling student ID search.
+ * - Handling the borrow action.
+ *
+ * @param view The root view of the borrow dialog layout.
+ */
 class DialogBorrow(view: View) {
     var book: Book? = null
 

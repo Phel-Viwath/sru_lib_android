@@ -42,7 +42,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookTabBinding
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
@@ -57,7 +57,6 @@ import com.viwath.srulibrarymobile.presentation.view.dialog.DialogBorrow
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookTabViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.utils.PermissionRequest
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.launch
 
@@ -176,11 +175,9 @@ class BookTabFragment : Fragment() {
         permission = PermissionRequest(this)
         setupUI(isDarkMode)
 
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ status ->
-            when(status){
-                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
-                else -> observeViewModel(isDarkMode)
-            }
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
+            if (isConnected)
+                observeViewModel(isDarkMode)
         }
 
     }

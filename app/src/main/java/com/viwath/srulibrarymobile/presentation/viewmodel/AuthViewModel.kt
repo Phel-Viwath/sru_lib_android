@@ -26,6 +26,16 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [AuthViewModel]
+ *
+ * This ViewModel manages the authentication state and processes user authentication events.
+ * It interacts with the [AuthUseCase] to handle sign-up, sign-in, and authentication logic.
+ * It exposes state updates via [state], loading status via [isLoading],
+ * authentication results via [authResult], and error messages via [exceptionFlow].
+ *
+ * @property useCase The [AuthUseCase] instance for handling authentication logic.
+ */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val useCase: AuthUseCase

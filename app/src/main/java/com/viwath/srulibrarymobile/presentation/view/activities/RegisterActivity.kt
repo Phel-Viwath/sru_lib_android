@@ -24,6 +24,22 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * [RegisterActivity] is the activity responsible for handling user registration.
+ *
+ * This activity allows users to create a new account by providing a username,
+ * password, and email. It also provides a link to the [LoginActivity] for users
+ * who already have an account.
+ *
+ * The activity interacts with [AuthViewModel] to perform the registration logic
+ * and [ConnectivityViewModel] to check for network connectivity.
+ *
+ * It also uses [Loading] to display a loading indicator while waiting for network responses.
+ *
+ * Uses [ActivityRegisterBinding] for view binding.
+ *
+ * Uses [MaterialAlertDialogBuilder] to show message dialogs.
+ */
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity(){
 
@@ -39,6 +55,21 @@ class RegisterActivity : AppCompatActivity(){
         loading = Loading(this)
 
         //val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        // Check connection
+        connectivityViewModel.networkStatus.observe(this){ isConnected ->
+            if (isConnected)
+                observeViewModel()
+            else
+                dialogMessage("No Internet Connection", "System")
+        }
+
+        setUpView()
+
+    }
+
+    private fun setUpView(){
+        val state = viewModel.state
 
         val fullText = getString(R.string.register_login_hint)
         val boldText = "Sign In"
@@ -56,9 +87,26 @@ class RegisterActivity : AppCompatActivity(){
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        // view model
-        val state = viewModel.state
+        binding.edtUsername.setText(state.value.signUpUsername)
+        binding.edtPassword.setText(state.value.signUpPassword)
+        binding.edtEmail.setText(state.value.signUpEmail)
 
+        binding.btRegister.setOnClickListener {
+            val username = binding.edtUsername.text
+            val password = binding.edtPassword.text
+            val email = binding.edtEmail.text
+            if (username.isNullOrBlank() || password.isNullOrBlank() || email.isNullOrBlank()){
+                dialogMessage(message = "Please enter username, password and email.", title = "Error!")
+                return@setOnClickListener
+            }
+            viewModel.onEvent(AuthEvent.SignUpUsernameChanged(username.toString()))
+            viewModel.onEvent(AuthEvent.SignUpPasswordChanged(password.toString()))
+            viewModel.onEvent(AuthEvent.SignUpEmailChanged(email.toString()))
+            viewModel.onEvent(AuthEvent.SignUp)
+        }
+    }
+
+    private fun observeViewModel(){
         lifecycleScope.launch {
             viewModel.authResult.collect {result ->
                 when(result){
@@ -95,24 +143,6 @@ class RegisterActivity : AppCompatActivity(){
             }
         }
 
-        binding.edtUsername.setText(state.value.signUpUsername)
-        binding.edtPassword.setText(state.value.signUpPassword)
-        binding.edtEmail.setText(state.value.signUpEmail)
-
-        binding.btRegister.setOnClickListener {
-            val username = binding.edtUsername.text
-            val password = binding.edtPassword.text
-            val email = binding.edtEmail.text
-            if (username.isNullOrBlank() || password.isNullOrBlank() || email.isNullOrBlank()){
-                dialogMessage(message = "Please enter username, password and email.", title = "Error!")
-                return@setOnClickListener
-            }
-            viewModel.onEvent(AuthEvent.SignUpUsernameChanged(username.toString()))
-            viewModel.onEvent(AuthEvent.SignUpPasswordChanged(password.toString()))
-            viewModel.onEvent(AuthEvent.SignUpEmailChanged(email.toString()))
-            viewModel.onEvent(AuthEvent.SignUp)
-        }
-
         lifecycleScope.launch {
             viewModel.exceptionFlow.collect{ message ->
                 dialogMessage(message = message, title = "Error!")
@@ -128,6 +158,7 @@ class RegisterActivity : AppCompatActivity(){
             }
         }
     }
+
 
     private fun dialogMessage(message: String, title: String){
         runOnUiThread {

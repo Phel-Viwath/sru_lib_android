@@ -16,6 +16,15 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * [DashboardUseCase] is a Use Case class responsible for fetching and handling the Dashboard data.
+ *
+ * It interacts with the [CoreRepository] to retrieve the [Dashboard] information.
+ * It handles potential errors during the data retrieval process, such as network or server issues,
+ * and emits the result as a [Flow] of [Resource] objects.
+ *
+ * @property repository The [CoreRepository] instance used to access the data layer.
+ */
 class DashboardUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

@@ -27,35 +27,56 @@ import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.utils.IntentString.EMAIL
-import com.viwath.srulibrarymobile.utils.connectivity.ConnectivityObserver
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * LoginActivity handles user authentication in the SRU Library Mobile application
+ *
+ * Key Responsibilities:
+ * - Manage user login process
+ * - Handle network connectivity
+ * - Display error messages and loading states
+ * - Navigate to registration or main application flow
+ *
+ * @AndroidEntryPoint Enables Dagger Hilt dependency injection
+ */
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity(){
 
-    /// global variable or object
+    /**
+     * View Binding and ViewModel Dependencies
+     * - binding: Provides access to UI elements
+     * - loading: Custom loading indicator
+     * - viewModel: Manages authentication state and events
+     * - connectivityViewModel: Monitors network connectivity
+     */
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loading: Loading
     private val viewModel: AuthViewModel by viewModels()
     private val connectivityViewModel: ConnectivityViewModel by viewModels()
 
+    /**
+     * Activity Lifecycle Method
+     * Initializes UI, sets up event listeners, and observes network and authentication states
+     *
+     * @param savedInstanceState Previous activity state
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         loading = Loading(this)
 
-        connectivityViewModel.networkStatus.observe(this){ status ->
-            when(status){
-                Status.DISCONNECTED -> showSnackbar("No Internet Connection")
-                else -> viewModel.authenticate()
+        uiEvent()
+
+        connectivityViewModel.networkStatus.observe(this){ isConnected ->
+            if (isConnected){
+                observerViewModel()
+            }else{
+                showSnackbar("No Internet Connection")
             }
         }
-
-        uiEvent()
-        observerViewModel()
 
     }
 
@@ -66,6 +87,12 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Handles UI initialization and event binding
+     * - Pre-fills email from intent extras
+     * - Sets up dark/light mode line styling
+     * - Configures login, create account, and OTP request buttons
+     */
     private fun uiEvent(){
         val email = intent.getStringExtra(EMAIL)
         if (!email.isNullOrEmpty())
@@ -99,6 +126,12 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Observes ViewModel states and handles different authentication scenarios
+     * - Authentication result processing
+     * - Exception handling
+     * - Loading state management
+     */
     private fun observerViewModel(){
         lifecycleScope.launch {
             viewModel.authResult.collect {result ->
@@ -151,6 +184,12 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Utility Methods
+     * - Display dialog messages
+     * - Show snackbar notifications
+     * - Check network connectivity
+     */
     private fun dialogMessage(message: String, title: String){
         runOnUiThread {
             if(!isFinishing && !isDestroyed)

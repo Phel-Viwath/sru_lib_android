@@ -15,6 +15,15 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
+/**
+ * `CheckExitingUseCase` is a use case class responsible for checking the exiting status of an attendance record.
+ *
+ * This class interacts with the [CoreRepository] to perform the check and provides the result wrapped
+ * in a [Resource] object, allowing for handling of loading, success, and error states.
+ *
+ * @property repository The [CoreRepository] instance used for data access and checking the exiting status.
+ * @constructor Creates a [CheckExitingUseCase] instance with the specified [CoreRepository].
+ */
 class CheckExitingUseCase @Inject constructor(
     private val repository: CoreRepository
 ){

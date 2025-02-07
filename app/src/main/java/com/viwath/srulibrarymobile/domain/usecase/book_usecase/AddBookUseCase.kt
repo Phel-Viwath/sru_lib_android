@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,6 +17,14 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
+/**
+ * Use case for adding a new book to the data source.
+ *
+ * This class handles the logic of adding a book through the repository. It wraps the
+ * repository call in a flow and manages the different states of the operation (loading, success, error).
+ *
+ * @property repository The repository responsible for data access.
+ */
 class AddBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

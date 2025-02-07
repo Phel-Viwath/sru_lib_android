@@ -15,6 +15,18 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
+/**
+ * AuthInterceptor is an OkHttp interceptor responsible for managing authentication tokens.
+ *
+ * It handles the following:
+ * 1. **Adding Authorization Header:**  Adds an "Authorization" header with a Bearer token to each outgoing request.
+ * 2. **Token Refresh:** If a request returns a 401 (Unauthorized) error, it attempts to refresh the access token.
+ * 3. **Retry:** If the token is successfully refreshed, it retries the original request with the new token.
+ * 4. **Error Handling:** Throws an `IllegalStateException` if the token refresh succeeds but no new token is found.
+ *
+ * @property tokenManager Manages the storage and retrieval of authentication tokens.
+ * @property authUseCase A lazy-loaded instance of the AuthUseCase, used for refreshing the token.
+ */
 class AuthInterceptor @Inject constructor(
     private val tokenManager: TokenManager,
     private val authUseCase: Lazy<AuthUseCase>

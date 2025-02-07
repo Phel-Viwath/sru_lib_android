@@ -24,6 +24,29 @@ import com.viwath.srulibrarymobile.utils.IntentString.EMAIL
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * RequestOtpActivity
+ *
+ * This activity is responsible for handling the request OTP (One-Time Password) flow.
+ * It allows the user to input their email address and request an OTP to be sent to that email.
+ * Upon successful request, the activity navigates the user to the VerifyOtpActivity.
+ *
+ * Features:
+ * - User interface for entering the email address.
+ * - Button to request an OTP.
+ * - Navigation to the LoginActivity.
+ * - Display loading indicators during network operations.
+ * - Display success/error messages using Snackbar and Toast.
+ * - Observe and handle different states and events from the OtpViewModel.
+ *
+ * Dependencies:
+ * - Hilt for dependency injection.
+ * - Data Binding for view binding.
+ * - Coroutines for asynchronous operations.
+ * - ViewModel for managing UI-related data.
+ * - Loading class for displaying loading indicator.
+ * - OtpViewModel, OtpEvent, ResultEvent to perform and handle OTP events.
+ */
 @AndroidEntryPoint
 class RequestOtpActivity : AppCompatActivity(){
 

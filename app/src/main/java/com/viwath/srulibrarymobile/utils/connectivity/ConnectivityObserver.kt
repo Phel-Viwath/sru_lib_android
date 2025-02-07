@@ -10,5 +10,5 @@ package com.viwath.srulibrarymobile.utils.connectivity
 import kotlinx.coroutines.flow.Flow
 
 interface ConnectivityObserver{
-    fun networkObserve(): Flow<Status>
+    fun networkObserve(): Flow<Boolean>
 }

@@ -58,3 +58,8 @@ typealias BorrowId = Long
 typealias BorrowDate = String
 typealias GiveBackDate = String
 typealias IsBringBack = Boolean
+
+// Donation
+typealias DonateDate = String
+typealias DonatorId = Int
+typealias DonatorName = String

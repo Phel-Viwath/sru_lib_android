@@ -17,6 +17,16 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Use case responsible for retrieving all borrow records.
+ *
+ * This class encapsulates the logic for fetching a list of all [Borrow] objects
+ * from the underlying [CoreRepository]. It handles potential errors during the
+ * data retrieval process, such as network issues or server errors, and emits
+ * the result as a [Resource] sealed class.
+ *
+ * @property repository The [CoreRepository] instance used to interact with the data layer.
+ */
 class GetAllBorrowUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

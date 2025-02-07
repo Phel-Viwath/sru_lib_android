@@ -15,6 +15,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+/**
+ * `GetStudentByIDUseCase` is a use case class responsible for retrieving a student's data by their ID.
+ *
+ * This class encapsulates the business logic for fetching a student from the repository
+ * and handling potential errors during the process. It interacts with the [CoreRepository]
+ * to access the underlying data source.
+ *
+ * @property repository The [CoreRepository] instance used to access student data.
+ *
+ * @constructor Creates a [GetStudentByIDUseCase] instance.
+ * @param repository The [CoreRepository] to be injected.
+ */
 class GetStudentByIDUseCase @Inject constructor(
     private val repository: CoreRepository
 ){

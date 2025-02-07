@@ -18,6 +18,15 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Use case for returning a book.
+ *
+ * This class encapsulates the logic for returning a book to the library. It interacts with the
+ * [CoreRepository] to perform the actual return operation and handles potential errors, such as
+ * network issues or server errors.
+ *
+ * @property repository The [CoreRepository] instance responsible for interacting with the data layer.
+ */
 class ReturnBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

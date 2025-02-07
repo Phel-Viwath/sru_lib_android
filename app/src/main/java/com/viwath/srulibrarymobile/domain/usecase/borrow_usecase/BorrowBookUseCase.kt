@@ -16,6 +16,17 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * A use case class responsible for handling the borrowing of a book.
+ *
+ * This class interacts with the [CoreRepository] to perform the actual
+ * borrowing operation and handles various scenarios, including success,
+ * failure, network issues, and HTTP errors. It emits a [Resource] state
+ * representing the outcome of the borrow operation.
+ *
+ * @property repository The [CoreRepository] instance used to communicate with
+ *                     the data layer for borrowing operations.
+ */
 class BorrowBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

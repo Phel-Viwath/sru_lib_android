@@ -17,6 +17,15 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
+/**
+ * Use case for changing a user's password.
+ *
+ * This class handles the business logic for initiating a password change request.
+ * It interacts with the [AuthRepository] to perform the actual password change operation
+ * and emits the result wrapped in a [Resource] sealed class.
+ *
+ * @property repository The [AuthRepository] instance used to interact with the authentication data source.
+ */
 class ChangePasswordUseCase @Inject constructor(
     private val repository: AuthRepository
 ){

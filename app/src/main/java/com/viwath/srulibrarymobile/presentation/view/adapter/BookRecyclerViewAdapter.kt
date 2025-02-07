@@ -18,8 +18,21 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 
+/**
+ * [BookRecyclerViewAdapter] is a RecyclerView adapter responsible for displaying a list of [Book] objects.
+ *
+ * It handles the creation of view holders, binding data to the views, and managing user interactions like
+ * clicking on a book item or its associated menu.
+ *
+ * @property context The application context.
+ * @property books The list of [Book] objects to display.
+ * @property isDarkMode Boolean indicating whether dark mode is enabled. This affects the appearance of the menu icon.
+ * @property onMenuItemClicked Callback function invoked when a menu item (update, delete, borrow) is clicked for a book.
+ *          It takes the [Book] object and the action string ("update", "delete", "borrow") as parameters.
+ * @property onItemClicked Callback function invoked when a book item is clicked. It takes the clicked [Book] object as a parameter.
+ */
 class BookRecyclerViewAdapter(
     private val context: Context,
     private var books: List<Book>,

@@ -22,6 +22,20 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [ChangePasswordViewModel]
+ *
+ * This ViewModel handles the logic for the change password screen. It interacts with the [AuthUseCase]
+ * to perform the password change operation and manages the state of the UI.
+ *
+ * It exposes two main flows:
+ *  - `state`: A [MutableStateFlow] that holds the current state of the UI, including input fields and loading state.
+ *  - `eventResult`: A [SharedFlow] that emits events to the UI, such as success or error messages.
+ *
+ *  The view model also contain a method called [onEvent] that handle [ChangePasswordEvent] sent from UI.
+ *
+ * @property authUseCase An instance of [AuthUseCase] used for password change operations.
+ */
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
     private val authUseCase: AuthUseCase

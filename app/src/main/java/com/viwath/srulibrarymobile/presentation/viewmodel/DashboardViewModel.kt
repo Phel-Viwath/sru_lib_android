@@ -26,6 +26,19 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * The ViewModel for the Dashboard screen.
+ *
+ * This ViewModel is responsible for:
+ * - Fetching and managing the dashboard data.
+ * - Handling user interactions related to dashboard entries (e.g., saving attendance, getting student details).
+ * - Exposing the dashboard state and events to the UI.
+ * - Retrieving user information from TokenManager
+ *
+ * @property useCase The use case for fetching the dashboard data.
+ * @property entryUseCase The use case for handling dashboard entry operations (save attend, get student).
+ * @property tokenManager The manager for handling user tokens and retrieving user data.
+ */
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val useCase: DashboardUseCase,

@@ -21,6 +21,20 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [OtpViewModel] is a ViewModel class responsible for managing the state and logic related to
+ * One-Time Password (OTP) operations. It interacts with the [AuthUseCase] to handle OTP
+ * requests and verification.
+ *
+ * This ViewModel exposes two main flows:
+ * - `event`: Emits events related to the overall result of OTP operations, such as success or
+ *   error messages.
+ * - `otpEvent`: Emits events related to the specific OTP flow, such as starting/stopping
+ *   loading indicators, navigation events, and countdown actions.
+ *
+ * @property authUseCase The use case responsible for handling authentication-related operations,
+ *                      including requesting and verifying OTPs. Injected via Hilt.
+ */
 @HiltViewModel
 class OtpViewModel @Inject constructor(
     private val authUseCase: AuthUseCase

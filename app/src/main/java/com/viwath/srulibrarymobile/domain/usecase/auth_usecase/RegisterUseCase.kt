@@ -13,6 +13,16 @@ import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import javax.inject.Inject
 
+/**
+ * Use case responsible for handling the registration process.
+ *
+ * This class encapsulates the logic for registering a new user. It performs
+ * validation on the provided registration data (email and password) and then
+ * delegates the actual registration to the [AuthRepository].
+ *
+ * @property repository The [AuthRepository] instance used for communicating with
+ * the data layer to perform the registration.
+ */
 class RegisterUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {

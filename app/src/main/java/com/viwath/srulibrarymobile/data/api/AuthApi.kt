@@ -20,6 +20,13 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
+/**
+ * Interface defining the API endpoints for authentication-related operations.
+ *
+ * This interface uses Retrofit annotations to map Kotlin functions to HTTP requests.
+ * Each function represents a specific authentication operation and defines the
+ * corresponding HTTP method, endpoint path, request parameters, and response type.
+ */
 interface AuthApi {
     @POST("/api/v1/auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>

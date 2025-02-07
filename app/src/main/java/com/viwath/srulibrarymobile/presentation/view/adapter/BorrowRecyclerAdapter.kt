@@ -22,6 +22,19 @@ import com.google.android.material.card.MaterialCardView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 
+/**
+ * [BorrowRecyclerAdapter] is a RecyclerView adapter that displays a list of [Borrow] objects.
+ * It handles the display of borrow details, including student ID, book ID, borrow quantity, dates,
+ * book title, student name, and return status. It also provides an expandable/collapsible view
+ * for detailed information and handles item click events.
+ *
+ * @param borrow The list of [Borrow] objects to display.
+ * @param isDarkMode A boolean indicating whether dark mode is enabled. This affects the appearance
+ *                   of the expand/collapse arrow.
+ * @param context The application context.
+ * @param onItemClicked A lambda function that is invoked when an item in the RecyclerView is clicked.
+ *                      It receives the clicked [Borrow] object as a parameter.
+ */
 class BorrowRecyclerAdapter(
     private val borrow: List<Borrow>,
     private val isDarkMode: Boolean,

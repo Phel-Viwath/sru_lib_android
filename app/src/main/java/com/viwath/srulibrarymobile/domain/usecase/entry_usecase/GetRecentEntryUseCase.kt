@@ -13,6 +13,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+/**
+ * `GetRecentEntryUseCase` is a Use Case class responsible for retrieving the most recent entry data.
+ *
+ * This class encapsulates the logic for fetching the recent entry from the repository
+ * and handling potential errors during the process. It uses a Flow to emit the results,
+ * allowing for reactive data handling.
+ *
+ * @property repository The [CoreRepository] instance used to interact with the data source.
+ */
 class GetRecentEntryUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

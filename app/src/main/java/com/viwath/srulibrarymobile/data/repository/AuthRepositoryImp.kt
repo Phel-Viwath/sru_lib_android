@@ -19,6 +19,24 @@ import com.viwath.srulibrarymobile.utils.TokenManager
 import retrofit2.HttpException
 import javax.inject.Inject
 
+/**
+ * Implementation of the [AuthRepository] interface.
+ *
+ * This class handles all authentication-related operations, including:
+ * - User registration
+ * - User login
+ * - User authentication (checking if the user is logged in)
+ * - Refreshing the user's access token
+ * - Requesting OTP
+ * - Verifying OTP
+ * - Changing Password
+ *
+ * It utilizes the [AuthApi] for network requests and the [TokenManager] for managing
+ * authentication tokens. It also includes error handling and logging.
+ *
+ * @property api The [AuthApi] instance used to make network requests to the authentication server.
+ * @property tokenManager The [TokenManager] instance used to manage authentication tokens.
+ */
 class AuthRepositoryImp @Inject constructor(
     private val api: AuthApi,
     private val tokenManager: TokenManager

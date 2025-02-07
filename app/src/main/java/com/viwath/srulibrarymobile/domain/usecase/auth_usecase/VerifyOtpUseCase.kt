@@ -16,6 +16,16 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
+/**
+ * Use case for verifying an OTP (One-Time Password).
+ *
+ * This class encapsulates the logic for verifying an OTP against an authentication repository.
+ * It handles various scenarios, including successful verification, network errors, HTTP exceptions,
+ * and general exceptions.
+ *
+ * @property repository The [AuthRepository] used to interact with the authentication service.
+ * @constructor Creates a [VerifyOtpUseCase] instance with the provided [AuthRepository].
+ */
 class VerifyOtpUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {
@@ -35,6 +45,4 @@ class VerifyOtpUseCase @Inject constructor(
             emit(Resource.Error(e.message.toString()))
         }
     }
-
-
 }

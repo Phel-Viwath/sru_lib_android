@@ -11,8 +11,13 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.domain.model.book.Book
 
+/**
+ * DialogBookDetail is a class responsible for populating and displaying detailed information
+ * about a book within a dialog or a similar UI component. It takes a View as input, which
+ * is assumed to contain the TextViews used to display the book's attributes.
+ */
 class DialogBookDetail(view: View) {
     private val tvBookId: TextView = view.findViewById(R.id.tvId)
     private val tvBookTitle: TextView = view.findViewById(R.id.tvTitle)

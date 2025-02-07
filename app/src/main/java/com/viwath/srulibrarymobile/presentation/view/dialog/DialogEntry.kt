@@ -21,6 +21,12 @@ import com.viwath.srulibrarymobile.domain.model.Purpose
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.StudentName
 
+/**
+ * Represents a dialog entry for student check-in, managing UI elements and data related to
+ * student identification and their purpose for entering.
+ *
+ * @param view The parent view containing the dialog's UI elements.
+ */
 class DialogEntry(view: View) {
     val purposes = mutableListOf<String>()
     val usePC = "Use PC"

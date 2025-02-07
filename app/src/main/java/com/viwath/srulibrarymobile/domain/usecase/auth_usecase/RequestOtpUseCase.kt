@@ -16,6 +16,14 @@ import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
+/**
+ * A use case responsible for requesting a One-Time Password (OTP) for a given email.
+ *
+ * This class interacts with the [AuthRepository] to send a request for an OTP to the server.
+ * It handles potential network and server errors, emitting appropriate [Resource] states.
+ *
+ * @property repository The [AuthRepository] instance used to communicate with the authentication data source.
+ */
 class RequestOtpUseCase @Inject constructor(
     private val repository: AuthRepository
 ){

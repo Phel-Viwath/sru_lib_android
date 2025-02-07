@@ -9,6 +9,15 @@ package com.viwath.srulibrarymobile.utils
 
 import android.content.Context
 
+/**
+ * Manages the storage and retrieval of authentication tokens and user information.
+ *
+ * This class provides methods to save, retrieve, and clear access tokens, refresh tokens,
+ * usernames, and user roles using SharedPreferences. It utilizes the `SharedPreferencesHelper`
+ * for interacting with SharedPreferences.
+ *
+ * @property context The Android application context used to access SharedPreferences.
+ */
 class TokenManager(context: Context) {
 
     private val sharedPreferencesHelper = SharedPreferencesHelper.getInstance(context)

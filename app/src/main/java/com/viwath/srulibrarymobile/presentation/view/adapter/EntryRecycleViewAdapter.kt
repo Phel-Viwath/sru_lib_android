@@ -18,8 +18,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.AttendDetail
+import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
 
+/**
+ * EntryRecycleViewAdapter is a RecyclerView.Adapter that displays a list of AttendDetail objects.
+ * It also displays a header row with column labels.
+ */
 class EntryRecycleViewAdapter(
     private val list: List<AttendDetail>
 ) : RecyclerView.Adapter<EntryRecycleViewAdapter.ViewHolder>() {

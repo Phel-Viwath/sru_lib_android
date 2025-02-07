@@ -8,8 +8,8 @@
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.domain.model.Book
-import com.viwath.srulibrarymobile.domain.model.toBook
+import com.viwath.srulibrarymobile.domain.model.book.Book
+import com.viwath.srulibrarymobile.domain.model.book.toBook
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,6 +17,16 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Use case for searching books based on a keyword.
+ *
+ * This class encapsulates the logic for searching books in the data source
+ * through the [CoreRepository]. It handles the flow of data, including
+ * loading, success, and error states. It also manages potential exceptions
+ * during the search process, such as network errors or HTTP errors.
+ *
+ * @property repository The [CoreRepository] instance responsible for interacting with the data source.
+ */
 class SearchBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

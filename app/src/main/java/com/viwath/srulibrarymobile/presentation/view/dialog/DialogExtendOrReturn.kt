@@ -21,6 +21,11 @@ import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.utils.DateTimeUtil.extendBorrowDate
 
+/**
+ * This class represents a dialog that allows the user to either extend or return a borrowed item.
+ * It handles UI interactions related to the dialog, such as theme changes, radio button selection,
+ * data population, and button click events.
+ */
 @SuppressLint("SetTextI18n")
 class DialogExtendOrReturn(
     view: View

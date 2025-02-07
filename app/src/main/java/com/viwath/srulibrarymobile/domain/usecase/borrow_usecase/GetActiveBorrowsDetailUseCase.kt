@@ -16,6 +16,17 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * `GetActiveBorrowsDetailUseCase` is a use case class responsible for retrieving the details of
+ * active borrows from the repository. It handles the business logic for fetching this data,
+ * including potential network and other errors, and exposes the result as a Flow of `Resource<List<Borrow>>`.
+ *
+ * This use case interacts with the `CoreRepository` to fetch the data and transforms it into
+ * a list of `Borrow` domain objects before emitting it. It also handles various error scenarios
+ * and emits the appropriate `Resource.Error` state.
+ *
+ * @property repository The `CoreRepository` instance responsible for data access.
+ */
 class GetActiveBorrowsDetailUseCase(
     private val repository: CoreRepository
 ) {

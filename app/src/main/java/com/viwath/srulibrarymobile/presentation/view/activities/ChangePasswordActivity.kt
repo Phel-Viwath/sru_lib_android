@@ -24,6 +24,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Activity for changing the user's password.
+ *
+ * This activity allows users to change their password after receiving a password reset link.
+ * It handles user input, validation, and interaction with the {@link ChangePasswordViewModel}
+ * to perform the password change operation.
+ *
+ * @see ChangePasswordViewModel
+ * @see ChangePasswordEvent
+ * @see ResultEvent
+ * @see Loading
+ */
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity(){
 

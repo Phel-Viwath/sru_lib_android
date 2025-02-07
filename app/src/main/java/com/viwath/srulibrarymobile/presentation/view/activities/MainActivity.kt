@@ -27,10 +27,16 @@ import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 
+/**
+ * The main entry point of the application.
+ *
+ * This activity manages the main navigation flow using the Navigation Component,
+ * handles network connectivity changes, displays loading indicators,
+ * and provides utility functions for common UI operations.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -50,15 +56,8 @@ class MainActivity : AppCompatActivity() {
             binding.statusBar.visibility = View.VISIBLE
         }
 
-        observeNetworkStatus { status: Status ->
-            when(status){
-                Status.CONNECTED -> {}
-                Status.DISCONNECTED -> showTopSnackbar("No Internet Connection", true)
-                Status.CONNECTED_WIFI -> showTopSnackbar("Connected to Wi-Fi", isDisconnected = false)
-                Status.CONNECTED_MOBILE -> showTopSnackbar("Using Mobile Data", isDisconnected = false)
-                Status.CONNECTED_UNMETERED -> showTopSnackbar("Unmetered Connection", isDisconnected = false)
-            }
-        }
+        observeNetworkStatus()
+
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -101,16 +100,17 @@ class MainActivity : AppCompatActivity() {
         outState.putString(ACTIVE_FRAGMENT_TAG, activeFragmentTag)
     }
 
-    fun observeNetworkStatus(onStatus: (Status) -> Unit){
-        connectivityViewModel.networkStatus.observe(this){ status ->
-            val networkStatus = when(status!!) {
-                Status.DISCONNECTED -> Status.DISCONNECTED
-                Status.CONNECTED -> Status.CONNECTED
-                Status.CONNECTED_WIFI -> Status.CONNECTED_WIFI
-                Status.CONNECTED_MOBILE -> Status.CONNECTED_MOBILE
-                Status.CONNECTED_UNMETERED -> Status.CONNECTED_UNMETERED
+    fun observeNetworkStatus(){
+        connectivityViewModel.networkMessage.observe(this){ message ->
+            message?.let {
+                if (it == "Connected"){
+                    showTopSnackbar(it, false)
+                }
+                if (it == "No Internet Connection"){
+                    showTopSnackbar(it, true)
+                }
+                connectivityViewModel.onSnackBarShown()
             }
-            onStatus(networkStatus)
         }
     }
 

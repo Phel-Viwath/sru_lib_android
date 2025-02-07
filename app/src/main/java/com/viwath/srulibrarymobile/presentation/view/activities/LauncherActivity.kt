@@ -22,13 +22,31 @@ import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.databinding.ActivitySplashBinding
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * LauncherActivity is the initial activity that the user sees when the application starts.
+ * It handles the authentication process and network connectivity checks before directing the user
+ * to either the MainActivity or LoginActivity.
+ *
+ * This activity performs the following key functions:
+ * 1. **Network Connectivity Check:** Determines if the device is connected to the internet.
+ * 2. **Authentication:** Attempts to authenticate the user using the AuthViewModel.
+ * 3. **Result Handling:** Processes the result of the authentication and navigates accordingly.
+ * 4. **Error Handling:** Displays error messages via alert dialogs or snackbars.
+ *
+ * Uses the following dependencies:
+ * - `AuthViewModel`: Responsible for handling authentication logic.
+ * - `ConnectivityViewModel`: Responsible for observing network status.
+ * - `ActivitySplashBinding`: View binding for the activity's layout.
+ * - `Hilt`: For dependency injection.
+ * - `Coroutines`: For asynchronous tasks.
+ *
+ */
 @AndroidEntryPoint
 class LauncherActivity : AppCompatActivity() {
 
@@ -42,22 +60,19 @@ class LauncherActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        connectivityViewModel.networkStatus.observe(this){ status ->
-            when(status){
-                Status.DISCONNECTED -> alertDialog("No Internet Connection")
-                Status.CONNECTED -> {
-                    viewModel.authenticate()
-                    CoroutineScope(Dispatchers.IO).launch {
-                        viewModel.authResult.collect { result ->
-                            withContext(Dispatchers.Main) {
-                                handleAuthResult(result)
-                            }
+        connectivityViewModel.networkStatus.observe(this){ isConnected ->
+            if (isConnected){
+                viewModel.authenticate()
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.authResult.collect { result ->
+                        withContext(Dispatchers.Main) {
+                            handleAuthResult(result)
                         }
                     }
                 }
-                Status.CONNECTED_WIFI -> {}
-                Status.CONNECTED_MOBILE -> {}
-                Status.CONNECTED_UNMETERED -> {}
+            }
+            else{
+                alertDialog("No Internet Connection")
             }
         }
 

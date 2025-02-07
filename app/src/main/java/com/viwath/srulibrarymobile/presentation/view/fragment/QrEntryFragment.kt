@@ -34,7 +34,6 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.QrFragmentViewModel
 import com.viwath.srulibrarymobile.utils.CameraPreview
 import com.viwath.srulibrarymobile.utils.PermissionRequest
-import com.viwath.srulibrarymobile.utils.connectivity.Status
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -155,11 +154,11 @@ class QrEntryFragment: Fragment(){
 
         }
         //// Observe View model
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { status ->
-            when(status){
-                Status.DISCONNECTED -> mainActivity.showTopSnackbar("No Internet Connection", true)
-                else -> observerViewModel()
-            }
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected)
+                observerViewModel()
+            else
+                mainActivity.showTopSnackbar("No Internet Connection", true)
         }
 
     }

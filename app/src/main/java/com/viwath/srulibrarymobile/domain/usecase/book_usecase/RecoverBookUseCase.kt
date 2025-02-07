@@ -13,6 +13,17 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * `RecoverBookUseCase` is a use case class responsible for recovering a book.
+ *
+ * This class encapsulates the business logic for recovering a book, interacting with the
+ * underlying repository to perform the operation. It handles potential exceptions that may
+ * occur during the process, such as network issues or HTTP errors, and returns the result
+ * wrapped in a `Resource` object.
+ *
+ * @property repository The `CoreRepository` instance used to interact with the data layer.
+ * @constructor Creates a `RecoverBookUseCase` with the provided `CoreRepository`.
+ */
 class RecoverBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {

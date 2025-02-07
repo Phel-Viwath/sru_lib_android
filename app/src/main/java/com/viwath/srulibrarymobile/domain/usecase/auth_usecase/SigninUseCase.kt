@@ -13,6 +13,18 @@ import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import javax.inject.Inject
 
+/**
+ * `SigninUseCase` is a use case class responsible for handling the sign-in logic.
+ *
+ * It takes an [AuthRepository] instance in its constructor and exposes an `invoke`
+ * operator function that allows initiating the sign-in process.
+ *
+ * The sign-in process involves:
+ * 1. Validating the provided email and password.
+ * 2. Invoking the [AuthRepository.logIn] method to perform the actual sign-in operation.
+ *
+ * @property repository The [AuthRepository] instance used to interact with the data layer for authentication.
+ */
 class SigninUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {

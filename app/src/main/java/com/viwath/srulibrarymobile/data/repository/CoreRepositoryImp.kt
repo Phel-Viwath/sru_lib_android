@@ -13,8 +13,12 @@ import com.viwath.srulibrarymobile.data.api.CoreApi
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
-import com.viwath.srulibrarymobile.domain.model.Attend
-import com.viwath.srulibrarymobile.domain.model.Book
+import com.viwath.srulibrarymobile.data.dto.DonationDto
+import com.viwath.srulibrarymobile.data.safeCall
+import com.viwath.srulibrarymobile.domain.DataError
+import com.viwath.srulibrarymobile.domain.Result
+import com.viwath.srulibrarymobile.domain.model.entry.Attend
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.BorrowId
 import com.viwath.srulibrarymobile.domain.model.College
@@ -29,6 +33,14 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 import javax.inject.Inject
 
+/**
+ * Implementation of the [CoreRepository] interface.
+ * This class handles data operations related to core functionalities,
+ * such as fetching dashboard information, managing student data,
+ * handling attendances, book management, and donation features.
+ *
+ * @property api The [CoreApi] instance used for making network requests.
+ */
 class CoreRepositoryImp @Inject constructor(
     private val api: CoreApi,
 ) : CoreRepository {
@@ -222,6 +234,20 @@ class CoreRepositoryImp @Inject constructor(
     ): Response<Unit> {
         val response = api.returnBook(studentId, bookId)
         return response
+    }
+
+    // donation
+
+    override suspend fun addDonation(donationDto: DonationDto): Result<Unit, DataError.Remote> {
+        return safeCall { api.addDonation(donationDto) }
+    }
+
+    override suspend fun getAllDonation(): Result<List<DonationDto>, DataError.Remote> {
+        return safeCall { api.getAllDonation() }
+    }
+
+    override suspend fun updateDonation(donationDto: DonationDto): Result<Unit, DataError.Remote> {
+        return safeCall { api.updateDonation(donationDto) }
     }
 
 }

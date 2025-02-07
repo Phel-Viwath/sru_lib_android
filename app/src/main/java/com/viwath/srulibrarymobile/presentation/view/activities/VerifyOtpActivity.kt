@@ -27,6 +27,28 @@ import com.viwath.srulibrarymobile.utils.IntentString.EMAIL
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * VerifyOtpActivity
+ *
+ * This activity handles the OTP verification process. It receives an email address from the
+ * previous activity, displays a countdown timer for OTP expiration, allows the user to enter
+ * the OTP, and provides functionality to resend the OTP. It interacts with the {@link OtpViewModel}
+ * to handle OTP verification and other related operations.
+ *
+ * Key Features:
+ * - Receives an email address from the calling activity.
+ * - Displays a countdown timer indicating OTP expiration.
+ * - Provides an input field for the user to enter the OTP.
+ * - Handles OTP verification by sending it to the {@link OtpViewModel}.
+ * - Enables the user to request a new OTP after the timer expires.
+ * - Navigates to the {@link ChangePasswordActivity} upon successful OTP verification.
+ * - Displays loading indicators during network operations.
+ * - Shows error messages or success notifications using Toast or Snackbar.
+ *
+ * Dependencies:
+ * - {@link OtpViewModel}: Handles business logic related to OTP operations.
+ * - {@link Loading}: Displays a loading indicator.
+ * - {@link ActivityVerifyOtpBinding}: View binding for the */
 @AndroidEntryPoint
 class VerifyOtpActivity : AppCompatActivity(){
     private lateinit var binding: ActivityVerifyOtpBinding
