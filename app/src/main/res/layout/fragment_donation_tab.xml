@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinnerFilter"
             android:text="@string/add_book"
             android:spinnerMode="dialog"
             android:textColor="?android:attr/textColorPrimary"

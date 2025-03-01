@@ -75,6 +75,7 @@ inline fun <reified T> responseToResult(
                 Result.Error(DataError.Remote.SERIALIZATION)
             }
         }
+        response.code() == 403 -> Result.Error(DataError.Remote.FORBIDDEN)
         response.code() == 408 -> Result.Error(DataError.Remote.REQUEST_TIMEOUT)
         response.code() == 429 -> Result.Error(DataError.Remote.TOO_MANY_REQUESTS)
         response.code() in 500..599 -> Result.Error(DataError.Remote.SERVER)

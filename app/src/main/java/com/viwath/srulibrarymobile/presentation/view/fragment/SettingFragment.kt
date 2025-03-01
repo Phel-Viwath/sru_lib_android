@@ -22,7 +22,7 @@ import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentSettingBinding
 import com.viwath.srulibrarymobile.presentation.view.activities.LoginActivity
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
-import com.viwath.srulibrarymobile.utils.SettingPreferences
+import com.viwath.srulibrarymobile.utils.share_preferences.SettingPreferences
 
 /**
  * SettingFragment is a Fragment that allows the user to customize their application settings.

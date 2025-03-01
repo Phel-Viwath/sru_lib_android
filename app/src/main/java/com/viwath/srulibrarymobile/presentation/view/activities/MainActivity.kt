@@ -9,7 +9,6 @@ package com.viwath.srulibrarymobile.presentation.view.activities
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -19,6 +18,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -52,9 +53,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         loading = Loading(this)
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM){
-            binding.statusBar.visibility = View.VISIBLE
-        }
+//        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM){
+//            //binding.statusBar.visibility = View.VISIBLE
+//        }
 
         observeNetworkStatus()
 
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         outState.putString(ACTIVE_FRAGMENT_TAG, activeFragmentTag)
     }
 
-    fun observeNetworkStatus(){
+    private fun observeNetworkStatus(){
         connectivityViewModel.networkMessage.observe(this){ message ->
             message?.let {
                 if (it == "Connected"){
@@ -129,6 +130,33 @@ class MainActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
+    fun showTopSnackbar(message: String){
+        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+        val view = snackbar.view
+
+        val textView = view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        textView.gravity = Gravity.CENTER
+        textView.textSize = 16f
+        textView.setTextColor(Color.WHITE)
+        textView.setTypeface(textView.typeface, Typeface.BOLD)
+
+        view.setBackgroundColor(getColor(R.color.dark_shade_purple))
+        view.backgroundTintList = null
+        view.backgroundTintMode = null
+
+        val param = view.layoutParams as CoordinatorLayout.LayoutParams
+        param.gravity = Gravity.TOP
+        view.layoutParams = param
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            param.topMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.layoutParams = param
+            WindowInsetsCompat.CONSUMED
+        }
+
+        snackbar.show()
+    }
+
     fun showTopSnackbar(message: String, isDisconnected: Boolean){
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
         val view = snackbar.view
@@ -151,6 +179,11 @@ class MainActivity : AppCompatActivity() {
         val param = view.layoutParams as CoordinatorLayout.LayoutParams
         param.gravity = Gravity.TOP
         view.layoutParams = param
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            param.topMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.layoutParams = param
+            WindowInsetsCompat.CONSUMED
+        }
         snackbar.show()
     }
 

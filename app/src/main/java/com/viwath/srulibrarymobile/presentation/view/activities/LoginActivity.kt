@@ -94,9 +94,9 @@ class LoginActivity : AppCompatActivity(){
      * - Configures login, create account, and OTP request buttons
      */
     private fun uiEvent(){
-        val email = intent.getStringExtra(EMAIL)
-        if (!email.isNullOrEmpty())
-            binding.edtEmail.post{ binding.edtEmail.setText(email) }
+        val retrievedEmail = intent.getStringExtra(EMAIL)
+        if (!retrievedEmail.isNullOrEmpty())
+            binding.edtEmail.post{ binding.edtEmail.setText(retrievedEmail) }
 
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         binding.line.setBackgroundColor(if (isDarkMode) Color.WHITE else Color.BLACK)
@@ -121,7 +121,7 @@ class LoginActivity : AppCompatActivity(){
                 return@setOnClickListener
             }
             viewModel.onEvent(AuthEvent.SignInUsernameChanged(email))
-            viewModel.onEvent(AuthEvent.SignInPasswordChanged(password.toString()))
+            viewModel.onEvent(AuthEvent.SignInPasswordChanged(password))
             viewModel.onEvent(AuthEvent.SignIn)
         }
     }

@@ -12,13 +12,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.CollegeId
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.LanguageId
+import com.viwath.srulibrarymobile.domain.model.book.Book
 
 /**
  * `DialogAddBook` is a utility class designed to manage the data entry and retrieval
@@ -43,6 +44,8 @@ class DialogAddBook(view: View) {
 
     private var collegeId: String = ""
     private var languageId: String = ""
+
+
 
     // Setup dropdown menus for languages and colleges
     fun setupSpinners(context: Context, languages: List<Language>, colleges: List<College>) {
@@ -87,6 +90,7 @@ class DialogAddBook(view: View) {
         return Pair(collegeId, languageId)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun populateBookData(book: Book){
         edtBookId.setText(book.bookId)
         edtTitle.setText(book.bookTitle)
@@ -106,5 +110,19 @@ class DialogAddBook(view: View) {
         )
         spinnerCollege.setSelection(collegePosition)
     }
+
+    fun disableEditText(isEnable: Boolean){
+        if (!isEnable){
+            edtBookId.isEnabled = false
+            edtTitle.isEnabled = false
+            edtAuthor.isEnabled = false
+            edtGenre.isEnabled = false
+            edtPublicYear.isEnabled = false
+            edtQuan.isEnabled = false
+            spinnerCollege.isEnabled = false
+            spinnerLanguage.isEnabled = false
+        }
+    }
+
 
 }

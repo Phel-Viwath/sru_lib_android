@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.data.api
 
 import android.util.Log
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
-import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

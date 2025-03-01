@@ -75,11 +75,7 @@ class BookTabViewModel @Inject constructor(
 
     suspend fun loadInitData() = coroutineScope {
             val bookDeferred = async{ loadListBook() }
-            val languageDeferred = async{ loadLanguage() }
-            val collegeDeferred = async{ loadCollege() }
             bookDeferred.await()
-            languageDeferred.await()
-            collegeDeferred.await()
     }
 
     fun onEvent(event: BookTabEvent){
@@ -135,22 +131,6 @@ class BookTabViewModel @Inject constructor(
                 _booksList.addAll(book)
                 _state.updateState { copy(isLoading = false, books = book) }
             },
-            onError = {error -> _state.updateState { copy(isLoading = false, error = error) }}
-        )
-    }
-
-    private suspend fun loadLanguage(){
-        useCase.getLanguageUseCase().collectResource(
-            onLoading = { _state.updateState { copy(isLoading = true) }},
-            onSuccess = {language -> _state.updateState { copy(isLoading = false, language = language) }},
-            onError = {error -> _state.updateState { copy(isLoading = false, error = error) }}
-        )
-    }
-
-    private suspend fun loadCollege(){
-        useCase.getCollegeUseCase().collectResource(
-            onLoading = {_state.updateState { copy(isLoading = true) }},
-            onSuccess = {college -> _state.updateState { copy(isLoading = false, college = college) }},
             onError = {error -> _state.updateState { copy(isLoading = false, error = error) }}
         )
     }

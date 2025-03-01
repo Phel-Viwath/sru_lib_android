@@ -15,7 +15,7 @@ import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RefreshToken
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
-import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import retrofit2.HttpException
 import javax.inject.Inject
 

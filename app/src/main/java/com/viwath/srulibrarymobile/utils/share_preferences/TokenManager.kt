@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.utils
+package com.viwath.srulibrarymobile.utils.share_preferences
 
 import android.content.Context
 
@@ -23,7 +23,7 @@ class TokenManager(context: Context) {
     private val sharedPreferencesHelper = SharedPreferencesHelper.getInstance(context)
 
     fun saveAccessToken(accessToken: String){
-        sharedPreferencesHelper.putString(ACCESS_TOKEN, accessToken)
+        sharedPreferencesHelper.putEncryptedString(ACCESS_TOKEN, accessToken)
     }
 
     fun saveRefreshToken(refreshToken: String){
@@ -38,9 +38,7 @@ class TokenManager(context: Context) {
         sharedPreferencesHelper.putString(ROLE, role)
     }
 
-    fun getAccessToken(): String?{
-        return sharedPreferencesHelper.getString(ACCESS_TOKEN)
-    }
+    fun getAccessToken(): String? = sharedPreferencesHelper.getEncryptedString(ACCESS_TOKEN)
 
     fun getRefreshToken(): String? = sharedPreferencesHelper.getEncryptedString(REFRESH_TOKEN)
 
@@ -49,8 +47,8 @@ class TokenManager(context: Context) {
     fun getRole(): String? = sharedPreferencesHelper.getString(ROLE)
 
     fun clearToken(){
-        sharedPreferencesHelper.clearValue(ACCESS_TOKEN, USERNAME, ROLE)
-        sharedPreferencesHelper.clearValue(REFRESH_TOKEN)
+        sharedPreferencesHelper.clearValue(USERNAME, ROLE)
+        sharedPreferencesHelper.clearEncryptedValue(REFRESH_TOKEN, ACCESS_TOKEN)
     }
 
     companion object{

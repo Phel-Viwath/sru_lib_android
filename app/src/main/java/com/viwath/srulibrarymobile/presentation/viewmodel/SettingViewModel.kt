@@ -10,7 +10,7 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

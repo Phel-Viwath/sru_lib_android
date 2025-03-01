@@ -30,8 +30,8 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBooksUseCase
-import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetCollegeUseCase
-import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetLanguageUseCase
+import com.viwath.srulibrarymobile.domain.usecase.GetCollegeUseCase
+import com.viwath.srulibrarymobile.domain.usecase.GetLanguageUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
@@ -55,9 +55,11 @@ import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetRecentEntryUs
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.SaveAttendUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.UpdateExitingUseCase
-import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.KeyStoreManager
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import com.viwath.srulibrarymobile.utils.connectivity.ConnectivityObserver
 import com.viwath.srulibrarymobile.utils.connectivity.NetworkConnectivityObserver
+import com.viwath.srulibrarymobile.utils.share_preferences.PinEncryptionData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -239,13 +241,19 @@ object AppModule {
             RecoverBookUseCase(repository),
             GetBookInTrashUseCase(repository),
             GetSummaryUseCase(repository),
-            GetLanguageUseCase(repository),
-            GetCollegeUseCase(repository),
             UploadBookUseCase(repository),
             GetStudentByIDUseCase(repository),
             SearchBookUseCase(repository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideGetCollegeUseCase(repository: CoreRepository): GetCollegeUseCase = GetCollegeUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetLanguageUseCase(repository: CoreRepository): GetLanguageUseCase = GetLanguageUseCase(repository)
 
     /**
      * Provides book borrowing related use cases
@@ -332,4 +340,15 @@ object AppModule {
         return TokenManager(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideKeyStoreManager(): KeyStoreManager {
+        return KeyStoreManager()
+    }
+
+    @Provides
+    @Singleton
+    fun providePinEncryptionData(@ApplicationContext context: Context): PinEncryptionData {
+        return PinEncryptionData(context)
+    }
 }

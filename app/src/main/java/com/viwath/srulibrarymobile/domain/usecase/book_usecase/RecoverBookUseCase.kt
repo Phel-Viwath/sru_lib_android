@@ -8,9 +8,11 @@
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
-import retrofit2.HttpException
-import java.io.IOException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -27,15 +29,15 @@ import javax.inject.Inject
 class RecoverBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {
-    suspend operator fun invoke(bookId: String): Resource<Boolean> {
-        return try {
-            val result = repository.recoverBook(bookId)
-            if (result) Resource.Success(true)
-            else Resource.Error("Error recover book")
-        }catch (e: HttpException){
-            Resource.Error(e.localizedMessage ?: "An HTTP error occurred.")
-        }catch (e: IOException){
-            Resource.Error("Couldn't reach the server. Check your connection.")
+    operator fun invoke(bookId: String): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading())
+        when(val result = repository.recoverBook(bookId)){
+            is Result.Success -> {
+                emit(Resource.Success(true))
+            }
+            is Result.Error -> {
+                emit(Resource.Error(result.error.handleRemoteError()))
+            }
         }
     }
 }

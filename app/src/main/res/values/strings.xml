@@ -121,6 +121,10 @@
     <string name="exitingTime">Exiting Time</string>
     <string name="status">Status</string>
 
+    <string name="donatorName">Donator Name</string>
+    <string name="donateDate">Donate Date</string>
+    <string name="donateQuan">Donate Quan</string>
+
 <!--    bottom navigation menu-->
     <string name="book">Book</string>
     <string name="student">Student</string>
@@ -197,4 +201,19 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="borrow">Borrow</string>
+
+    <string name="cancel_ic">⌫</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+
+    <string name="create_pin">Create you PIN</string>
+    <string name="confirm_pin">Confirm you PIN</string>
+
 </resources>

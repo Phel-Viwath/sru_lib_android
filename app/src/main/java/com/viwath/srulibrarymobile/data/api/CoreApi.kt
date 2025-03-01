@@ -13,6 +13,7 @@ import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
 import com.viwath.srulibrarymobile.data.dto.DonationDto
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.DonationIO
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
@@ -88,19 +89,19 @@ interface CoreApi {
     suspend fun addBooks(@Body books: List<Book>): Response<Unit>
 
     @GET("/api/v1/book/current-book")
-    suspend fun getBooks(): List<BookDto>
+    suspend fun getBooks(): Response<List<BookDto>>
 
     @PUT("/api/v1/book")
-    suspend fun updateBook(@Body book: Book): Response<BookDto>
+    suspend fun updateBook(@Body book: Book): Response<Unit>
 
     @GET("/api/v1/book/search")
     suspend fun searchBook(@Query("keyword") keyword: String): Response<List<BookDto>>
 
     @PUT("/api/v1/book/trash")
-    suspend fun movToTrash(@Query("bookId") bookId: String): Response<String>
+    suspend fun movToTrash(@Query("bookId") bookId: String): Response<Unit>
 
     @PUT("/api/v1/recover")
-    suspend fun recoverBook(@Query("bookId") bookId: String): Response<String>
+    suspend fun recoverBook(@Query("bookId") bookId: String): Response<Unit>
 
     @GET("/api/v1/in-trash")
     suspend fun bookInTrash(): Response<List<BookDto>>
@@ -136,9 +137,9 @@ interface CoreApi {
     suspend fun getAllDonation(): Response<List<DonationDto>>
 
     @POST("/api/v1/donation")
-    suspend fun addDonation(@Body donationDto: DonationDto): Response<Unit>
+    suspend fun addDonation(@Body donationIO: DonationIO): Response<Unit>
 
     @PUT("api/v1/donation")
-    suspend fun updateDonation(@Body donationDto: DonationDto): Response<Unit>
+    suspend fun updateDonation(@Body donationDto: DonationIO): Response<Unit>
 
 }

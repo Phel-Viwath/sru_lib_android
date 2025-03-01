@@ -52,7 +52,7 @@ class BookFragment : Fragment(R.layout.fragment_book){
         val fragmentList = listOf(
             BookTabFragment(),
             BorrowedTabFragment(),
-            DonationFragment(),
+            DonationTabFragment(),
             BackupBookFragment()
         )
         val tabTitle = listOf(

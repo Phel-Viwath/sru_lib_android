@@ -22,6 +22,7 @@ import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.databinding.ActivitySplashBinding
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.PinViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,9 +51,12 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class LauncherActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySplashBinding
+
     private val viewModel: AuthViewModel by viewModels()
     private val connectivityViewModel: ConnectivityViewModel by viewModels()
-    private lateinit var binding: ActivitySplashBinding
+    private val pinViewModel: PinViewModel by viewModels()
+
     private var dialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +76,7 @@ class LauncherActivity : AppCompatActivity() {
                 }
             }
             else{
-                alertDialog("No Internet Connection")
+                Snackbar.make(binding.root, "No Internet Connection.", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -82,7 +86,7 @@ class LauncherActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (!isNetworkConnected()){
-            alertDialog("No Internet Connection")
+            Snackbar.make(binding.root, "No Internet Connection.", Snackbar.ANIMATION_MODE_FADE).show()
         }
     }
 
@@ -103,9 +107,9 @@ class LauncherActivity : AppCompatActivity() {
                 finish()
             }
             is AuthResult.Authorize -> {
-                // Navigate to MainActivity if authentication succeeds
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
+                //checkUserRolePin()
             }
         }
     }
@@ -123,10 +127,6 @@ class LauncherActivity : AppCompatActivity() {
             .setTextColor(getColor(R.color.light_green))
     }
 
-    private fun snackbar(message: String){
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
-            .show()
-    }
 
     private fun isNetworkConnected(): Boolean {
         val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -134,4 +134,25 @@ class LauncherActivity : AppCompatActivity() {
         val capabilities = connectivityManager.getNetworkCapabilities(network)
         return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
+
+    private fun checkUserRolePin(){
+        val role = viewModel.role.value!!
+
+        if (role == "ADMIN" || role == "SUPER_ADMIN"){
+            if (pinViewModel.isPinSet()){
+                navigateToMain()
+            }
+            else{
+                startActivity(Intent(this, CreatePinActivity::class.java))
+            }
+        }else{
+            navigateToMain()
+        }
+    }
+
+    private fun navigateToMain(){
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
 }

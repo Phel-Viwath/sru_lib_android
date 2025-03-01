@@ -9,8 +9,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="12dp"
-    android:paddingVertical="4dp"
+    android:padding="12dp"
     style="@style/layoutBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -172,7 +171,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearEditTextSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,12 +8,12 @@
 package com.viwath.srulibrarymobile.domain.usecase.borrow_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BorrowId
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -28,20 +28,16 @@ class ExtendBorrowUseCase @Inject constructor(
 ) {
     operator fun invoke(id: BorrowId): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
-        try {
-            val extend = repository.extendBorrow(id)
-            if (extend.isSuccessful){
-                emit(Resource.Success(Unit))
-            }else{
-                emit(Resource.Error(extend.message() + extend.code()))
+        when(val result = repository.extendBorrow(id)){
+            is Result.Success -> {
+                val data = result.data
+                emit(Resource.Success(data))
             }
-        }catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "An error occurred"))
-        } catch (e: HttpException){
-            emit(Resource.Error(e.localizedMessage ?: "An HTTP error occurred."))
-        } catch (e: IOException){
-            e.printStackTrace()
-            emit(Resource.Error("Couldn't reach the server. Check your connection."))
+            is Result.Error -> {
+                val error = result.error
+                val message = error.handleRemoteError()
+                emit(Resource.Error(message))
+            }
         }
     }
 }

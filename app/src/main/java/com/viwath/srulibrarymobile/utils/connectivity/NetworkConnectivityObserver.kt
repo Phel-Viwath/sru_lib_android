@@ -11,7 +11,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.util.Log
 import androidx.core.content.getSystemService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +52,6 @@ class NetworkConnectivityObserver @Inject constructor (
 
                 override fun onLost(network: Network) {
                     super.onLost(network)
-                    Log.d("NetworkObserver", "Network lost")
                     trySend(false)
                 }
                 override fun onCapabilitiesChanged(
@@ -62,8 +60,7 @@ class NetworkConnectivityObserver @Inject constructor (
                 ) {
                     super.onCapabilitiesChanged(network, networkCapabilities)
                     val hasNetworkCapabilities = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-                    Log.d("NetworkObserver", "Network onCapabilitiesChanged. Has internet: $")
-                    if (hasNetworkCapabilities == true){
+                    if (hasNetworkCapabilities){
                         CoroutineScope(IO).launch{
                             val hasInternet = HasActiveInternet.execute()
                             trySend(hasInternet)

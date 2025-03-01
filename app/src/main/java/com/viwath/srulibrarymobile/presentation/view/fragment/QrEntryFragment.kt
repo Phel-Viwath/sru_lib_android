@@ -155,10 +155,12 @@ class QrEntryFragment: Fragment(){
         }
         //// Observe View model
         connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
-            if (isConnected)
+            if (isConnected){
                 observerViewModel()
-            else
+            }
+            else{
                 mainActivity.showTopSnackbar("No Internet Connection", true)
+            }
         }
 
     }

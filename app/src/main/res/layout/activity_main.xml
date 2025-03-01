@@ -5,38 +5,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     style="@style/layoutBackground">
 
-    <!-- Status Bar View -->
-    <View
-        android:id="@+id/statusBar"
+    <!-- ConstraintLayout inside CoordinatorLayout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="match_parent">
 
-    <!-- Fragment Container View -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingBottom="?attr/actionBarSize"
-        tools:layout="@layout/fragment_dashboard" />
+        <!-- Status Bar View -->
 
-    <!-- Bottom Navigation View -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:itemTextAppearanceActive="@style/BottomNavTextAppearance"
-        app:itemTextAppearanceInactive="@style/BottomNavTextAppearance"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+        <!-- Fragment Container View -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph"
+            tools:layout="@layout/fragment_dashboard"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavView"/>
+
+        <!-- Bottom Navigation View -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemTextAppearanceActive="@style/BottomNavTextAppearance"
+            app:itemTextAppearanceInactive="@style/BottomNavTextAppearance"
+            app:menu="@menu/bottom_nav_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

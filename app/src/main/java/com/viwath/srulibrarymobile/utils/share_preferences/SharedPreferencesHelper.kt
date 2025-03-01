@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.utils
+package com.viwath.srulibrarymobile.utils.share_preferences
 
 import android.content.Context
 import android.content.SharedPreferences

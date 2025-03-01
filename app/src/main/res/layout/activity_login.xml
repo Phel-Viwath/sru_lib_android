@@ -11,10 +11,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/layoutBackground"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="10dp"
     tools:context=".presentation.view.activities.LoginActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content">
         <!-- TextInputLayout for Username -->
         <com.google.android.material.textfield.TextInputLayout
+            android:paddingHorizontal="12dp"
             android:id="@+id/tilUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,13 +61,15 @@
                 android:hint="@string/login_email_hint"
                 android:inputType="textEmailAddress"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="ContentDescription" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TextInputLayout for Password -->
         <com.google.android.material.textfield.TextInputLayout
+            android:paddingHorizontal="12dp"
             android:id="@+id/tilPassword"
+            android:layout_marginTop="14dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cursorColor="?android:attr/textColorPrimary"
@@ -85,11 +88,12 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:paddingHorizontal="12dp"
         android:id="@+id/tvGoGetOtp"
         android:layout_gravity="end"
         android:layout_width="wrap_content"
@@ -107,13 +111,14 @@
         app:cornerRadius="6dp"
         android:layout_marginTop="6dp"
         android:text="@string/login"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <View
+        android:layout_marginHorizontal="12dp"
         android:id="@+id/line"
         android:layout_marginTop="6dp"
         android:background="@color/white"
@@ -128,7 +133,7 @@
         app:cornerRadius="6dp"
         android:text="@string/create_account"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

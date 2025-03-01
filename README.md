@@ -48,7 +48,5 @@ Includes shared components that can be used across multiple features:
 ## Conclusion
 This architecture provides a **scalable, maintainable, and testable** structure by separating concerns into clear layers. The inclusion of `util` and `common` packages enhances reusability and code organization, making development more efficient.
 
----
-
-For any questions or contributions, feel free to reach out!
+## 
 

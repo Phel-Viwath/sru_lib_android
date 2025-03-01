@@ -40,7 +40,7 @@ import java.io.File
  */
 fun Uri.uriToFile(context: Context): File?{
     val contentResolver = context.contentResolver
-    val fileName = getFileNameFromUri(context, this) ?: return null
+    val fileName = this.getFileNameFromUri(context) ?: return null
     val tempFile = File(context.cacheDir, fileName)
     contentResolver.openInputStream(this)?.use { inputStream ->
         tempFile.outputStream().use { outputStream ->
@@ -50,8 +50,17 @@ fun Uri.uriToFile(context: Context): File?{
     return tempFile
 }
 
-private fun getFileNameFromUri(context: Context, uri: Uri): String? {
-    val cursor = context.contentResolver.query(uri, null, null, null, null)
+/**
+ * Retrieves the file name from a given content URI.
+ *
+ * This function queries the content resolver using the provided URI to extract the file's display name.
+ *
+ * @param context The application context.
+ * @param uri The content URI of the file.
+ * @return The file name (display name) associated with the URI, or null if the file name cannot be determined.
+ */
+fun Uri.getFileNameFromUri(context: Context): String? {
+    val cursor = context.contentResolver.query(this, null, null, null, null)
     return cursor?.use {
         if (it.moveToFirst()) {
             val displayNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)

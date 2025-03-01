@@ -120,6 +120,9 @@ dependencies {
     //security-crypto
     implementation(libs.security.crypto)
 
+    // biometric
+    implementation (libs.androidx.biometric)
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
 }

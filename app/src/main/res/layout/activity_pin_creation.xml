@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutPinContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/layoutBackground"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvPin"
+        android:text="@string/create_pin"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginTop="90dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPin">
+
+        <TextView
+            android:id="@+id/pin1"
+            style="@style/PinBox" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/pin2"
+            style="@style/PinBox" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/pin3"
+            style="@style/PinBox" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/pin4"
+            style="@style/PinBox" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/pin5"
+            style="@style/PinBox" />
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/pin6"
+            style="@style/PinBox" />
+
+    </LinearLayout>
+
+
+    <GridLayout
+        android:id="@+id/gridLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Number Buttons -->
+        <Button
+            android:id="@+id/btn1"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/one" />
+
+        <Button
+            android:id="@+id/btn2"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/two" />
+
+        <Button
+            android:id="@+id/btn3"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/three" />
+
+        <Button
+            android:id="@+id/btn4"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/four" />
+
+        <Button
+            android:id="@+id/btn5"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/five" />
+
+        <Button
+            android:id="@+id/btn6"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/six" />
+
+        <Button
+            android:id="@+id/btn7"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/seven" />
+
+        <Button
+            android:id="@+id/btn8"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/eight" />
+
+        <Button
+            android:id="@+id/btn9"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/nine" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1" />
+
+        <Button
+            android:id="@+id/btn0"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/zero" />
+
+        <Button
+            android:id="@+id/btnDel"
+            style="@style/NumberButton"
+            android:layout_columnWeight="1"
+            android:text="@string/cancel_ic" />
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

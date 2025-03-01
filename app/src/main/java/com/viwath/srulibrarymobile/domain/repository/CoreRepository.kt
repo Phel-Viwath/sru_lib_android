@@ -16,6 +16,7 @@ import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.BorrowId
 import com.viwath.srulibrarymobile.domain.model.College
+import com.viwath.srulibrarymobile.domain.model.DonationIO
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
@@ -25,7 +26,6 @@ import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
 import com.viwath.srulibrarymobile.domain.model.entry.Attend
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import okhttp3.MultipartBody
-import retrofit2.Response
 
 /**
  * CoreRepository interface provides access to the core data operations.
@@ -34,35 +34,35 @@ import retrofit2.Response
  */
 interface CoreRepository {
     suspend fun getDashboard(): Dashboard
-    suspend fun getStudentById(id: Long): Students
+    suspend fun getStudentById(id: Long): Result<Students, DataError.Remote>
     suspend fun newAttend(studentId: String, purpose: String): Attend
     suspend fun getRecentEntryData(): Entry
     suspend fun updateExitingTime(studentId: Long): Boolean
     suspend fun checkExitingAttend(id: String): String
 
     // book
-    suspend fun addBooks(books: List<Book>): Boolean
-    suspend fun uploadBook(file: MultipartBody.Part): Response<Unit>
-    suspend fun updateBook(book: Book): Boolean
-    suspend fun getBooks(): List<BookDto>
-    suspend fun getBooksInTrash(): List<BookDto>
-    suspend fun getSummaryBook(): BookSummary
-    suspend fun moveToTrash(bookId: String): Boolean
-    suspend fun recoverBook(bookId: String): Boolean
-    suspend fun bookLanguages(): List<Language>
-    suspend fun college(): List<College>
-    suspend fun searchBook(keyword: String): List<BookDto>
+    suspend fun addBooks(books: List<Book>): Result<Unit, DataError.Remote>
+    suspend fun uploadBook(file: MultipartBody.Part): Result<Unit, DataError.Remote>
+    suspend fun updateBook(book: Book): Result<Unit, DataError.Remote>
+    suspend fun getBooks(): Result<List<BookDto>, DataError.Remote>
+    suspend fun getBooksInTrash(): Result<List<BookDto>, DataError.Remote>
+    suspend fun getSummaryBook(): Result<BookSummary, DataError.Remote>
+    suspend fun moveToTrash(bookId: String): Result<Unit, DataError.Remote>
+    suspend fun recoverBook(bookId: String): Result<Unit, DataError.Remote>
+    suspend fun bookLanguages(): Result<List<Language>, DataError.Remote>
+    suspend fun college(): Result<List<College>, DataError.Remote>
+    suspend fun searchBook(keyword: String): Result<List<BookDto>, DataError.Remote>
 
     // borrow
-    suspend fun borrowBook(borrow: BorrowRequest): Response<Unit>
-    suspend fun getAllBorrowsDetail(): List<BorrowDetailDto>
-    suspend fun getActiveBorrowsDetail(): List<BorrowDetailDto>
-    suspend fun searchBorrow(keyword: String): List<BorrowDetailDto>
-    suspend fun extendBorrow(id: BorrowId): Response<Unit>
-    suspend fun returnBook(studentId: StudentId, bookId: BookId): Response<Unit>
+    suspend fun borrowBook(borrow: BorrowRequest): Result<Unit, DataError.Remote>
+    suspend fun getAllBorrowsDetail(): Result<List<BorrowDetailDto>, DataError.Remote>
+    suspend fun getActiveBorrowsDetail(): Result<List<BorrowDetailDto>, DataError.Remote>
+    suspend fun searchBorrow(keyword: String): Result<List<BorrowDetailDto>, DataError.Remote>
+    suspend fun extendBorrow(id: BorrowId): Result<Unit, DataError.Remote>
+    suspend fun returnBook(studentId: StudentId, bookId: BookId): Result<Unit, DataError.Remote>
 
     // donation
-    suspend fun addDonation(donationDto: DonationDto): Result<Unit, DataError.Remote>
+    suspend fun addDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
     suspend fun getAllDonation(): Result<List<DonationDto>, DataError.Remote>
-    suspend fun updateDonation(donationDto: DonationDto): Result<Unit, DataError.Remote>
+    suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
 }

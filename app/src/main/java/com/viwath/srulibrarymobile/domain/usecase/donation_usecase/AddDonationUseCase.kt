@@ -11,8 +11,7 @@ import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.DataError
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
-import com.viwath.srulibrarymobile.domain.model.Donation
-import com.viwath.srulibrarymobile.domain.model.toDonationDto
+import com.viwath.srulibrarymobile.domain.model.DonationIO
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,17 +21,16 @@ class AddDonationUseCase @Inject constructor(
     private val repository: CoreRepository
 ){
 
-    operator fun invoke(donation: Donation): Flow<Resource<Unit>> = flow{
+    operator fun invoke(donation: DonationIO): Flow<Resource<Unit>> = flow{
         emit(Resource.Loading())
-        val donationDto = donation.toDonationDto()
-        when(val result = repository.addDonation(donationDto)){
+        when(val result = repository.addDonation(donation)){
             is Result.Success -> {
                 emit(Resource.Success(result.data))
             }
             is Result.Error -> {
-                val message: DataError.Remote = result.error
-                val error = handleRemoteError(message)
-                emit(Resource.Error(error))
+                val error: DataError.Remote = result.error
+                val message = error.handleRemoteError()
+                emit(Resource.Error(message))
             }
         }
     }

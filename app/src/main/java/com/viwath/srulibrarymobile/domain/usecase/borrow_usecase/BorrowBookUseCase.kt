@@ -8,12 +8,12 @@
 package com.viwath.srulibrarymobile.domain.usecase.borrow_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -34,19 +34,15 @@ class BorrowBookUseCase @Inject constructor(
         borrowRequest: BorrowRequest
     ): Flow<Resource<String>> = flow {
         emit(Resource.Loading())
-        try {
-            val result = repository.borrowBook(borrowRequest)
-            if (result.isSuccessful)
-                emit(Resource.Success(result.message()))
-            else
-                emit(Resource.Error(result.message()))
-        }catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "An error occurred"))
-        } catch (e: HttpException){
-            emit(Resource.Error(e.localizedMessage ?: "An HTTP error occurred."))
-        } catch (e: IOException){
-            e.printStackTrace()
-            emit(Resource.Error("Couldn't reach the server. Check your connection."))
+        when(val result = repository.borrowBook(borrowRequest)){
+            is Result.Success -> {
+                emit(Resource.Success("Borrow request successfully"))
+            }
+            is Result.Error -> {
+                val error = result.error
+                val message = error.handleRemoteError()
+                emit(Resource.Error(message))
+            }
         }
     }
 }

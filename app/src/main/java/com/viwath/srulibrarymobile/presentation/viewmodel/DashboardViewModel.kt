@@ -17,7 +17,7 @@ import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.DashboardState
 import com.viwath.srulibrarymobile.presentation.state.StudentState
-import com.viwath.srulibrarymobile.utils.TokenManager
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="12dp"
+    style="@style/layoutBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btUploadFile"
+        app:cornerRadius="8dp"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        app:icon="@drawable/img_exel_img"
+        app:iconTint="@null"
+        app:iconGravity="end"
+        app:iconSize="24sp"
+        android:text="@string/upload_exel"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        android:fontFamily="monospace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearEditTextSection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btUploadFile"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDonatorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text"
+            android:requiresFadingEdge="horizontal">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDonatorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_id"
+                android:inputType="text"
+                android:textColor="?android:attr/textColorPrimary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text"
+            android:requiresFadingEdge="horizontal">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtBookId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_id"
+                android:inputType="text"
+                android:textColor="?android:attr/textColorPrimary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_title"
+                android:inputType="text"
+                android:textColor="?android:attr/textColorPrimary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/author"
+                android:inputType="text"
+                android:textColor="?android:attr/textColorPrimary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtBookGenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_genre"
+                android:inputType="text"
+                android:textColor="?android:attr/textColorPrimary"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPublicYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPublicYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/public_year"
+                android:textColor="?android:attr/textColorPrimary"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilBookQuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtBookQuan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_quan"
+                android:textColor="?android:attr/textColorPrimary"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDonateDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorColor="?android:attr/textColorPrimary"
+            app:hintTextColor="?android:attr/textColorPrimary"
+            app:boxStrokeColor="?android:attr/textColorPrimary"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDonateDate"
+                android:inputType="date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_quan"
+                android:textColor="?android:attr/textColorPrimary"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinnerCollege"
+            android:spinnerMode="dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp" />
+        <Spinner
+            android:id="@+id/spinnerLanguage"
+            android:spinnerMode="dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btSubmit"
+        android:text="@string/submit"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:fontFamily="monospace"
+        android:textStyle="italic|bold"
+        app:cornerRadius="4dp"
+        android:padding="4dp"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:backgroundTint="@color/teal_700"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearEditTextSection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

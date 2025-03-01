@@ -49,10 +49,10 @@ class BookFragmentViewModel @Inject constructor(
 
     private suspend fun getSummaryBook(){
         withContext(IO) {
-            val result = async{
+            val summaryResult = async{
                 useCase.getSummaryUseCase()
             }.await()
-            result.collect{ result ->
+            summaryResult.collect{ result ->
                 when(result){
                     is Resource.Success -> {
                         val data = result.data

@@ -5,10 +5,12 @@
  *
  */
 
-package com.viwath.srulibrarymobile.domain.usecase.book_usecase
+package com.viwath.srulibrarymobile.domain.usecase
 
 import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
@@ -36,12 +38,9 @@ class GetCollegeUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<List<College>>> = flow{
         emit(Resource.Loading())
-        try {
-            val colleges = repository.college()
-            Log.d("GetCollegeUseCase", "invoke: $colleges")
-            emit(Resource.Success(colleges))
-        }catch (e: Exception){
-            emit(Resource.Error(e.message.toString()))
+        when(val result = repository.college()){
+            is Result.Success -> emit(Resource.Success(result.data))
+            is Result.Error -> emit(Resource.Error(result.error.handleRemoteError()))
         }
     }
 }

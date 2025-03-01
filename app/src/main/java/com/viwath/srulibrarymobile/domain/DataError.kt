@@ -22,6 +22,7 @@ sealed interface DataError : Error{
         NO_INTERNET,
         SERVER,
         SERIALIZATION,
+        FORBIDDEN,
         UNKNOWN
     }
     enum class Local: DataError{

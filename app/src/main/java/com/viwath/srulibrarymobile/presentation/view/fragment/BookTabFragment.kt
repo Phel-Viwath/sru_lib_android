@@ -10,18 +10,16 @@ package com.viwath.srulibrarymobile.presentation.view.fragment
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
@@ -29,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -42,10 +41,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookTabBinding
-import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Language
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.presentation.event.BookTabEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
@@ -55,8 +54,14 @@ import com.viwath.srulibrarymobile.presentation.view.dialog.DialogAddBook
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogBookDetail
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogBorrow
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookTabViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.CollegeViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.LanguageViewModel
+import com.viwath.srulibrarymobile.utils.BiometricPromptUtils
+import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.requestBiometricEnrollment
+import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.resetBiometricEnrollmentRequest
 import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.getFileNameFromUri
 import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.launch
 
@@ -74,6 +79,10 @@ class BookTabFragment : Fragment() {
 
     private lateinit var mainActivity: MainActivity
 
+    private val biometricPromptUtils by lazy {
+        BiometricPromptUtils(requireActivity() as AppCompatActivity)
+    }
+
     // dialog
     private var dialogAddUpdate: Dialog? = null
     private var progressDialog: Dialog? = null
@@ -88,6 +97,8 @@ class BookTabFragment : Fragment() {
 
     private val viewModel: BookTabViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
+    private val languageViewModel: LanguageViewModel by activityViewModels()
+    private val collegeViewModel: CollegeViewModel by activityViewModels()
 
     private val _languages: MutableList<Language> = mutableListOf()
     private val _colleges: MutableList<College> = mutableListOf()
@@ -95,8 +106,10 @@ class BookTabFragment : Fragment() {
 
     private val spinnerLayout = android.R.layout.simple_spinner_dropdown_item
 
+    private var biometricEnrollmentRequested = false
+
     /**
-     * [storagePermissionLauncher] is a [androidx.activity.result.ActivityResultLauncher] used to request the read storage permission.
+     *[storagePermissionLauncher] is a [androidx.activity.result.ActivityResultLauncher] used to request the read storage permission.
      *
      * When the permission is granted, it launches the [contract] to pick a file with any type.
      *
@@ -109,6 +122,17 @@ class BookTabFragment : Fragment() {
             contract.launch("*/*")
         } else {
             Snackbar.make(binding.root, "Read storage permission is required!", Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private val enrollLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){ result ->
+        if (result.resultCode == Activity.RESULT_OK){
+
+        }else{
+            showToast("Biometric enrollment failed.")
+            resetBiometricEnrollmentRequest()
         }
     }
     /**
@@ -127,17 +151,13 @@ class BookTabFragment : Fragment() {
      * @see ActivityResultContracts.GetContent
      * @see registerForActivityResult
      */
+    @SuppressLint("SetTextI18n")
     private val contract = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
         if (uri != null) {
             fileUri = uri
-            val filePath = getFileNameFromUri(requireContext(), uri)
+            val filePath = uri.getFileNameFromUri(requireContext())
             if (filePath != null) {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Message")
-                    .setMessage("File selected: $filePath. Click button submit to upload.")
-                    .setCancelable(true)
-                    .create()
-                    .show()
+                mainActivity.showTopSnackbar("File Selected.")
             } else {
                 showToast("Unable to retrieve the file name.")
             }
@@ -145,6 +165,8 @@ class BookTabFragment : Fragment() {
             showToast("No file selected.")
         }
     }
+
+    // Android lifecycle function
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBookTabBinding.inflate(inflater, container, false)
@@ -158,7 +180,7 @@ class BookTabFragment : Fragment() {
                     }
                     else{
                         isEnabled = false
-                        activity?.onBackPressed()
+                        activity?.onBackPressedDispatcher?.onBackPressed()
                     }
                 }
             }
@@ -185,31 +207,14 @@ class BookTabFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         dialogAddUpdate?.dismiss()
+        progressDialog?.dismiss()
         borrowDialog?.dismiss()
-        borrowDialog = null
         dialogAddUpdate = null
+        progressDialog = null
+        borrowDialog = null
+        _binding = null
     }
 
-    /**
-     * Retrieves the file name from a given content URI.
-     *
-     * This function queries the content resolver using the provided URI to extract the file's display name.
-     *
-     * @param context The application context.
-     * @param uri The content URI of the file.
-     * @return The file name (display name) associated with the URI, or null if the file name cannot be determined.
-     */
-    private fun getFileNameFromUri(context: Context, uri: Uri): String? {
-        val cursor = context.contentResolver.query(uri, null, null, null, null)
-        return cursor?.use {
-            if (it.moveToFirst()) {
-                val displayNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (displayNameIndex != -1) {
-                    it.getString(displayNameIndex)
-                } else null
-            } else null
-        }
-    }
 
     /**
      * Sets up the UI elements of the view.
@@ -231,7 +236,8 @@ class BookTabFragment : Fragment() {
             }
         }
         binding.rootLayout.setOnTouchListener { _, _ ->
-            hideKeyboard()
+            mainActivity.hideKeyboard()
+            binding.edtSearch.clearFocus()
             false
         }
         binding.fabAddBook.setOnClickListener { showDialogAddUpdateBook() }
@@ -242,7 +248,7 @@ class BookTabFragment : Fragment() {
                 lifecycleScope.launch {
                     if (binding.edtSearch.isFocused)
                         binding.edtSearch.clearFocus()
-                    hideKeyboard()
+                    mainActivity.hideKeyboard()
                     viewModel.loadInitData()
                 }
                 val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
@@ -297,11 +303,6 @@ class BookTabFragment : Fragment() {
                     state.books.isNotEmpty() -> {
                         stopLoading()
                         setupRecyclerView(state.books, isDarkMode) // Display list of books
-
-                        _languages.clear()
-                        _languages.addAll(state.language)
-                        _colleges.clear()
-                        _colleges.addAll(state.college)
                     }
                 }
             }
@@ -354,6 +355,40 @@ class BookTabFragment : Fragment() {
                     ArrayAdapter(requireContext(), spinnerLayout, it).also { adapter ->
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         binding.spinnerFilter.adapter = adapter
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch{
+            languageViewModel.state.collect{ state ->
+                when{
+                    state.isLoading -> mainActivity.startLoading()
+                    state.error.isNotBlank() -> {
+                        mainActivity.stopLoading()
+                        mainActivity.showToast(state.error)
+                    }
+                    state.languages.isNotEmpty() -> {
+                        mainActivity.stopLoading()
+                        _languages.clear()
+                        _languages.addAll(state.languages)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch{
+            collegeViewModel.state.collect { state ->
+                when {
+                    state.isLoading -> mainActivity.startLoading()
+                    state.error.isNotBlank() -> {
+                        mainActivity.stopLoading()
+                        mainActivity.showToast(state.error)
+                    }
+                    state.colleges.isNotEmpty() -> {
+                        mainActivity.stopLoading()
+                        _colleges.clear()
+                        _colleges.addAll(state.colleges)
                     }
                 }
             }
@@ -433,16 +468,19 @@ class BookTabFragment : Fragment() {
                 }
             } else {
                 // Update existing book
-                viewModel.apply {
-                    onEvent(BookTabEvent.BookIdChange(bookId))
-                    onEvent(BookTabEvent.BookTittleChange(title))
-                    onEvent(BookTabEvent.AuthorChange(author))
-                    onEvent(BookTabEvent.GenreChange(genre))
-                    onEvent(BookTabEvent.PublicYearChange(year))
-                    onEvent(BookTabEvent.QuanChange(quan))
-                    onEvent(BookTabEvent.CollegeChange(collegeId))
-                    onEvent(BookTabEvent.LanguageChange(languageId))
-                    onEvent(BookTabEvent.UpdateBook)
+                biometricPromptUtils.showBiometricForm()
+                observeBiometricAuthentication {
+                    viewModel.apply {
+                        onEvent(BookTabEvent.BookIdChange(bookId))
+                        onEvent(BookTabEvent.BookTittleChange(title))
+                        onEvent(BookTabEvent.AuthorChange(author))
+                        onEvent(BookTabEvent.GenreChange(genre))
+                        onEvent(BookTabEvent.PublicYearChange(year))
+                        onEvent(BookTabEvent.QuanChange(quan))
+                        onEvent(BookTabEvent.CollegeChange(collegeId))
+                        onEvent(BookTabEvent.LanguageChange(languageId))
+                        onEvent(BookTabEvent.UpdateBook)
+                    }
                 }
             }
 
@@ -450,13 +488,14 @@ class BookTabFragment : Fragment() {
         }
 
         btUploadFile.setOnClickListener{
-            if (fileUri != null){
-                btUploadFile.setBackgroundResource(R.color.light_green)
-            }
+            var isHasFile = false
             // permission
             if (permission.hasReadStoragePermission()) {
                 contract.launch("*/*") // Permissions already granted, open file picker
+                val isFileSelected: Boolean = fileUri != null
+                isHasFile = isFileSelected
             } else checkAndRequestStoragePermission()
+            dialogAddBook.disableEditText(isHasFile)
         }
 
         dialog.show()
@@ -489,7 +528,6 @@ class BookTabFragment : Fragment() {
     }
 
     private fun dialogDelete(bookId: BookId, isDarkMode: Boolean){
-        viewModel.onEvent(BookTabEvent.BookIdChange(bookId))
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete")
             .setMessage("Are you sure you want to delete this book?")
@@ -502,14 +540,19 @@ class BookTabFragment : Fragment() {
             }
             .create()
 
-        dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(resources.getColor(R.color.red))
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(
-                if (isDarkMode) resources.getColor(R.color.light_color)
-                else resources.getColor(R.color.black)
-            )
+        biometricPromptUtils.showBiometricForm()
+        observeBiometricAuthentication {
+            viewModel.onEvent(BookTabEvent.BookIdChange(bookId))
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(resources.getColor(R.color.red))
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(
+                    if (isDarkMode) resources.getColor(R.color.light_color)
+                    else resources.getColor(R.color.black)
+                )
+        }
+
     }
 
     private fun dialogBorrow(book: Book){
@@ -564,11 +607,6 @@ class BookTabFragment : Fragment() {
     private fun showToast(message: String): Unit = requireActivity().runOnUiThread{
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
-    private fun hideKeyboard() {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-        binding.edtSearch.clearFocus()
-    }
     private fun formatFileSize(size: Long): String = when {
         size >= 1_000_000 -> "%.1f MB".format(size / 1_000_000.0)
         size >= 1_000 -> "%.1f KB".format(size / 1_000.0)
@@ -590,6 +628,44 @@ class BookTabFragment : Fragment() {
         val dialogBook = DialogBookDetail(view)
         dialogBook.populateData(this)
         dialog.show()
+    }
+
+    private fun observeBiometricAuthentication(onSuccess: () -> Unit){
+        viewLifecycleOwner.lifecycleScope.launch {
+            biometricPromptUtils.biometricResultFlow.collect{ result ->
+                when(result){
+                    is BiometricPromptUtils.BiometricResult.AuthenticationSuccess -> {
+                        resetBiometricEnrollmentRequest()
+                        onSuccess()
+                    }
+                    is BiometricPromptUtils.BiometricResult.AuthenticationFail -> {
+                        mainActivity.showTopSnackbar("Authentication failed")
+                    }
+                    is BiometricPromptUtils.BiometricResult.FeatureUnavailable -> {
+                        mainActivity.showTopSnackbar("Feature unavailable")
+                    }
+                    is BiometricPromptUtils.BiometricResult.AuthenticationError -> {
+                        mainActivity.showTopSnackbar(result.error)
+                    }
+                    is BiometricPromptUtils.BiometricResult.AuthenticationNotSet -> {
+                        mainActivity.showTopSnackbar("Authentication not set")
+                        requestBiometricEnrollment{ intent ->
+                            if (!biometricEnrollmentRequested){
+                                biometricEnrollmentRequested = true
+
+                            }
+                            enrollLauncher.launch(intent)
+                        }
+                    }
+                    is BiometricPromptUtils.BiometricResult.HardwareUnavailable -> {
+                        mainActivity.showTopSnackbar("Hardware unavailable")
+                    }
+                    is BiometricPromptUtils.BiometricResult.AuthenticationCanceled -> {
+                        mainActivity.showTopSnackbar("Authentication canceled")
+                    }
+                }
+            }
+        }
     }
 
 

@@ -8,7 +8,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="10dp"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:id="@+id/linearRootLayoutOtp"
     android:layout_width="match_parent"
@@ -34,6 +34,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilOtp"
+        android:paddingHorizontal="12dp"
         android:layout_marginTop="14dp"
         app:cursorColor="?android:attr/textColorPrimary"
         android:layout_width="match_parent"
@@ -75,6 +76,7 @@
 
     <View
         android:id="@+id/line"
+        android:layout_marginHorizontal="12dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="6dp"
         android:background="@color/white"

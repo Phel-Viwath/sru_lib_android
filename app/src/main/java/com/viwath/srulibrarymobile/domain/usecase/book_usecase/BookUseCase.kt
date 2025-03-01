@@ -38,8 +38,6 @@ data class BookUseCase(
     val recoverBookUseCase: RecoverBookUseCase,
     val getBookInTrashUseCase: GetBookInTrashUseCase,
     val getSummaryUseCase: GetSummaryUseCase,
-    val getLanguageUseCase: GetLanguageUseCase,
-    val getCollegeUseCase: GetCollegeUseCase,
     val uploadBookUseCase: UploadBookUseCase,
     val getStudentByIDUseCase: GetStudentByIDUseCase,
     val searchBookUseCase: SearchBookUseCase

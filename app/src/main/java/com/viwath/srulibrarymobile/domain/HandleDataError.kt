@@ -14,19 +14,20 @@ package com.viwath.srulibrarymobile.domain
  */
 object HandleDataError {
 
-    fun handleRemoteError(error: DataError.Remote): String {
-        return when (error) {
+    fun DataError.Remote.handleRemoteError(): String {
+        return when (this) {
             DataError.Remote.REQUEST_TIMEOUT -> "Request timed out, please try again."
             DataError.Remote.TOO_MANY_REQUESTS -> "Too many requests, slow down."
             DataError.Remote.NO_INTERNET -> "No internet connection, check your network."
             DataError.Remote.SERVER -> "Server error, try again later."
             DataError.Remote.SERIALIZATION -> "Data serialization error."
+            DataError.Remote.FORBIDDEN -> "You don't have permission to perform this action."
             DataError.Remote.UNKNOWN -> "An unknown error occurred."
         }
     }
 
-    fun handleLocalError(error: DataError.Local): String{
-        return when(error){
+    fun DataError.Local.handleLocalError(): String{
+        return when(this){
             DataError.Local.DISK_FULL -> "Disk is full, please try again later."
             DataError.Local.UNKNOWN -> "An unknown error occurred."
         }

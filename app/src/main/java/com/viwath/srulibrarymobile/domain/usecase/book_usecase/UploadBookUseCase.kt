@@ -8,6 +8,8 @@
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import android.util.Log
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
 import kotlinx.coroutines.Dispatchers.IO
@@ -102,14 +104,14 @@ class UploadBookUseCase @Inject constructor(
                     body = requestBody
                 )
                 Log.d("UploadBookUseCase", "About to upload file to server")
-                val response = repository.uploadBook(multipartBody)
-                if (response.isSuccessful){
-                    Log.d("UploadBookUseCase", "Upload successful: ${response.body()}")
-                    send(UploadState.Uploading(100, file.length(), file.length()))
-                    send(UploadState.Success("Upload Success!"))
-                }else{
-                    Log.e("UploadBookUseCase", "Upload failed: ${response.message()}")
-                    send(UploadState.Error(response.message()))
+                when(val response = repository.uploadBook(multipartBody)){
+                    is Result.Success -> {
+                        send(UploadState.Uploading(100, file.length(), file.length()))
+                        send(UploadState.Success("Upload Success!"))
+                    }
+                    is Result.Error -> {
+                        send(UploadState.Error(response.error.handleRemoteError()))
+                    }
                 }
             }
         }catch (e: HttpException) {

@@ -46,32 +46,4 @@ class PermissionRequest(private val fragment: Fragment) {
         }
     }
 
-//    fun requestPermissions(vararg permissions: String, requestCode: Int) {
-//        ActivityCompat.requestPermissions(
-//            fragment.requireActivity(),
-//            permissions,
-//            requestCode
-//        )
-//    }
-
-//    fun handlePermissionResult(
-//        requestCode: Int,
-//        permissions: Array<out String?>,
-//        grantResults: IntArray,
-//        onPermissionGranted: () -> Unit,
-//        onPermissionDenied: () -> Unit
-//    ) {
-//        if (grantResults.isNotEmpty()) {
-//            // Check if all permissions are granted
-//            val allGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-//            if (allGranted) {
-//                onPermissionGranted()
-//            } else {
-//                onPermissionDenied()
-//            }
-//        } else {
-//            // No permissions were granted
-//            onPermissionDenied()
-//        }
-//    }
 }

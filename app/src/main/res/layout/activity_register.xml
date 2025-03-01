@@ -15,7 +15,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:paddingHorizontal="10dp"
+    android:fitsSystemWindows="true"
     tools:context=".presentation.view.activities.Hilt_RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -35,6 +35,7 @@
         android:textSize="30sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingHorizontal="12dp"
         android:layout_marginTop="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -58,7 +59,7 @@
                 android:hint="@string/username_hint"
                 android:inputType="textEmailAddress"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
         <!-- TextInputLayout for Email -->
         <com.google.android.material.textfield.TextInputLayout
@@ -81,7 +82,7 @@
                 android:hint="@string/login_email_hint"
                 android:inputType="textEmailAddress"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TextInputLayout for Password -->
@@ -105,7 +106,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -9,14 +9,17 @@ package com.viwath.srulibrarymobile
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.viwath.srulibrarymobile.utils.SettingPreferences
+import com.viwath.srulibrarymobile.utils.share_preferences.SettingPreferences
+import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class LibApp : Application(){
     private lateinit var settingPreferences: SettingPreferences
+    private lateinit var tokenManager: TokenManager
     override fun onCreate() {
         super.onCreate()
+        tokenManager = TokenManager(applicationContext)
         settingPreferences = SettingPreferences(applicationContext)
         val themeMode = settingPreferences.getSavedTheme()
         val theme = when(themeMode){

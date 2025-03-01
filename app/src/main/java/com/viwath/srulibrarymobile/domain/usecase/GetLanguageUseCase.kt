@@ -5,15 +5,15 @@
  *
  */
 
-package com.viwath.srulibrarymobile.domain.usecase.book_usecase
+package com.viwath.srulibrarymobile.domain.usecase
 
-import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
+import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
+import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -32,12 +32,9 @@ class GetLanguageUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<List<Language>>> = flow {
         emit(Resource.Loading())
-        try{
-            val languages = repository.bookLanguages()
-            Log.d("GetLanguageUseCase", "invoke: $languages")
-            emit(Resource.Success(languages))
-        }catch (e: Exception){
-            emit(Resource.Error(e.message.toString()))
+        when(val result = repository.bookLanguages()){
+            is Result.Success -> emit(Resource.Success(result.data))
+            is Result.Error -> emit(Resource.Error(result.error.handleRemoteError()))
         }
     }
 }
