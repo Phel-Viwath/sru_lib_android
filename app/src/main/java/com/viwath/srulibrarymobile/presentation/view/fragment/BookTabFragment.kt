@@ -28,6 +28,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -63,6 +65,7 @@ import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.resetBio
 import com.viwath.srulibrarymobile.utils.PermissionRequest
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
 import com.viwath.srulibrarymobile.utils.uriToFile
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -128,11 +131,17 @@ class BookTabFragment : Fragment() {
     private val enrollLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){ result ->
-        if (result.resultCode == Activity.RESULT_OK){
-
-        }else{
-            showToast("Biometric enrollment failed.")
-            resetBiometricEnrollmentRequest()
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                retryBiometricAuthentication()
+            }
+            Activity.RESULT_CANCELED -> {
+                retryBiometricAuthentication()
+            }
+            else -> {
+                mainActivity.showDialog("Application", "Biometric enrollment failed.")
+                resetBiometricEnrollmentRequest()
+            }
         }
     }
     /**
@@ -634,21 +643,21 @@ class BookTabFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             biometricPromptUtils.biometricResultFlow.collect{ result ->
                 when(result){
-                    is BiometricPromptUtils.BiometricResult.AuthenticationSuccess -> {
+                    is BiometricPromptUtils.BiometricResult.AuthenticationSucceeded -> {
                         resetBiometricEnrollmentRequest()
                         onSuccess()
                     }
                     is BiometricPromptUtils.BiometricResult.AuthenticationFail -> {
-                        mainActivity.showTopSnackbar("Authentication failed")
+                        mainActivity.showDialog("Application", "Authentication failed")
                     }
                     is BiometricPromptUtils.BiometricResult.FeatureUnavailable -> {
-                        mainActivity.showTopSnackbar("Feature unavailable")
+                        mainActivity.showDialog("Application", "Feature unavailable")
                     }
                     is BiometricPromptUtils.BiometricResult.AuthenticationError -> {
-                        mainActivity.showTopSnackbar(result.error)
+                        mainActivity.showDialog("Application", result.error)
                     }
                     is BiometricPromptUtils.BiometricResult.AuthenticationNotSet -> {
-                        mainActivity.showTopSnackbar("Authentication not set")
+                        mainActivity.showTopSnackbar("Biometric is not set")
                         requestBiometricEnrollment{ intent ->
                             if (!biometricEnrollmentRequested){
                                 biometricEnrollmentRequested = true
@@ -658,12 +667,32 @@ class BookTabFragment : Fragment() {
                         }
                     }
                     is BiometricPromptUtils.BiometricResult.HardwareUnavailable -> {
-                        mainActivity.showTopSnackbar("Hardware unavailable")
+                        mainActivity.showDialog("Application","This device does not have a fingerprint sensor")
                     }
                     is BiometricPromptUtils.BiometricResult.AuthenticationCanceled -> {
-                        mainActivity.showTopSnackbar("Authentication canceled")
+                        mainActivity.showDialog("Application","Authentication canceled")
+                    }
+                    is BiometricPromptUtils.BiometricResult.NoDeviceCredentialIsSet -> {
+                        mainActivity.showDialog("Application", "No device credential is set.")
                     }
                 }
+            }
+        }
+    }
+
+    private fun retryBiometricAuthentication() {
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                // Device credential is available, retry authentication
+                lifecycleScope.launch {
+                    delay(300) // Delay to avoid FragmentManager conflicts
+                    biometricPromptUtils.showBiometricForm()
+                }
+            }
+            else -> {
+                // No device credential is available
+                mainActivity.showDialog("Application", "No device credential is set.")
             }
         }
     }

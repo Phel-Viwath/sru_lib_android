@@ -10,7 +10,6 @@ package com.viwath.srulibrarymobile.utils
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -89,19 +88,16 @@ class BiometricPromptUtils(
         object : AuthenticationCallback(){
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                val result = when (errorCode) {
-                    BiometricPrompt.ERROR_NEGATIVE_BUTTON -> BiometricResult.AuthenticationCanceled
-                    else -> {
-                        Log.d("BiometricPromptUtil", "onAuthenticationError: $errorCode $errString")
-                        BiometricResult.AuthenticationError(errString.toString())
-                    }
+                val result = when(errorCode){
+                    BiometricPrompt.ERROR_CANCELED -> BiometricResult.AuthenticationCanceled
+                    else -> BiometricResult.AuthenticationError(errString.toString())
                 }
                 _biometricResultChannel.tryEmit(result)
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                _biometricResultChannel.tryEmit(BiometricResult.AuthenticationSuccess)
+                _biometricResultChannel.tryEmit(BiometricResult.AuthenticationSucceeded)
             }
 
             override fun onAuthenticationFailed() {
@@ -119,10 +115,11 @@ class BiometricPromptUtils(
     sealed interface BiometricResult{
         data object HardwareUnavailable: BiometricResult
         data object FeatureUnavailable: BiometricResult
-        data object AuthenticationSuccess: BiometricResult
+        data object AuthenticationSucceeded: BiometricResult
         data object AuthenticationNotSet: BiometricResult
         data object AuthenticationFail: BiometricResult
         data object AuthenticationCanceled: BiometricResult
+        data object NoDeviceCredentialIsSet: BiometricResult
         data class AuthenticationError(val error: String): BiometricResult
     }
 

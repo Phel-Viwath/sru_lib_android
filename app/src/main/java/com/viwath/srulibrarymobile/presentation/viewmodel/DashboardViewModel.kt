@@ -17,7 +17,7 @@ import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.EntryUseCase
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.DashboardState
 import com.viwath.srulibrarymobile.presentation.state.StudentState
-import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
+import com.viwath.srulibrarymobile.utils.datastore.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
@@ -37,13 +37,13 @@ import javax.inject.Inject
  *
  * @property useCase The use case for fetching the dashboard data.
  * @property entryUseCase The use case for handling dashboard entry operations (save attend, get student).
- * @property tokenManager The manager for handling user tokens and retrieving user data.
+ * @property userPreferences The manager for handling user tokens and retrieving user data.
  */
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val useCase: DashboardUseCase,
     private val entryUseCase: EntryUseCase,
-    tokenManager: TokenManager
+    userPreferences: UserPreferences
 ): ViewModel(){
 
     private val _state = MutableLiveData(DashboardState())
@@ -52,9 +52,13 @@ class DashboardViewModel @Inject constructor(
     private val _eventChannel = Channel<StudentState>(Channel.BUFFERED)
     val eventFlow = _eventChannel.receiveAsFlow()
 
-    val username = tokenManager.getUsername()
+    private val _username = MutableLiveData<String>()
+    val username: LiveData<String> = _username
 
     init {
+        viewModelScope.launch {
+            _username.value = userPreferences.getUsername() ?: "User"
+        }
         if(_state.value?.dashboard == null){
             getDashboard()
         }

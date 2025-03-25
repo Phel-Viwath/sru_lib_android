@@ -206,7 +206,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                 when{
                     it.isLoading -> mainActivity.startLoading()
                     it.error.isNotEmpty() -> {
-                        mainActivity.startLoading()
+                        mainActivity.stopLoading()
                         mainActivity.showToast(it.error)
                     }
                     else -> {

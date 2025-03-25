@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/transparent" /> <!-- Background color -->
+    <corners
+        android:topLeftRadius="8dp"
+        android:topRightRadius="8dp"/>
+    <stroke
+        android:width="2dp"
+        android:color="@android:color/transparent" /> <!-- Border width and color -->
+</shape>

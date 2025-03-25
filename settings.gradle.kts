@@ -1,3 +1,5 @@
+import java.net.URI
+
 /*
  * Copyright (c) 2025.
  * @Author Phel Viwath
@@ -24,7 +26,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
+        maven ("https://jitpack.io")
     }
 }
 

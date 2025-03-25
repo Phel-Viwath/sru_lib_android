@@ -26,8 +26,8 @@ class PinViewModel @Inject constructor(
     val pinStatus: LiveData<Boolean> get() = _pinStatus
 
     fun savePin(pin: String){
-        val (encryptedPin, iv) = keyStoreManager.encrypt(pin.toByteArray())
-        pinEncryptionData.savePin(iv, encryptedPin)
+        val encryptedPin = keyStoreManager.encrypt(pin.toByteArray())
+        pinEncryptionData.savePin(encryptedPin)
     }
 
     fun validatePin(inputPin: String){
@@ -37,7 +37,7 @@ class PinViewModel @Inject constructor(
             val encryptedPin = Base64.decode(encryptedPinBase64, Base64.DEFAULT)
             val iv = Base64.decode(ivBase64, Base64.DEFAULT)
 
-            val decryptedPin = keyStoreManager.decrypt(encryptedBytes = encryptedPin, iv = iv)
+            val decryptedPin = keyStoreManager.decrypt(encryptedBytes = encryptedPin)
             _pinStatus.value = (String(decryptedPin) == inputPin)
         }
         else _pinStatus.value = false

@@ -13,7 +13,7 @@
     android:id="@+id/rootLayout"
     android:focusable="true"
     android:padding="10dp"
-    style="@style/layoutBackground"
+    android:background="@android:color/transparent"
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:layout_width="match_parent"

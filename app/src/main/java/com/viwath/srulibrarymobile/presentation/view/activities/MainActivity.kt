@@ -5,30 +5,47 @@
  *
  */
 
+
+@file:Suppress("DEPRECATION")
+
 package com.viwath.srulibrarymobile.presentation.view.activities
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.ActivityMainBinding
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import dagger.hilt.android.AndroidEntryPoint
+import eightbitlab.com.blurview.BlurView
+import eightbitlab.com.blurview.RenderEffectBlur
+import eightbitlab.com.blurview.RenderScriptBlur
+import kotlinx.coroutines.launch
 
 
 /**
@@ -47,18 +64,33 @@ class MainActivity : AppCompatActivity() {
 
     private var activeFragmentTag: String? = null
     private val connectivityViewModel: ConnectivityViewModel by viewModels()
+    private val settingViewModel: SettingViewModel by viewModels()
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        loading = Loading(this)
-//        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM){
-//            //binding.statusBar.visibility = View.VISIBLE
-//        }
 
+        binding.bottomNavView.background = null
+        loading = Loading(this)
         observeNetworkStatus()
 
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        lifecycleScope.launch {
+            settingViewModel.viewMode.observe(this@MainActivity) {
+                val isClassicMode = when(it){
+                    CLASSIC -> true
+                    MODERN -> false
+                    else -> true
+                }
+                setUpView(isDarkMode, isClassicMode)
+            }
+        }
+
+        setUpBlurView(binding.bottomNavViewBlurView)
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -91,6 +123,14 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        binding.bottomNavView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_label_color)
+        binding.bottomNavView
+            .itemIconTintList = ContextCompat.getColorStateList(
+                this,
+                if (isDarkMode) R.color.bottom_nav_dark_icon_color
+                else R.color.bottom_nav_light_icon_color
+            )
 
     }
 
@@ -190,6 +230,51 @@ class MainActivity : AppCompatActivity() {
     fun showSnackbar(message: String){
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
         snackbar.show()
+    }
+
+    fun showDialog(title: String, message: String){
+        MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setCancelable(true)
+            .setPositiveButton("Ok"){ dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setUpBlurView(blurView: BlurView) {
+        val decorView = window.decorView
+        val rootView = binding.root // Get main layout instead of android.R.id.content
+
+        val blurAlgorithm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            RenderEffectBlur()
+        } else {
+            RenderScriptBlur(this)
+        }
+
+        blurView.setupWith(rootView, blurAlgorithm)
+            .setFrameClearDrawable(window.decorView.background ?: ContextCompat.getDrawable(this, R.drawable.translution_bg))
+            .setBlurRadius(20f) // Increase blur intensity
+            .setBlurAutoUpdate(true)
+            .setBlurEnabled(true) // Ensure blur is enabled
+
+        blurView.outlineProvider = ViewOutlineProvider.BACKGROUND
+        blurView.clipToOutline = true
+    }
+
+    private fun setUpView(isDarkMode: Boolean, isClassicMode: Boolean){
+        when(isClassicMode){
+            true ->{
+                binding.root.setBackgroundResource(if (isDarkMode) R.color.dark_background else R.color.light_background)
+            }
+            false -> {
+                binding.root.setBackgroundResource(if (isDarkMode) R.drawable.img_dark_bg else R.drawable.img_light_bg_3)
+            }
+        }
     }
 
     companion object{

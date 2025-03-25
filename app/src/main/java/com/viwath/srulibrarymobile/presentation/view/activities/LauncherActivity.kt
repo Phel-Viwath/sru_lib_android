@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 /**
  * LauncherActivity is the initial activity that the user sees when the application starts.
  * It handles the authentication process and network connectivity checks before directing the user
@@ -69,7 +70,7 @@ class LauncherActivity : AppCompatActivity() {
                 viewModel.authenticate()
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.authResult.collect { result ->
-                        withContext(Dispatchers.Main) {
+                        withContext(Dispatchers.Main){
                             handleAuthResult(result)
                         }
                     }
@@ -93,13 +94,16 @@ class LauncherActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         dialog?.dismiss()
+        dialog = null
     }
 
     private fun handleAuthResult(result: AuthResult<Unit>) {
         when (result) {
             is AuthResult.UnknownError -> {
                 // Show an error message or handle the error as needed
-                alertDialog("Server problem")
+                runOnUiThread {
+                    alertDialog("Server problem")
+                }
             }
             is AuthResult.Unauthorized, is AuthResult.InternalServerError, is AuthResult.BadRequest -> {
                 // Navigate to LoginActivity if authentication fails

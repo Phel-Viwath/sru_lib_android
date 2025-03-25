@@ -10,7 +10,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/layoutBackground"
+    android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -47,445 +47,510 @@
                 </RelativeLayout>
 
                 <!--  Card Section-->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardViewCardSection"
+                    app:cardBackgroundColor="#1f1f1f"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="@android:color/transparent"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp">
-                    <!-- Card layout -->
-                    <RelativeLayout
-                        android:id="@+id/relativeCard"
-                        android:paddingVertical="8dp"
+                    android:layout_height="wrap_content">
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/blurViewCardSection"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/light_box_bg"
-                        android:orientation="vertical"
-                        android:spacing="16dp"
-                        tools:ignore="UselessParent">
-
-                        <!-- Entry Today Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card1"
-                            style="?attr/materialCardViewOutlinedStyle"
-                            android:layout_alignParentTop="true"
-                            app:cardCornerRadius="@dimen/fab_margin"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="12dp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/relativeCard"
+                            android:paddingVertical="8dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardElevation="1dp">
-                            <RelativeLayout
-                                android:id="@+id/entry_relative"
+                            android:orientation="vertical"
+                            android:spacing="16dp"
+                            tools:ignore="UselessParent">
+
+                            <!-- Entry Today Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card1"
+                                style="?attr/materialCardViewOutlinedStyle"
+                                app:cardCornerRadius="@dimen/fab_margin"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginBottom="12dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp">
-                                <TextView
-                                    android:id="@+id/tvCard1"
-                                    android:layout_width="wrap_content"
+                                app:cardElevation="1dp">
+                                <eightbitlab.com.blurview.BlurView
+                                    android:id="@+id/cardEntryBlur"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/entry_text"
-                                    android:textSize="16sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    tools:ignore="RelativeOverlap" />
+                                    tools:ignore="TooDeepLayout">
+                                    <RelativeLayout
+                                        android:id="@+id/entry_relative"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="16dp">
+                                        <TextView
+                                            android:id="@+id/tvCard1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/entry_text"
+                                            android:textSize="16sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            tools:ignore="RelativeOverlap,TooDeepLayout" />
 
-                                <TextView
-                                    android:id="@+id/tv_entry_count"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/zero"
-                                    android:textSize="32sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tvCard1"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_entry_count"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/zero"
+                                            android:textSize="32sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tvCard1"
+                                            android:layout_marginTop="8dp"/>
 
-                                <TextView
-                                    android:id="@+id/tv_entry_percentage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/entry_percent"
-                                    android:textSize="14sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tv_entry_count"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_entry_percentage"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/entry_percent"
+                                            android:textSize="14sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tv_entry_count"
+                                            android:layout_marginTop="8dp"/>
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/img_walk"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:contentDescription="@string/walk_icon"/>
-                            </RelativeLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@drawable/img_walk"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_centerVertical="true"
+                                            android:contentDescription="@string/walk_icon"/>
+                                    </RelativeLayout>
+                                </eightbitlab.com.blurview.BlurView>
 
-                        <!-- Book Borrow Today Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card2"
-                            style="?attr/materialCardViewOutlinedStyle"
-                            android:layout_below="@+id/card1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="12dp"
-                            app:cardCornerRadius="@dimen/fab_margin"
-                            app:cardElevation="4dp">
 
-                            <RelativeLayout
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Book Borrow Today Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card2"
+                                style="?attr/materialCardViewOutlinedStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp">
-                                <TextView
-                                    android:id="@+id/tvCard2"
-                                    android:layout_width="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginBottom="12dp"
+                                app:cardCornerRadius="@dimen/fab_margin"
+                                app:cardElevation="1dp">
+                                <eightbitlab.com.blurview.BlurView
+                                    android:id="@+id/cardBorrowBlur"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/borrow_text"
-                                    android:textSize="16sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    tools:ignore="RelativeOverlap" />
+                                    tools:ignore="TooDeepLayout">
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="16dp">
+                                        <TextView
+                                            android:id="@+id/tvCard2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/borrow_text"
+                                            android:textSize="16sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            tools:ignore="RelativeOverlap" />
 
-                                <TextView
-                                    android:id="@+id/tv_book_borrow_count"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/zero"
-                                    android:textSize="32sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tvCard2"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_book_borrow_count"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/zero"
+                                            android:textSize="32sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tvCard2"
+                                            android:layout_marginTop="8dp"/>
 
-                                <TextView
-                                    android:id="@+id/tv_book_borrow_percentage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/borrow_percent"
-                                    android:textSize="14sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tv_book_borrow_count"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_book_borrow_percentage"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/borrow_percent"
+                                            android:textSize="14sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tv_book_borrow_count"
+                                            android:layout_marginTop="8dp"/>
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/img_borrow_book"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:contentDescription="@string/walk_icon"/>
-                            </RelativeLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@drawable/img_borrow_book"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_centerVertical="true"
+                                            android:contentDescription="@string/walk_icon"/>
+                                    </RelativeLayout>
 
-                        <!-- Book Sponsor Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card3"
-                            style="?attr/materialCardViewOutlinedStyle"
-                            android:layout_below="@+id/card2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="12dp"
-                            android:elevation="4dp"
-                            app:cardCornerRadius="@dimen/fab_margin">
-                            <RelativeLayout
+                                </eightbitlab.com.blurview.BlurView>
+
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Book Sponsor Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card3"
+                                style="?attr/materialCardViewOutlinedStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:id="@+id/tvCard3"
-                                    android:layout_width="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginBottom="12dp"
+                                android:elevation="1dp"
+                                app:cardCornerRadius="@dimen/fab_margin">
+                                <eightbitlab.com.blurview.BlurView
+                                    android:id="@+id/cardDonationBlur"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/donate_text"
-                                    android:textSize="16sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    tools:ignore="RelativeOverlap"/>
+                                    tools:ignore="TooDeepLayout">
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="16dp">
 
-                                <TextView
-                                    android:id="@+id/tv_book_sponsor_count"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/zero"
-                                    android:textSize="32sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tvCard3"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tvCard3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/donate_text"
+                                            android:textSize="16sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            tools:ignore="RelativeOverlap"/>
 
-                                <TextView
-                                    android:id="@+id/tv_book_sponsor_percentage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/sponsor_percent"
-                                    android:textSize="14sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tv_book_sponsor_count"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_book_sponsor_count"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/zero"
+                                            android:textSize="32sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tvCard3"
+                                            android:layout_marginTop="8dp"/>
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/img_books_stack"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:contentDescription="@string/walk_icon"/>
-                            </RelativeLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                        <TextView
+                                            android:id="@+id/tv_book_sponsor_percentage"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/sponsor_percent"
+                                            android:textSize="14sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tv_book_sponsor_count"
+                                            android:layout_marginTop="8dp"/>
 
-                        <!-- Total Entry Of This Month Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card4"
-                            style="?attr/materialCardViewOutlinedStyle"
-                            android:layout_below="@+id/card3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="12dp"
-                            android:elevation="4dp"
-                            app:cardCornerRadius="@dimen/fab_margin">
-                            <RelativeLayout
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@drawable/img_books_stack"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_centerVertical="true"
+                                            android:contentDescription="@string/walk_icon"/>
+                                    </RelativeLayout>
+                                </eightbitlab.com.blurview.BlurView>
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Total Entry Of This Month Card -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card4"
+                                style="?attr/materialCardViewOutlinedStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp">
-
-                                <TextView
-                                    android:id="@+id/tvCard4"
-                                    android:layout_width="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginEnd="12dp"
+                                android:layout_marginBottom="12dp"
+                                android:elevation="1dp"
+                                app:cardCornerRadius="@dimen/fab_margin">
+                                <eightbitlab.com.blurview.BlurView
+                                    android:id="@+id/cardMonthlyEntryBlur"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/total_entry_this_month"
-                                    android:textSize="16sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    tools:ignore="RelativeOverlap" />
+                                    tools:ignore="TooDeepLayout">
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="16dp">
 
-                                <TextView
-                                    android:id="@+id/tv_total_entry_count"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/zero"
-                                    android:textSize="32sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tvCard4"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tvCard4"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/total_entry_this_month"
+                                            android:textSize="16sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            tools:ignore="RelativeOverlap" />
 
-                                <TextView
-                                    android:id="@+id/tv_total_entry_percentage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/entry_month_percent"
-                                    android:textSize="14sp"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:layout_below="@id/tv_total_entry_count"
-                                    android:layout_marginTop="8dp"/>
+                                        <TextView
+                                            android:id="@+id/tv_total_entry_count"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/zero"
+                                            android:textSize="32sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tvCard4"
+                                            android:layout_marginTop="8dp"/>
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/img_people"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:contentDescription="@string/walk_icon"/>
-                            </RelativeLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                        <TextView
+                                            android:id="@+id/tv_total_entry_percentage"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/entry_month_percent"
+                                            android:textSize="14sp"
+                                            android:textColor="?android:attr/textColorPrimary"
+                                            android:layout_below="@id/tv_total_entry_count"
+                                            android:layout_marginTop="8dp"/>
 
-                        <!-- End of Card layout -->
-                    </RelativeLayout>
-                </LinearLayout>
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@drawable/img_people"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_centerVertical="true"
+                                            android:contentDescription="@string/walk_icon"/>
+                                    </RelativeLayout>
+                                </eightbitlab.com.blurview.BlurView>
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- End of Card layout -->
+                        </LinearLayout>
+                    </eightbitlab.com.blurview.BlurView>
+
+                </com.google.android.material.card.MaterialCardView>
 
 
                 <!--  Bar Chart Section-->
-                <LinearLayout
-                    android:padding="8dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardBarChart"
+                    app:strokeColor="@android:color/transparent"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardUseCompatPadding="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <RelativeLayout
-                        android:id="@+id/relativeBarChart"
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/blurViewBarChartSection"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="8dp"
-                        android:background="@drawable/white_box_bg"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            android:id="@+id/title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginStart="20dp"
-                            android:text="@string/weekly_visitor"
-                            android:textColor="?android:attr/textColorPrimary"
-                            android:textSize="20sp" />
-
-                        <com.github.mikephil.charting.charts.BarChart
-                            android:backgroundTint="@color/dark_gray"
-                            android:id="@+id/barChart"
-                            android:layout_width="match_parent"
-                            android:layout_height="400dp"
-                            android:layout_below="@id/title"
-                            android:layout_marginTop="18dp"/>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <!--  Pie Chart Section-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp">
-                    <RelativeLayout
-                        android:id="@+id/relativePieChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/white_box_bg"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:id="@+id/titlePie"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginStart="20dp"
-                            android:text="@string/major_visitor"
-                            android:textColor="?android:attr/textColorPrimary"
-                            android:textSize="20sp" />
-
+                        android:layout_height="wrap_content">
                         <RelativeLayout
+                            android:id="@+id/relativeBarChart"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_below="@id/titlePie"
-                            android:layout_marginTop="10dp"
-                            android:padding="@dimen/fab_margin">
-
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChart"
-                                android:layout_width="300dp"
-                                android:layout_height="300dp"
-                                android:layout_centerInParent="true" />
+                            android:padding="8dp"
+                            tools:ignore="UselessParent">
 
                             <TextView
-                                android:id="@+id/tvTotalMajor"
+                                android:id="@+id/title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:text="@string/total"
-                                android:textAlignment="center"
-                                android:textColor="@color/black"
-                                android:textSize="24sp" />
+                                android:layout_marginTop="20dp"
+                                android:layout_marginStart="20dp"
+                                android:text="@string/weekly_visitor"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="20sp" />
 
+                            <com.github.mikephil.charting.charts.BarChart
+                                android:backgroundTint="@color/dark_gray"
+                                android:id="@+id/barChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="400dp"
+                                android:layout_below="@id/title"
+                                android:layout_marginTop="18dp"/>
                         </RelativeLayout>
-                    </RelativeLayout>
-                </LinearLayout>
+                    </eightbitlab.com.blurview.BlurView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <!--  Progress ring Section-->
-                <LinearLayout
-                    android:padding="8dp"
-                    android:orientation="vertical"
+                <!--  Pie Chart Section-->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardPieChart"
+                    app:strokeColor="@android:color/transparent"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardUseCompatPadding="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:id="@+id/linearProgress"
-                        android:padding="16dp"
-                        android:background="@drawable/white_box_bg"
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/pieChartBlur"
+                        android:padding="@dimen/fab_margin"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:id="@+id/titleProgress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/total_book_of_this_month"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary"
-                            android:layout_marginBottom="24dp" />
-
-                        <!-- Text Progress  -->
+                        android:layout_height="wrap_content">
                         <RelativeLayout
-                            android:id="@+id/re_language"
+                            android:id="@+id/relativePieChart"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:id="@+id/titlePie"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginStart="20dp"
+                                android:text="@string/major_visitor"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="20sp" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_below="@id/titlePie"
+                                android:layout_marginTop="10dp"
+                                android:padding="@dimen/fab_margin">
+
+                                <com.github.mikephil.charting.charts.PieChart
+                                    android:id="@+id/pieChart"
+                                    android:layout_width="300dp"
+                                    android:layout_height="300dp"
+                                    android:layout_centerInParent="true" />
+
+                                <TextView
+                                    android:id="@+id/tvTotalMajor"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:text="@string/total"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="24sp" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </eightbitlab.com.blurview.BlurView>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!--  Progress ring Section-->
+                <com.google.android.material.card.MaterialCardView
+                    app:cardUseCompatPadding="true"
+                    app:strokeColor="@android:color/transparent"
+                    android:orientation="vertical"
+                    app:cardElevation="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/progressRingBlur"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/linearProgress"
+                            android:padding="16dp"
+                            android:background="@android:color/transparent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:id="@+id/titleProgress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/total_book_of_this_month"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:layout_marginBottom="24dp" />
+
+                            <!-- Text Progress  -->
+                            <RelativeLayout
+                                android:id="@+id/re_language"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
-                                <TextView
-                                    android:id="@+id/khmer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/khmer"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:textSize="18sp"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/english"
-                                    android:layout_marginEnd="40dp"
-                                    android:textStyle="bold" />
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                    <TextView
+                                        android:id="@+id/khmer"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/khmer"
+                                        android:textColor="?android:attr/textColorPrimary"
+                                        android:textSize="18sp"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toStartOf="@+id/english"
+                                        android:layout_marginEnd="40dp"
+                                        android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/english"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/english"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:textSize="18sp"
-                                    app:layout_constraintStart_toEndOf="@+id/khmer"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    android:layout_marginStart="40dp"
-                                    android:textStyle="bold"/>
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-                        </RelativeLayout>
-
-                        <!-- Progress Circle -->
-                        <LinearLayout
-                            android:id="@+id/container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="24dp"
-                            tools:ignore="DisableBaselineAlignment">
-
-                            <RelativeLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center">
-
-                                <com.github.lzyzsd.circleprogress.DonutProgress
-                                    android:id="@+id/progress_khmer"
-                                    android:layout_width="150dp"
-                                    android:layout_height="150dp"
-                                    app:donut_finished_color="#8A2BE2"
-                                    app:donut_unfinished_color="#6B6868"
-                                    app:donut_progress="50"
-                                    app:donut_text="2345"
-                                    app:donut_text_color="#8A2BE2"
-                                    app:donut_text_size="24sp"/>
+                                    <TextView
+                                        android:id="@+id/english"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/english"
+                                        android:textColor="?android:attr/textColorPrimary"
+                                        android:textSize="18sp"
+                                        app:layout_constraintStart_toEndOf="@+id/khmer"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        android:layout_marginStart="40dp"
+                                        android:textStyle="bold"/>
+                                </androidx.constraintlayout.widget.ConstraintLayout>
                             </RelativeLayout>
 
-                            <RelativeLayout
-                                android:layout_width="0dp"
+                            <!-- Progress Circle -->
+                            <LinearLayout
+                                android:id="@+id/container"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center">
+                                android:orientation="horizontal"
+                                android:gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="24dp"
+                                tools:ignore="DisableBaselineAlignment">
 
-                                <com.github.lzyzsd.circleprogress.DonutProgress
-                                    android:id="@+id/progress_english"
-                                    android:layout_width="150dp"
-                                    android:layout_height="150dp"
-                                    app:donut_finished_color="#8A2BE2"
-                                    app:donut_unfinished_color="#6B6868"
-                                    app:donut_progress="80"
-                                    app:donut_text="4535"
-                                    app:donut_text_color="#8A2BE2"
-                                    app:donut_text_size="24sp"/>
-                            </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center">
+
+                                    <com.github.lzyzsd.circleprogress.DonutProgress
+                                        android:id="@+id/progress_khmer"
+                                        android:layout_width="150dp"
+                                        android:layout_height="150dp"
+                                        app:donut_finished_color="#8A2BE2"
+                                        app:donut_unfinished_color="#6B6868"
+                                        app:donut_progress="50"
+                                        app:donut_text="2345"
+                                        app:donut_text_color="#8A2BE2"
+                                        app:donut_text_size="24sp"/>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center">
+
+                                    <com.github.lzyzsd.circleprogress.DonutProgress
+                                        android:id="@+id/progress_english"
+                                        android:layout_width="150dp"
+                                        android:layout_height="150dp"
+                                        app:donut_finished_color="#8A2BE2"
+                                        app:donut_unfinished_color="#6B6868"
+                                        app:donut_progress="80"
+                                        app:donut_text="4535"
+                                        app:donut_text_color="#8A2BE2"
+                                        app:donut_text_size="24sp"/>
+                                </RelativeLayout>
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
+                    </eightbitlab.com.blurview.BlurView>
 
-                </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <!-- recycle view -->
                 <LinearLayout
@@ -493,79 +558,97 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintRecycle"
-                        android:background="@drawable/top_light_box_bg"
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/blurViewBtEntry"
+                        android:background="@drawable/top_transparent_box_bg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <RelativeLayout
-                            android:id="@+id/relativeTexBut"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginHorizontal="8dp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:orientation="horizontal"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintRecycle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:id="@+id/tvAddEntry"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/entry_today"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textColor="?android:attr/textColorPrimary"
-                                android:layout_marginBottom="24dp"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerInParent="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentBottom="true"
-                                tools:ignore="RelativeOverlap" />
+                            <RelativeLayout
+                                android:id="@+id/relativeTexBut"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginHorizontal="8dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/tvAddEntry"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/entry_today"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_marginBottom="24dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerInParent="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentBottom="true"
+                                    tools:ignore="RelativeOverlap" />
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btEntry"
-                                style="?attr/materialButtonOutlinedStyle"
-                                app:strokeColor="?android:attr/textColorPrimary"
-                                app:strokeWidth="1.5dp"
-                                app:cornerRadius="6dp"
-                                app:icon="@drawable/ic_person_add_24"
-                                app:iconGravity="start"
-                                android:text="@string/entry"
-                                android:textColor="?android:attr/textColorPrimary"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:layout_centerHorizontal="true"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentBottom="true"
-                                tools:ignore="RelativeOverlap" />
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btEntry"
+                                    style="?attr/materialButtonOutlinedStyle"
+                                    app:strokeColor="?android:attr/textColorPrimary"
+                                    app:strokeWidth="1.5dp"
+                                    app:cornerRadius="6dp"
+                                    app:icon="@drawable/ic_person_add_24"
+                                    app:iconGravity="start"
+                                    android:text="@string/entry"
+                                    android:textColor="?android:attr/textColorPrimary"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentBottom="true"
+                                    tools:ignore="RelativeOverlap" />
 
-                        </RelativeLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            </RelativeLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </eightbitlab.com.blurview.BlurView>
 
-                    <HorizontalScrollView
-                        android:id="@+id/horizontalScrollView"
+
+                    <eightbitlab.com.blurview.BlurView
+                        android:id="@+id/blurViewEntryList"
+                        android:background="@drawable/bottom_transparent_box_bg"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bottom_light_box_bg"
-                        android:scrollbars="none"
-                        android:paddingHorizontal="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="12dp">
-
-                        <!-- RecyclerView for Horizontal Scrolling -->
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerViewEntry"
-                            android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <HorizontalScrollView
+                            android:id="@+id/horizontalScrollView"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal" />
-                    </HorizontalScrollView>
+                            android:scrollbars="none"
+                            android:paddingHorizontal="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="12dp">
+
+                            <!-- RecyclerView for Horizontal Scrolling -->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewEntry"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+                        </HorizontalScrollView>
+                    </eightbitlab.com.blurview.BlurView>
+
 
                 </LinearLayout>
+
                 <!--  Parent  -->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    android:background="@android:color/transparent"/>
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

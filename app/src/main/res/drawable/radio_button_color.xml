@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025.
+  ~ @Author Phel Viwath
+  ~ All rights reserved.
+  ~
+  -->
+
+<!-- res/color-night/radio_button_color.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked state -->
+    <item android:state_checked="true" android:color="@android:color/white" />
+    <!-- Unchecked state -->
+    <item android:state_checked="false" android:color="@android:color/white" />
+    <!-- Default color -->
+    <item android:color="@android:color/white" />
+</selector>

@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.data.api
 
 import android.util.Log
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
-import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
+import com.viwath.srulibrarymobile.utils.datastore.UserPreferences
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -24,11 +24,11 @@ import javax.inject.Inject
  * 3. **Retry:** If the token is successfully refreshed, it retries the original request with the new token.
  * 4. **Error Handling:** Throws an `IllegalStateException` if the token refresh succeeds but no new token is found.
  *
- * @property tokenManager Manages the storage and retrieval of authentication tokens.
+ * @property userPreferences Manages the storage and retrieval of authentication tokens.
  * @property authUseCase A lazy-loaded instance of the AuthUseCase, used for refreshing the token.
  */
 class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager,
+    private val userPreferences: UserPreferences,
     private val authUseCase: Lazy<AuthUseCase>
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -38,7 +38,7 @@ class AuthInterceptor @Inject constructor(
             val requestBuilder = originalRequest.newBuilder()
 
             // Try with existing token first
-            tokenManager.getAccessToken()?.let { token ->
+            userPreferences.getAccessToken()?.let { token ->
                 requestBuilder.addHeader("Authorization", "Bearer $token")
             }
 
@@ -53,7 +53,7 @@ class AuthInterceptor @Inject constructor(
                 Log.d("AuthInterceptor", "access token: $newAccessToken")
 
                 if (newAccessToken) {
-                    val newToken = tokenManager.getAccessToken()
+                    val newToken = userPreferences.getAccessToken()
                         ?: throw IllegalStateException("Token refresh succeeded but no token found")
 
                     // Create new request with new token

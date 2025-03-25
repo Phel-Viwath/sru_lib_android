@@ -13,9 +13,8 @@ import android.util.Base64
 class PinEncryptionData(context: Context) {
     private val preferences = SharedPreferencesHelper.getInstance(context)
 
-    fun savePin(iv: ByteArray, encryptedPin: ByteArray){
+    fun savePin(encryptedPin: ByteArray){
         preferences.putString(ENCRYPTED_PIN, Base64.encodeToString(encryptedPin, Base64.DEFAULT))
-        preferences.putString(ENCRYPTION_IV, Base64.encodeToString(iv, Base64.DEFAULT))
     }
 
     fun getEncryptedPin(): String? = preferences.getString(ENCRYPTED_PIN)

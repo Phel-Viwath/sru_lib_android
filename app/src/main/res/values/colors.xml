@@ -69,6 +69,52 @@
     <color name="material_dynamic_secondary10">#151B2C</color>
     <color name="material_on_primary_emphasis_high_type">#DDFFFFFF</color>
 
+    <!-- Dark Colors (Black-based) -->
+    <!-- 20% opacity -->
+    <color name="translucent_black_20">#33000000</color>
+    <!-- 30% opacity -->
+    <color name="translucent_black_30">#4D000000</color>
+    <!-- 35% opacity -->
+    <color name="translucent_black_35">#59000000</color>
+    <!-- 40% opacity -->
+    <color name="translucent_black_40">#66000000</color>
+    <!-- 45% opacity -->
+    <color name="translucent_black_45">#73000000</color>
+    <!-- 50% opacity -->
+    <color name="translucent_black_50">#80000000</color>
+    <!-- 60% opacity -->
+    <color name="translucent_black_60">#99000000</color>
+    <!-- 65% opacity -->
+    <color name="translucent_black_65">#A6000000</color>
+    <!-- 70% opacity -->
+    <color name="translucent_black_70">#B3000000</color>
+    <!-- 80% opacity -->
+    <color name="translucent_black_80">#CC000000</color>
+    <!-- 90% opacity -->
+    <color name="translucent_black_90">#E6000000</color>
 
+        <!-- Light Colors (White-based) -->
+    <!-- 20% opacity -->
+    <color name="translucent_white_20">#33FFFFFF</color>
+    <!-- 30% opacity -->
+    <color name="translucent_white_30">#4DFFFFFF</color>
+    <!-- 35% opacity -->
+    <color name="translucent_white_35">#59FFFFFF</color>
+    <!-- 40% opacity -->
+    <color name="translucent_white_40">#66FFFFFF</color>
+    <!-- 45% opacity -->
+    <color name="translucent_white_45">#73FFFFFF</color>
+    <!-- 50% opacity -->
+    <color name="translucent_white_50">#80FFFFFF</color>
+    <!-- 60% opacity -->
+    <color name="translucent_white_60">#99FFFFFF</color>
+    <!-- 65% opacity -->
+    <color name="translucent_white_65">#A6FFFFFF</color>
+    <!-- 70% opacity -->
+    <color name="translucent_white_70">#B3FFFFFF</color>
+    <!-- 80% opacity -->
+    <color name="translucent_white_80">#CCFFFFFF</color>
+    <!-- 90% opacity -->
+    <color name="translucent_white_90">#E6FFFFFF</color>
 
 </resources>

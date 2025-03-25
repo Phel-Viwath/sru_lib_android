@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import androidx.core.content.edit
 
 /**
  * A helper class for managing SharedPreferences, providing both regular and encrypted storage options.
@@ -27,14 +28,24 @@ class SharedPreferencesHelper private constructor(
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val encryptedPrefs = createEncryptedSharePreferences(context)
 
-    fun putString(key: String, values: String): Unit = prefs.edit().putString(key, values).apply()
-    fun putEncryptedString(key: String, values: String): Unit = encryptedPrefs.edit().putString(key, values).apply()
+    fun putString(key: String, values: String): Unit = prefs.edit{ putString(key, values) }
+    fun putEncryptedString(key: String, values: String): Unit = encryptedPrefs.edit {
+        putString(
+            key,
+            values
+        )
+    }
 
     fun getString(key: String, defaultValue: String? = null): String? = prefs.getString(key, defaultValue)
     fun getEncryptedString(key: String, defaultValue: String? = null): String? = encryptedPrefs.getString(key, defaultValue)
 
-    fun putInt(key: String, values: Int): Unit =  prefs.edit().putInt(key, values).apply()
-    fun punEncryptedInt(key: String, values: Int): Unit = encryptedPrefs.edit().putInt(key, values).apply()
+    fun putInt(key: String, values: Int): Unit =  prefs.edit { putInt(key, values) }
+    fun punEncryptedInt(key: String, values: Int): Unit = encryptedPrefs.edit() {
+        putInt(
+            key,
+            values
+        )
+    }
 
     fun getInt(key: String, defaultValue: Int = 0): Int = prefs.getInt(key, defaultValue)
     fun getEncryptedInt(key: String, defaultValue: Int = 0): Int = encryptedPrefs.getInt(key, defaultValue)

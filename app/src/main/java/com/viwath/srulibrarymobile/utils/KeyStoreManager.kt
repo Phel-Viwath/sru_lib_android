@@ -18,18 +18,9 @@ import javax.inject.Inject
 
 class KeyStoreManager @Inject constructor() {
 
+    private val cipher = Cipher.getInstance(TRANSFORMATION)
     private val keyStore = KeyStore.getInstance(KEYSTORE_NAME).apply {
         load(null)
-    }
-
-    private val encryptCipher get() = Cipher.getInstance(TRANSFORMATION).apply {
-        init(Cipher.ENCRYPT_MODE, createKey())
-    }
-
-    private fun getDecryptCipherForIv(iv: ByteArray): Cipher{
-        return Cipher.getInstance(TRANSFORMATION).apply {
-            init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
-        }
     }
 
     private fun getKey() : SecretKey {
@@ -53,14 +44,18 @@ class KeyStoreManager @Inject constructor() {
         }.generateKey()
     }
 
-    fun encrypt(bytes: ByteArray): Pair<ByteArray, ByteArray> {
-        val cipher = encryptCipher
-        val encryptByte = encryptCipher.doFinal(bytes)
-        return Pair(encryptByte, cipher.iv) // Return both encrypted data and IV (Initialization Vector)
+    fun encrypt(bytes: ByteArray): ByteArray {
+        cipher.init(Cipher.ENCRYPT_MODE, getKey())
+        val iv = cipher.iv
+        val encrypted = cipher.doFinal(bytes)
+        return iv + encrypted
     }
 
-    fun decrypt(encryptedBytes: ByteArray, iv: ByteArray): ByteArray{
-        return getDecryptCipherForIv(iv).doFinal(encryptedBytes)
+    fun decrypt(encryptedBytes: ByteArray): ByteArray{
+        val iv = encryptedBytes.copyOfRange(0, cipher.blockSize)
+        val data = encryptedBytes.copyOfRange(cipher.blockSize, encryptedBytes.size)
+        cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
+        return cipher.doFinal(data)
     }
 
 

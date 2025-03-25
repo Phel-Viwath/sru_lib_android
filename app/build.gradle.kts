@@ -68,6 +68,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    // google android material design
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -75,10 +76,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // google android material design
-    implementation(libs.material.v1130alpha01)
-
 
     //Retrofit
     implementation(libs.retrofit)
@@ -100,8 +97,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     //MPAndroidChart
     implementation(libs.github.philJay.mpAndroidChart)
-    // Glass morphism
-    implementation(libs.fk.blur.view.android)
+    // blur view (Dimezis)
+    implementation(libs.blurview)
+
     // Circle progress
     implementation(libs.circleprogress)
     // Swipe refresh
@@ -123,6 +121,11 @@ dependencies {
     // biometric
     implementation (libs.androidx.biometric)
 
+    // date time
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // https://mvnrepository.com/artifact/androidx.datastore/datastore-preferences
+    implementation(libs.androidx.datastore.preferences)
+
 
 }

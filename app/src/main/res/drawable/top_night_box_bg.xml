@@ -13,5 +13,5 @@
         android:topRightRadius="8dp"/>
     <stroke
         android:width="2dp"
-        android:color="#1f1f1f" /> <!-- Border width and color -->
+        android:color="@android:color/transparent" /> <!-- Border width and color -->
 </shape>

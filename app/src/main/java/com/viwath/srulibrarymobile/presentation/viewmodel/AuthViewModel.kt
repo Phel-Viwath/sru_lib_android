@@ -17,7 +17,7 @@ import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.presentation.event.AuthEvent
 import com.viwath.srulibrarymobile.presentation.state.AuthState
-import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
+import com.viwath.srulibrarymobile.utils.datastore.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -41,7 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val useCase: AuthUseCase,
-    tokenManager: TokenManager
+    userPreferences: UserPreferences
 ): ViewModel(){
 
     var state = MutableStateFlow(AuthState())
@@ -74,7 +74,9 @@ class AuthViewModel @Inject constructor(
         }
     }
     init {
-        _role.value = tokenManager.getRole()
+        viewModelScope.launch {
+            _role.value = userPreferences.getRole()
+        }
     }
 
     private fun logIn() {

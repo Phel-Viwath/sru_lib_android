@@ -18,6 +18,8 @@ import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
 import com.viwath.srulibrarymobile.data.repository.CoreRepositoryImp
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.usecase.GetCollegeUseCase
+import com.viwath.srulibrarymobile.domain.usecase.GetLanguageUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthenticateUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.ChangePasswordUseCase
@@ -30,8 +32,6 @@ import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBooksUseCase
-import com.viwath.srulibrarymobile.domain.usecase.GetCollegeUseCase
-import com.viwath.srulibrarymobile.domain.usecase.GetLanguageUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RecoverBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.RemoveBookUseCase
@@ -56,9 +56,10 @@ import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUs
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.SaveAttendUseCase
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.UpdateExitingUseCase
 import com.viwath.srulibrarymobile.utils.KeyStoreManager
-import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
 import com.viwath.srulibrarymobile.utils.connectivity.ConnectivityObserver
 import com.viwath.srulibrarymobile.utils.connectivity.NetworkConnectivityObserver
+import com.viwath.srulibrarymobile.utils.datastore.SettingPreferences
+import com.viwath.srulibrarymobile.utils.datastore.UserPreferences
 import com.viwath.srulibrarymobile.utils.share_preferences.PinEncryptionData
 import dagger.Module
 import dagger.Provides
@@ -159,13 +160,13 @@ object AppModule {
     /**
      * Provides the authentication repository implementation
      * @param authApi Authentication API interface
-     * @param tokenManager Manager for handling authentication tokens
+     * @param userPreferences Manager for handling authentication tokens
      * @return AuthRepository implementation
      */
     @Provides
     @Singleton
-    fun provideAuthRepository(authApi: AuthApi, tokenManager: TokenManager): AuthRepository {
-        return AuthRepositoryImp(authApi, tokenManager)
+    fun provideAuthRepository(authApi: AuthApi, userPreferences: UserPreferences): AuthRepository {
+        return AuthRepositoryImp(authApi, userPreferences)
     }
 
 
@@ -311,7 +312,7 @@ object AppModule {
      * Provides the authentication interceptor for HTTP requests
      * The interceptor is responsible for adding authentication tokens to requests and handling token refresh
      *
-     * @param tokenManager Manager for retrieving and storing authentication tokens
+     * @param userPreferences Manager for retrieving and storing authentication tokens
      * @param authUseCase Provider of authentication use cases, lazily initialized to avoid circular dependencies
      * @return AuthInterceptor instance
      *
@@ -320,8 +321,8 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager, authUseCase: Provider<AuthUseCase>): AuthInterceptor {
-        return AuthInterceptor(tokenManager, lazy { authUseCase.get() })
+    fun provideAuthInterceptor(userPreferences: UserPreferences, authUseCase: Provider<AuthUseCase>): AuthInterceptor {
+        return AuthInterceptor(userPreferences, lazy { authUseCase.get() })
     }
 
 
@@ -336,8 +337,8 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideTokenManger(@ApplicationContext context: Context): TokenManager {
-        return TokenManager(context)
+    fun provideTokenManger(@ApplicationContext context: Context, keyStoreManager: KeyStoreManager): UserPreferences {
+        return UserPreferences(context, keyStoreManager)
     }
 
     @Provides
@@ -351,4 +352,11 @@ object AppModule {
     fun providePinEncryptionData(@ApplicationContext context: Context): PinEncryptionData {
         return PinEncryptionData(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingPrefs(
+        @ApplicationContext context: Context,
+        keyStoreManager: KeyStoreManager
+    ): SettingPreferences = SettingPreferences(context, keyStoreManager)
 }

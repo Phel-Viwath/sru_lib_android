@@ -15,7 +15,7 @@ import com.viwath.srulibrarymobile.domain.model.auth.LogInRequest
 import com.viwath.srulibrarymobile.domain.model.auth.RefreshToken
 import com.viwath.srulibrarymobile.domain.model.auth.RegisterRequest
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
-import com.viwath.srulibrarymobile.utils.share_preferences.TokenManager
+import com.viwath.srulibrarymobile.utils.datastore.UserPreferences
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -31,15 +31,15 @@ import javax.inject.Inject
  * - Verifying OTP
  * - Changing Password
  *
- * It utilizes the [AuthApi] for network requests and the [TokenManager] for managing
+ * It utilizes the [AuthApi] for network requests and the [UserPreferences] for managing
  * authentication tokens. It also includes error handling and logging.
  *
  * @property api The [AuthApi] instance used to make network requests to the authentication server.
- * @property tokenManager The [TokenManager] instance used to manage authentication tokens.
+ * @property userPreferences The [UserPreferences] instance used to manage authentication tokens.
  */
 class AuthRepositoryImp @Inject constructor(
     private val api: AuthApi,
-    private val tokenManager: TokenManager
+    private val userPreferences: UserPreferences
 ): AuthRepository {
 
     override suspend fun register(request: RegisterRequest): AuthResult<Unit> {
@@ -61,10 +61,10 @@ class AuthRepositoryImp @Inject constructor(
             val tokenResponse = api.logIn(request)
             if (tokenResponse.isSuccessful) {
                 tokenResponse.body()?.let {
-                    tokenManager.saveAccessToken(it.accessToken)
-                    tokenManager.saveRefreshToken(it.refreshToken)
-                    tokenManager.saveUsername(it.username)
-                    tokenManager.saveRole(it.role)
+                    userPreferences.saveAccessToken(it.accessToken)
+                    userPreferences.saveRefreshToken(it.refreshToken)
+                    userPreferences.saveUsername(it.username)
+                    userPreferences.saveRole(it.role)
                     return AuthResult.Authorize()
                 }
             }else return AuthResult.Unauthorized()
@@ -77,7 +77,8 @@ class AuthRepositoryImp @Inject constructor(
 
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
-            val tokens = tokenManager.getAccessToken()
+            val tokens = userPreferences.getAccessToken()
+            Log.d("AuthRepositoryImp", "authenticate: access token is $tokens")
             val accessToken: String
             if (tokens == null){
                 return AuthResult.BadRequest()
@@ -96,16 +97,16 @@ class AuthRepositoryImp @Inject constructor(
 
 
     override suspend fun refreshToken(): Boolean {
-        val refreshToken = tokenManager.getRefreshToken()
+        val refreshToken = userPreferences.getRefreshToken()
         return try {
             if (refreshToken == null) return false
             val response = api.refreshToken(RefreshToken(refreshToken))
             if (response.isSuccessful) {
                 response.body()?.let {
-                    tokenManager.saveUsername(it.username)
-                    tokenManager.saveAccessToken(it.accessToken)
-                    tokenManager.saveRefreshToken(it.refreshToken)
-                    tokenManager.saveRole(it.role)
+                    userPreferences.saveUsername(it.username)
+                    userPreferences.saveAccessToken(it.accessToken)
+                    userPreferences.saveRefreshToken(it.refreshToken)
+                    userPreferences.saveRole(it.role)
                     return true
                 }
             }

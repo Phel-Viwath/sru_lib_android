@@ -12,12 +12,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookBinding
+import com.viwath.srulibrarymobile.domain.model.book.BookCard
 import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
+import com.viwath.srulibrarymobile.presentation.view.adapter.BookCardAdapter
 import com.viwath.srulibrarymobile.presentation.view.adapter.ViewPagerAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
 import kotlinx.coroutines.launch
@@ -73,43 +76,31 @@ class BookFragment : Fragment(R.layout.fragment_book){
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect{ state ->
                 if (state.isLoading){
-                    startLoading()
+                    mainActivity.startLoading()
                 }
                 if (state.error.isEmpty()){
-                    stopLoading()
-                    bindData(
-                        totalBook = state.totalBook,
-                        totalDonation = state.totalDonation,
-                        totalBorrowed = state.totalBorrowed,
-                        totalExpiration = state.totalExpiration,
-                        borrowToday = state.borrowToday,
-                        returnToday = state.returnToday
+                    mainActivity.stopLoading()
+                    val cardList = listOf(
+                        BookCard(resources.getString(R.string.total_book), R.drawable.img_stack_of_books, state.totalBook),
+                        BookCard(resources.getString(R.string.total_donate_book), R.drawable.img_books_stack, state.totalDonation),
+                        BookCard(resources.getString(R.string.total_borrow), R.drawable.img_reading_book, state.totalBorrowed),
+                        BookCard(resources.getString(R.string.total_exp), R.drawable.img_exp_book, state.totalExpiration),
+                        BookCard(resources.getString(R.string.borrow_today), R.drawable.img_borrow_book, state.borrowToday),
+                        BookCard(resources.getString(R.string.return_today), R.drawable.img_return_book, state.returnToday),
                     )
+
+                    val adapter = BookCardAdapter(cardList)
+                    binding.recyclerBookCard.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                    binding.recyclerBookCard.adapter = adapter
                 }
                 if (state.error.isNotEmpty()){
-                    stopLoading()
+                    mainActivity.stopLoading()
                     Snackbar.make(view, state.error, Snackbar.LENGTH_LONG).show()
                 }
             }
         }
 
-    }
-    private fun bindData(totalBook: Int, totalDonation: Int, totalBorrowed: Int, totalExpiration: Int, borrowToday: Int, returnToday: Int){
-        binding.tvTotalBook.text = "$totalBook"
-        binding.tvTotalDonate.text = "$totalDonation"
-        binding.tvBorrows.text = "$totalBorrowed"
-        binding.tvBorrowExp.text = "$totalExpiration"
-        binding.tvBorrowToday.text = "$borrowToday"
-        binding.tvReturnToday.text = "$returnToday"
-    }
 
-
-    fun startLoading(){
-        mainActivity.startLoading()
-    }
-
-    fun stopLoading(){
-        mainActivity.stopLoading()
     }
 
 }
