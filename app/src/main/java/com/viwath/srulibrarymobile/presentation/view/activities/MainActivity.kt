@@ -247,8 +247,7 @@ class MainActivity : AppCompatActivity() {
 
     @Suppress("DEPRECATION")
     private fun setUpBlurView(blurView: BlurView) {
-        val decorView = window.decorView
-        val rootView = binding.root // Get main layout instead of android.R.id.content
+        val rootView = binding.root
 
         val blurAlgorithm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             RenderEffectBlur()

@@ -26,11 +26,11 @@ object HandleDataError {
         }
     }
 
-    fun DataError.Local.handleLocalError(): String{
-        return when(this){
-            DataError.Local.DISK_FULL -> "Disk is full, please try again later."
-            DataError.Local.UNKNOWN -> "An unknown error occurred."
-        }
-    }
+//    fun DataError.Local.handleLocalError(): String{
+//        return when(this){
+//            DataError.Local.DISK_FULL -> "Disk is full, please try again later."
+//            DataError.Local.UNKNOWN -> "An unknown error occurred."
+//        }
+//    }
 
 }

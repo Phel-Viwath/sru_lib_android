@@ -12,9 +12,13 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
@@ -22,7 +26,6 @@ import com.viwath.srulibrarymobile.common.result.AuthResult
 import com.viwath.srulibrarymobile.databinding.ActivitySplashBinding
 import com.viwath.srulibrarymobile.presentation.viewmodel.AuthViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
-import com.viwath.srulibrarymobile.presentation.viewmodel.PinViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,14 +59,23 @@ class LauncherActivity : AppCompatActivity() {
 
     private val viewModel: AuthViewModel by viewModels()
     private val connectivityViewModel: ConnectivityViewModel by viewModels()
-    private val pinViewModel: PinViewModel by viewModels()
 
     private var dialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val bar = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(bar.left, bar.top, bar.right, bar.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
 
         connectivityViewModel.networkStatus.observe(this){ isConnected ->
             if (isConnected){
@@ -137,26 +149,6 @@ class LauncherActivity : AppCompatActivity() {
         val network = connectivityManager.activeNetwork
         val capabilities = connectivityManager.getNetworkCapabilities(network)
         return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-    }
-
-    private fun checkUserRolePin(){
-        val role = viewModel.role.value!!
-
-        if (role == "ADMIN" || role == "SUPER_ADMIN"){
-            if (pinViewModel.isPinSet()){
-                navigateToMain()
-            }
-            else{
-                startActivity(Intent(this, CreatePinActivity::class.java))
-            }
-        }else{
-            navigateToMain()
-        }
-    }
-
-    private fun navigateToMain(){
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
     }
 
 }

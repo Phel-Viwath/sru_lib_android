@@ -20,7 +20,6 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewOutlineProvider
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.Toast
@@ -49,16 +48,14 @@ import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.StudentState
 import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
-import com.viwath.srulibrarymobile.presentation.view.adapter.EntryRecycleViewAdapter
+import com.viwath.srulibrarymobile.presentation.view.adapter.AttendRecyclerViewAdapter
 import com.viwath.srulibrarymobile.presentation.view.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
-import eightbitlab.com.blurview.BlurView
-import eightbitlab.com.blurview.RenderEffectBlur
-import eightbitlab.com.blurview.RenderScriptBlur
+import com.viwath.srulibrarymobile.utils.applyBlur
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,6 +72,7 @@ class DashboardFragment : Fragment() {
     private var isCardEnlarged = false
     private var currentExpandCard: CardView? = null
     private var isDarkMode: Boolean = false
+    private var isClassicMode: Boolean = true
 
     // Define View Model
     private val viewModel: DashboardViewModel by activityViewModels()
@@ -99,7 +97,7 @@ class DashboardFragment : Fragment() {
 
         lifecycleScope.launch {
             settingViewModel.viewMode.observe(requireActivity()) { viewMode ->
-                val isClassicMode = when(viewMode){
+                isClassicMode = when(viewMode){
                     CLASSIC -> true
                     MODERN -> false
                     else -> true
@@ -228,7 +226,7 @@ class DashboardFragment : Fragment() {
                         /// add recycler view
                         val list: List<AttendDetail> = dashboard.customEntry
                         binding.recyclerViewEntry.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        val adapter = EntryRecycleViewAdapter(list)
+                        val adapter = AttendRecyclerViewAdapter(requireActivity(), list, isDarkMode, isClassicMode)
                         binding.recyclerViewEntry.adapter = adapter
 
                     }
@@ -249,12 +247,26 @@ class DashboardFragment : Fragment() {
 
     // set up theme
     private fun setUpTheme(isDarkMode: Boolean, isClassicMode: Boolean){
+        val activity = requireActivity()
         val nightBoxBackground = R.drawable.night_box_bg
         val lightBoxBackground = R.drawable.light_box_bg
         val bottomLightBackground = R.drawable.bottom_light_box_bg
         val bottomNightBackground = R.drawable.bottom_night_box_bg
         val topLightBackground = R.drawable.top_light_box_bg
         val topNightBackground = R.drawable.top_night_box_bg
+
+        val translucentColor = if (isDarkMode) {
+            ContextCompat.getColor(requireContext(), R.color.translucent_black_20)
+        }
+        else {
+            ContextCompat.getColor(requireContext(), R.color.translucent_white_20)
+        }
+
+        val innerCardTranslucentColor = if (!isDarkMode) {
+           ContextCompat.getColor(requireContext(), R.color.translucent_white_35)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.translucent_black_35)
+        }
 
         binding.btEntry.setIconTintResource(if (isDarkMode) R.color.white else R.color.black)
 
@@ -266,24 +278,24 @@ class DashboardFragment : Fragment() {
                 binding.pieChartBlur.setBackgroundResource(if (isDarkMode) nightBoxBackground else lightBoxBackground)
                 binding.linearProgress.setBackgroundResource(if (isDarkMode) nightBoxBackground else lightBoxBackground)
                 binding.constraintRecycle.setBackgroundResource(if (isDarkMode) topNightBackground else topLightBackground)
-                binding.horizontalScrollView.setBackgroundResource(if (isDarkMode) bottomNightBackground else bottomLightBackground)
+                binding.linearAttendRecyclerView.setBackgroundResource(if (isDarkMode) bottomNightBackground else bottomLightBackground)
             }
             false -> {
                 //
                 binding.cardViewCardSection.setCardBackgroundColor(requireContext().getColor(android.R.color.transparent))
                 binding.card1.setCardBackgroundColor(requireContext().getColor(android.R.color.transparent))
 
-                binding.blurViewCardSection.applyBlur(isDarkMode)
-                binding.cardEntryBlur.applyBlur(isDarkMode, 50f, true)
-                binding.cardBorrowBlur.applyBlur(isDarkMode, 50f, true)
-                binding.cardDonationBlur.applyBlur(isDarkMode, 50f, true)
-                binding.cardMonthlyEntryBlur.applyBlur(isDarkMode, 50f, true)
+                binding.blurViewCardSection.applyBlur(activity, 5f, translucentColor)
+                binding.cardEntryBlur.applyBlur(activity, 50f, innerCardTranslucentColor)
+                binding.cardBorrowBlur.applyBlur(activity, 50f, innerCardTranslucentColor)
+                binding.cardDonationBlur.applyBlur(activity, 50f, innerCardTranslucentColor)
+                binding.cardMonthlyEntryBlur.applyBlur(activity, 50f, innerCardTranslucentColor)
 
-                binding.blurViewBarChartSection.applyBlur(isDarkMode)
-                binding.pieChartBlur.applyBlur(isDarkMode)
-                binding.progressRingBlur.applyBlur(isDarkMode)
-                binding.blurViewEntryList.applyBlur(isDarkMode)
-                binding.blurViewBtEntry.applyBlur(isDarkMode)
+                binding.blurViewBarChartSection.applyBlur(activity, 5f, translucentColor)
+                binding.pieChartBlur.applyBlur(activity, 5f, translucentColor)
+                binding.progressRingBlur.applyBlur(activity, 5f, translucentColor)
+                binding.blurViewEntryList.applyBlur(activity, 5f, translucentColor)
+                binding.blurViewBtEntry.applyBlur(activity, 5f, translucentColor)
             }
         }
     }
@@ -503,36 +515,5 @@ class DashboardFragment : Fragment() {
         }
         dialog.show()
     }
-
-    private fun BlurView.applyBlur(isDarkMode: Boolean, r: Float = 5f, isInnerCard: Boolean = false){
-        val rootView: ViewGroup = requireActivity().window.decorView as ViewGroup// Get the root view of the activity
-        val windowBackground = requireActivity().window.decorView.background
-
-        val translucentColor = if (!isDarkMode) {
-            if (!isInnerCard) ContextCompat.getColor(requireContext(), R.color.translucent_white_35) // Inner blur (lighter)
-            else ContextCompat.getColor(requireContext(), R.color.translucent_white_20) // Outer blur (darker)
-        } else {
-            if (!isInnerCard) ContextCompat.getColor(requireContext(), R.color.translucent_black_35) // Inner blur (lighter)
-            else ContextCompat.getColor(requireContext(), R.color.translucent_black_20) // Outer blur (darker)
-        }
-
-        val blurAlgorithm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            RenderEffectBlur()
-        } else {
-            RenderScriptBlur(requireContext())
-        }
-
-        this.apply {
-            setupWith(rootView, blurAlgorithm)
-                .setFrameClearDrawable(windowBackground)
-                .setBlurAutoUpdate(true)
-                .setBlurRadius(r)
-                .setBlurEnabled(true)
-                .setOverlayColor(translucentColor)
-            outlineProvider = ViewOutlineProvider.BACKGROUND
-            clipToOutline = true
-        }
-    }
-
 
 }

@@ -7,6 +7,8 @@
 
 package com.viwath.srulibrarymobile.domain.model
 
+import com.viwath.srulibrarymobile.domain.Result
+
 // student
 typealias StudentId = Long
 typealias StudentName = String
@@ -63,3 +65,6 @@ typealias IsBringBack = Boolean
 typealias DonateDate = String
 typealias DonatorId = Int
 typealias DonatorName = String
+
+
+typealias EmptyResult<E> = Result<Unit, E>
