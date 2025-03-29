@@ -62,7 +62,7 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.LanguageViewModel
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.requestBiometricEnrollment
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.resetBiometricEnrollmentRequest
-import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
 import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.delay

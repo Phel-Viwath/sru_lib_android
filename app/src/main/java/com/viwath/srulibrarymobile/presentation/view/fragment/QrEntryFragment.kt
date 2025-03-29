@@ -19,12 +19,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentQrBinding
 import com.viwath.srulibrarymobile.presentation.event.QrEntryEvent
@@ -32,8 +31,13 @@ import com.viwath.srulibrarymobile.presentation.state.QrFragmentState
 import com.viwath.srulibrarymobile.presentation.view.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.QrFragmentViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
+import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.CameraPreview
-import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.applyBlur
+import com.viwath.srulibrarymobile.utils.permission.PermissionLauncher.cameraPermissionLauncher
+import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -63,25 +67,27 @@ class QrEntryFragment: Fragment(){
     private lateinit var cameraAction: CameraPreview
     private lateinit var permission: PermissionRequest
     private lateinit var mainActivity: MainActivity
-    private val cameraPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            startCameraWithHandler()
-        } else {
-            Snackbar.make(binding.root, "Camera permission is required to scan QR codes!", Snackbar.LENGTH_LONG).show()
-        }
-    }
     ///
     private var qrCodeResult: String? = null
     private var isResultHandled = false
     private var studentId: Long? = null
     private var isFlashlightOn = false
     private var isChecked = false
+    private var isClassicMode: Boolean = true
 
     // View Model
     private val viewModel: QrFragmentViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
+    private val settingViewModel by activityViewModels<SettingViewModel>()
+
+    private val cameraPermissionLauncher = this@QrEntryFragment.cameraPermissionLauncher(
+        onGranted = {
+            startCameraWithHandler()
+        },
+        onDenied = {
+            mainActivity.showSnackbar("Camera permission is required to scan QR codes!")
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +95,7 @@ class QrEntryFragment: Fragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentQrBinding.inflate(inflater, container, false)
-        previewView = binding.cameraPreview
+        previewView = binding.cameraPreviewView
         // init cameraAction object
         cameraAction = CameraPreview(requireContext(), previewView, this)
         return binding.root
@@ -100,9 +106,32 @@ class QrEntryFragment: Fragment(){
         mainActivity = (requireActivity() as MainActivity)
 
         // check if dark mode or not
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        setUpBackground(isDarkTheme)
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        viewAction()
 
+        settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
+            isClassicMode = when(viewMode){
+                CLASSIC -> true
+                MODERN -> false
+                else -> true
+            }
+            if (_binding != null){
+                setUpBackground(isDarkMode, isClassicMode)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (::cameraAction.isInitialized){
+            cameraAction.stopCamera()
+        }
+        mainActivity.stopLoading()
+    }
+    //// End override method
+
+    //////// Method
+    private fun viewAction(){
         permission = PermissionRequest(this)
 
         // PreviewView and TextView click event
@@ -113,7 +142,7 @@ class QrEntryFragment: Fragment(){
             else cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
-        binding.cameraPreview.setOnClickListener(commonClickListener)
+        binding.cameraPreviewView.setOnClickListener(commonClickListener)
         binding.tvClickScan.setOnClickListener(commonClickListener)
         binding.flashlight.setOnClickListener {
             isFlashlightOn = !isFlashlightOn
@@ -153,47 +182,65 @@ class QrEntryFragment: Fragment(){
             }, 1000)
 
         }
-        //// Observe View model
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
-            if (isConnected){
-                observerViewModel()
-            }
-            else{
-                mainActivity.showTopSnackbar("No Internet Connection", true)
-            }
-        }
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (::cameraAction.isInitialized){
-            cameraAction.stopCamera()
-        }
-        mainActivity.stopLoading()
-    }
-    //// End override method
-
-    //////// Method
 
     // set up background
-    private fun setUpBackground(isDarkTheme: Boolean){
+    private fun setUpBackground(isDarkMode: Boolean, isClassicMode: Boolean){
         val lightColor = resources.getColor(R.color.light_color)
         val nightColor = resources.getColor(R.color.night_color)
+        val transparentColor = resources.getColor(android.R.color.transparent)
         val lightButton = R.drawable.light_button_bg
         val nightButton = R.drawable.night_button_bg
-        val nightBoxBackground = R.drawable.night_box_bg
-        val lightBoxBackground = R.drawable.light_box_bg
 
-        binding.relativeCamera.setBackgroundResource(if (isDarkTheme) nightBoxBackground else lightBoxBackground)
-        binding.linearStudentDetail.setBackgroundResource(if (isDarkTheme) nightBoxBackground else lightBoxBackground)
+        val translucentColor = if (isDarkMode) {
+            ContextCompat.getColor(requireContext(), R.color.translucent_black_20)
+        }
+        else {
+            ContextCompat.getColor(requireContext(), R.color.translucent_white_20)
+        }
 
-        binding.cardEntry.setCardBackgroundColor(if (isDarkTheme) nightColor else lightColor)
-        binding.cardExit.setCardBackgroundColor(if (isDarkTheme) nightColor else lightColor)
-        binding.cardTotal.setCardBackgroundColor(if (isDarkTheme) nightColor else lightColor)
+        val innerCardTranslucentColor = if (!isDarkMode) {
+            ContextCompat.getColor(requireContext(), R.color.translucent_white_35)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.translucent_black_35)
+        }
 
-        binding.btOk.setBackgroundResource(if (isDarkTheme) nightButton else lightButton)
-        binding.btCancel.setBackgroundResource(if (isDarkTheme) nightButton else lightButton)
+
+        when(isClassicMode){
+            true -> {
+                binding.cameraPreviewView.setBackgroundResource( R.drawable.frame_camera_bg_classic)
+                binding.cardSection.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+                binding.cardCameraFrame.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+                binding.cardStudentSection.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+
+                binding.cardEntry.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+                binding.cardExit.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+                binding.cardTotal.setCardBackgroundColor(if (isDarkMode) nightColor else lightColor)
+
+                binding.btOk.setBackgroundResource(if (isDarkMode) nightButton else lightButton)
+                binding.btCancel.setBackgroundResource(if (isDarkMode) nightButton else lightButton)
+            }
+            false -> {
+                binding.cameraPreviewView.setBackgroundResource( R.drawable.frame_camera_bg_modern)
+                // card section
+                binding.cardSection.setCardBackgroundColor(transparentColor)
+                binding.blurCardSection.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
+                binding.blurEntryCard.applyBlur(requireActivity(), 50f, innerCardTranslucentColor)
+                binding.blurExitedCard.applyBlur(requireActivity(), 50f, innerCardTranslucentColor)
+                binding.blurTotalCard.applyBlur(requireActivity(), 50f, innerCardTranslucentColor)
+
+                // camera preview view section
+
+                binding.cardCameraFrame.setCardBackgroundColor(transparentColor)
+                binding.blurViewScanSection.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
+
+                // student detail section
+                binding.cardStudentSection.setCardBackgroundColor(transparentColor)
+                binding.blurViewStudentDetail.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
+            }
+        }
     }
 
     /// Observe View model
@@ -231,7 +278,7 @@ class QrEntryFragment: Fragment(){
                 is QrFragmentState.AttentionSaved -> {
                     mainActivity.stopLoading()
                     binding.swipeRefresh.isRefreshing = false
-                    showSuccessMessage()
+                    mainActivity.showSnackbar("Attendance saved successfully!")
                     onButtonClearClick()
                 }
                 is QrFragmentState.EntryState -> state.entry?.let {
@@ -243,6 +290,19 @@ class QrEntryFragment: Fragment(){
 
             }
         }.launchIn(lifecycleScope)
+
+        //// Observe View model
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected){
+                observerViewModel()
+            }
+            else{
+                mainActivity.showTopSnackbar("No Internet Connection", true)
+            }
+        }
+
+        // observe setting
+
     }
 
     ////
@@ -289,10 +349,6 @@ class QrEntryFragment: Fragment(){
         viewModel.onEvent(QrEntryEvent.SaveAttention(studentId.toString(), purpose))
     }
 
-    // Snack bar
-    private fun showSuccessMessage() {
-        Snackbar.make(binding.root, "Attendance saved successfully!", Snackbar.LENGTH_LONG).show()
-    }
     // button clear
     private fun onButtonClearClick(){
         binding.edtId.text.clear()

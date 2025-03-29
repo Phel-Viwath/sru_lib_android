@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.utils
+package com.viwath.srulibrarymobile.utils.permission
 
 import android.Manifest
 import android.content.pm.PackageManager

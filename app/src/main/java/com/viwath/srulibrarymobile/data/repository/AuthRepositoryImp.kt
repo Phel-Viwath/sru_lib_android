@@ -78,7 +78,6 @@ class AuthRepositoryImp @Inject constructor(
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
             val tokens = userPreferences.getAccessToken()
-            Log.d("AuthRepositoryImp", "authenticate: access token is $tokens")
             val accessToken: String
             if (tokens == null){
                 return AuthResult.BadRequest()

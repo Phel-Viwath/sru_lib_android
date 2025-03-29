@@ -43,7 +43,7 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.CollegeViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.DonationTabViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.LanguageViewModel
-import com.viwath.srulibrarymobile.utils.PermissionRequest
+import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
 import kotlinx.coroutines.launch
 
