@@ -431,6 +431,7 @@
 
                 <!--  Progress ring Section-->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProgressRing"
                     app:cardUseCompatPadding="true"
                     app:strokeColor="@android:color/transparent"
                     android:orientation="vertical"

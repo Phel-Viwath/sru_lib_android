@@ -16,7 +16,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.view.activities.RequestOtpActivity">
+    tools:context=".presentation.ui.activities.RequestOtpActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/sruLogo"

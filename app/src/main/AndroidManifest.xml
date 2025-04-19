@@ -37,16 +37,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SRULibraryMobile"
         tools:targetApi="35">
-        <activity android:name=".presentation.view.activities.RegisterActivity"/>
-        <activity android:name=".presentation.view.activities.MainActivity"/>
-        <activity android:name=".presentation.view.activities.LoginActivity"/>
-        <activity android:name=".presentation.view.activities.RequestOtpActivity"/>
-        <activity android:name=".presentation.view.activities.ChangePasswordActivity"/>
-        <activity android:name=".presentation.view.activities.VerifyOtpActivity"/>
-        <activity android:name=".presentation.view.activities.CreatePinActivity"/>
+        <activity android:name=".presentation.ui.activities.RegisterActivity"/>
+        <activity android:name=".presentation.ui.activities.MainActivity"/>
+        <activity android:name=".presentation.ui.activities.LoginActivity"/>
+        <activity android:name=".presentation.ui.activities.RequestOtpActivity"/>
+        <activity android:name=".presentation.ui.activities.ChangePasswordActivity"/>
+        <activity android:name=".presentation.ui.activities.VerifyOtpActivity"/>
+        <activity android:name=".presentation.ui.activities.CreatePinActivity"/>
 
         <activity
-            android:name=".presentation.view.activities.LauncherActivity"
+            android:name=".presentation.ui.activities.LauncherActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:theme="@style/Theme.SRULibraryMobile">

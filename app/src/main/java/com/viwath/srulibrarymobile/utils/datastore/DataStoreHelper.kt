@@ -9,10 +9,8 @@ package com.viwath.srulibrarymobile.utils.datastore
 
 import android.content.Context
 import android.util.Base64
-import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.viwath.srulibrarymobile.utils.KeyStoreManager
 import kotlinx.coroutines.flow.Flow

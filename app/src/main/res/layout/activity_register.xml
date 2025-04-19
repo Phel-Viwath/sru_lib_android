@@ -16,7 +16,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.view.activities.Hilt_RegisterActivity">
+    tools:context=".presentation.ui.activities.Hilt_RegisterActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/sruLogo"

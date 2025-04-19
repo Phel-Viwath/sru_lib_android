@@ -16,142 +16,176 @@
     android:padding="8dp">
 
     <!-- Header Section -->
-    <RelativeLayout
-        android:id="@+id/relativeUserSection"
-        android:padding="12dp"
-        android:background="@drawable/light_box_bg"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardUsername"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-
-        <!-- Logo/Icon -->
-        <ImageView
-            android:id="@+id/ivProfile"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:contentDescription="@string/themeText"
-            android:src="@drawable/img_sru_image"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="8dp" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_toEndOf="@id/ivProfile"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurViewUsername"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <!-- Username -->
-            <TextView
-                android:id="@+id/tvUsername"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/relativeUserSection"
+                android:padding="12dp"
+                android:background="@drawable/light_box_bg"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/username_hint"
-                android:textSize="24sp"
-                android:textColor="?android:attr/textColorPrimary" />
+                android:gravity="center_vertical">
 
-            <!-- User Type -->
-            <TextView
-                android:id="@+id/tvUserType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user"
-                android:textSize="18sp"
-                android:textColor="?android:attr/textColorPrimary" />
-        </LinearLayout>
+                <!-- Logo/Icon -->
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:contentDescription="@string/themeText"
+                    android:src="@drawable/img_sru_image"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="8dp" />
 
-        <!-- Logout Button -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:text="@string/logout"
-            android:backgroundTint="@android:color/holo_red_dark"
-            android:textColor="@color/white"
-            tools:ignore="RelativeOverlap" />
-    </RelativeLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_toEndOf="@id/ivProfile"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <!-- Username -->
+                    <TextView
+                        android:id="@+id/tvUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/username_hint"
+                        android:textSize="24sp"
+                        android:textColor="?android:attr/textColorPrimary" />
+
+                    <!-- User Type -->
+                    <TextView
+                        android:id="@+id/tvUserType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user"
+                        android:textSize="18sp"
+                        android:textColor="?android:attr/textColorPrimary" />
+                </LinearLayout>
+
+                <!-- Logout Button -->
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/logout"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:textColor="@color/white"
+                    tools:ignore="RelativeOverlap" />
+            </RelativeLayout>
+        </eightbitlab.com.blurview.BlurView>
+    </com.google.android.material.card.MaterialCardView>
+
+
 
     <!-- Setting Options -->
-    <LinearLayout
-        android:id="@+id/linearSpinner"
-        android:padding="10dp"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTheme"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/light_box_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Dark Mode Option -->
-        <Spinner
-            android:id="@+id/themeSpinner"
-            android:spinnerMode="dialog"
-            android:padding="13dp"
+        android:layout_height="wrap_content">
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurViewTheme"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/linearSpinner"
+                android:padding="10dp"
+                android:background="@drawable/light_box_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linearRadio"
-        android:baselineAligned="false"
-        android:padding="10dp"
-        android:background="@drawable/light_box_bg"
+                <!-- Dark Mode Option -->
+                <Spinner
+                    android:id="@+id/themeSpinner"
+                    android:spinnerMode="dialog"
+                    android:padding="13dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </eightbitlab.com.blurview.BlurView>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewMode"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <!-- Light Theme Option -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/ivClassic"
-                android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurViewMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/linearRadio"
+                android:baselineAligned="false"
+                android:padding="10dp"
+                android:background="@drawable/light_box_bg"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/img_black_theme_96"
-                android:contentDescription="@string/app_version"
-                android:scaleType="fitCenter"/>
+                android:orientation="horizontal"
+                android:gravity="center">
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/radio_classic"
-                android:text="@string/classic"
-                app:buttonTint="@color/green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.Material3.CompoundButton.RadioButton" />
-        </LinearLayout>
+                <!-- Light Theme Option -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-        <!-- Dark Theme Option -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/ivClassic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/img_black_theme_96"
+                        android:contentDescription="@string/app_version"
+                        android:scaleType="fitCenter"/>
 
-            <ImageView
-                android:id="@+id/ivModern"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/img_gradient_theme_96"
-                android:contentDescription="@string/app_version"
-                android:scaleType="fitCenter" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_classic"
+                        android:text="@string/classic"
+                        app:buttonTint="@color/green"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.CompoundButton.RadioButton" />
+                </LinearLayout>
 
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/radio_modern"
-                app:buttonTint="@color/green"
-                android:text="@string/modern"
-                android:textColor="?android:attr/textColorPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </LinearLayout>
+                <!-- Dark Theme Option -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivModern"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/img_gradient_theme_96"
+                        android:contentDescription="@string/app_version"
+                        android:scaleType="fitCenter" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/radio_modern"
+                        app:buttonTint="@color/green"
+                        android:text="@string/modern"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </eightbitlab.com.blurview.BlurView>
+    </com.google.android.material.card.MaterialCardView>
+
 
 </LinearLayout>

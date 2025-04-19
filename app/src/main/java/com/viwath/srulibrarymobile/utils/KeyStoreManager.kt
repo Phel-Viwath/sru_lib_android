@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 class KeyStoreManager @Inject constructor() {
 
-    private val cipher = Cipher.getInstance(TRANSFORMATION)
     private val keyStore = KeyStore.getInstance(KEYSTORE_NAME).apply {
         load(null)
     }
@@ -45,6 +44,7 @@ class KeyStoreManager @Inject constructor() {
     }
 
     fun encrypt(bytes: ByteArray): ByteArray {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encrypted = cipher.doFinal(bytes)
@@ -52,6 +52,7 @@ class KeyStoreManager @Inject constructor() {
     }
 
     fun decrypt(encryptedBytes: ByteArray): ByteArray{
+        val cipher = Cipher.getInstance(TRANSFORMATION)
         val iv = encryptedBytes.copyOfRange(0, cipher.blockSize)
         val data = encryptedBytes.copyOfRange(cipher.blockSize, encryptedBytes.size)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
