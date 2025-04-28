@@ -68,12 +68,10 @@ class BookRecyclerViewAdapter(
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
         val menuIcon = holder.menuIcon
-        if (isDarkMode){
+        if (isDarkMode)
             menuIcon.setImageResource(R.drawable.ic_more_vert_light_24)
-        }
-        else{
+        else
             menuIcon.setImageResource(R.drawable.ic_more_vert_night_24)
-        }
 
         //holder.tvTitle.text = book.bookTitle
         holder.tvTitle.setTruncateText(book.bookTitle)
@@ -86,7 +84,7 @@ class BookRecyclerViewAdapter(
             popUpMenu.setOnMenuItemClickListener{ menuItem: MenuItem ->
                 when(menuItem.itemId){
                     R.id.action_update -> onMenuItemClicked(book, "update")
-                    R.id.action_delete -> onMenuItemClicked(book, "delete")
+                    R.id.action_remove -> onMenuItemClicked(book, "remove")
                     R.id.action_borrow -> onMenuItemClicked(book, "borrow")
                 }
                 true
@@ -94,10 +92,12 @@ class BookRecyclerViewAdapter(
             popUpMenu.show()
         }
         holder.itemView.setOnClickListener{ onItemClicked(book) }
+
         if (!isClassicMode){
             holder.rootView.apply {
-                setBackgroundColor(context.getTransparent())
-                radius = 5f
+                setCardBackgroundColor(context.getTransparent())
+                radius = 8f
+                strokeColor = context.getTransparent()
             }
             holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
         }

@@ -75,7 +75,7 @@ class BookFragment : Fragment(){
             BookTabFragment(),
             BorrowedTabFragment(),
             DonationTabFragment(),
-            BackupBookFragment()
+            TrashBookFragment()
         )
         val tabTitle = listOf(
             getString(R.string.add_book),

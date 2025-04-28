@@ -130,12 +130,12 @@ class RequestOtpActivity : AppCompatActivity(){
 
     private fun showLoading(){
         runOnUiThread{
-            loading.loadingStart()
+            loading.startLoading()
         }
     }
     private fun stopLoading(){
         runOnUiThread{
-            loading.loadingDismiss()
+            loading.stopLoading()
         }
     }
 

@@ -152,8 +152,8 @@ class RegisterActivity : AppCompatActivity(){
         lifecycleScope.launch{
             viewModel.isLoading.collect{
                 runOnUiThread {
-                    if (it) loading.loadingStart()
-                    else loading.loadingDismiss()
+                    if (it) loading.startLoading()
+                    else loading.stopLoading()
                 }
             }
         }

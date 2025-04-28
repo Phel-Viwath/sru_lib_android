@@ -30,6 +30,7 @@ import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.SigninUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.VerifyOtpUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.AddBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
+import com.viwath.srulibrarymobile.domain.usecase.book_usecase.DeleteBookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBookInTrashUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetBooksUseCase
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.GetSummaryUseCase
@@ -244,7 +245,8 @@ object AppModule {
             GetSummaryUseCase(repository),
             UploadBookUseCase(repository),
             GetStudentByIDUseCase(repository),
-            SearchBookUseCase(repository)
+            SearchBookUseCase(repository),
+            DeleteBookUseCase(repository)
         )
     }
 

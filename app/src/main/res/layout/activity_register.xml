@@ -22,7 +22,7 @@
         android:id="@+id/sruLogo"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/img_sru_image" />
+        android:src="@drawable/img_lib_app" />
 
     <TextView
         android:id="@+id/tvRegister"

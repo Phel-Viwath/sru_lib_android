@@ -284,20 +284,6 @@ class DashboardFragment : Fragment() {
                 //
                 binding.cardViewCardSection.apply {
                     setCardBackgroundColor(requireContext().getColor(android.R.color.transparent))
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
-                }
-                binding.cardBarChart.apply {
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
-                }
-                binding.cardPieChart.apply {
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
-                }
-                binding.cardProgressRing.apply {
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
                 }
                 binding.card1.setCardBackgroundColor(requireContext().getColor(android.R.color.transparent))
 

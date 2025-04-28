@@ -11,29 +11,20 @@ import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
+import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-/**
- * `RecoverBookUseCase` is a use case class responsible for recovering a book.
- *
- * This class encapsulates the business logic for recovering a book, interacting with the
- * underlying repository to perform the operation. It handles potential exceptions that may
- * occur during the process, such as network issues or HTTP errors, and returns the result
- * wrapped in a `Resource` object.
- *
- * @property repository The `CoreRepository` instance used to interact with the data layer.
- * @constructor Creates a `RecoverBookUseCase` with the provided `CoreRepository`.
- */
-class RecoverBookUseCase @Inject constructor(
+class DeleteBookUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {
-    operator fun invoke(bookId: String): Flow<Resource<Boolean>> = flow {
+
+    operator fun invoke(bookId: BookId): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading())
-        val result = repository.recoverBook(bookId)
-        Log.d("RecoverBookUseCase", "invoke: $result")
+        val result = repository.deleteBook(bookId)
+        Log.d("DeleteBookUseCase", "invoke: $result")
         when(result){
             is Result.Success -> {
                 emit(Resource.Success(true))
@@ -43,4 +34,5 @@ class RecoverBookUseCase @Inject constructor(
             }
         }
     }
+
 }

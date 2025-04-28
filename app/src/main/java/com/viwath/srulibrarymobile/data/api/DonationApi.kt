@@ -17,13 +17,13 @@ import retrofit2.http.PUT
 
 interface DonationApi {
 
-    @GET("/donation")
+    @GET("/api/v1/donation")
     suspend fun getAllDonation(): Response<List<DonationDto>>
 
-    @POST("/donation")
+    @POST("/api/v1/donation")
     suspend fun addDonation(@Body donationIO: DonationIO): Response<Unit>
 
-    @PUT("/donation")
+    @PUT("/api/v1/donation")
     suspend fun updateDonation(@Body donationDto: DonationIO): Response<Unit>
 
 }

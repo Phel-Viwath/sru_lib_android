@@ -47,11 +47,12 @@ interface CoreRepository {
     suspend fun getBooks(): Result<List<BookDto>, DataError.Remote>
     suspend fun getBooksInTrash(): Result<List<BookDto>, DataError.Remote>
     suspend fun getSummaryBook(): Result<BookSummary, DataError.Remote>
-    suspend fun moveToTrash(bookId: String): Result<Unit, DataError.Remote>
-    suspend fun recoverBook(bookId: String): Result<Unit, DataError.Remote>
+    suspend fun moveToTrash(bookId: BookId): Result<Unit, DataError.Remote>
+    suspend fun recoverBook(bookId: BookId): Result<Unit, DataError.Remote>
     suspend fun bookLanguages(): Result<List<Language>, DataError.Remote>
     suspend fun college(): Result<List<College>, DataError.Remote>
     suspend fun searchBook(keyword: String): Result<List<BookDto>, DataError.Remote>
+    suspend fun deleteBook(bookId: BookId): Result<Unit, DataError.Remote>
 
     // borrow
     suspend fun borrowBook(borrow: BorrowRequest): Result<Unit, DataError.Remote>

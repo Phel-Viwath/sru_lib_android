@@ -22,22 +22,22 @@ interface BorrowApi {
     /*
    * Borrow api
    * */
-    @POST("/borrow")
+    @POST("/api/v1/borrow")
     suspend fun activeBorrowDetails(@Body borrowRequest: BorrowRequest): Response<Unit>
 
-    @GET("borrow/detail")
+    @GET("/api/v1/borrow/detail")
     suspend fun getAllBorrowDetails(): Response<List<BorrowDetailDto>>
 
-    @GET("borrow/detail-active")
+    @GET("/api/v1/borrow/detail-active")
     suspend fun activeBorrowDetails(): Response<List<BorrowDetailDto>>
 
-    @GET("borrow/search")
+    @GET("/api/v1/borrow/search")
     suspend fun searchBorrow(@Query("keyword") keyword: String): Response<List<BorrowDetailDto>>
 
-    @PUT("borrow/extend-borrow")
+    @PUT("/api/v1/borrow/extend-borrow")
     suspend fun extendBorrow(@Query("id") id: Long): Response<Unit>
 
-    @PUT("/borrow")
+    @PUT("/api/v1/borrow")
     suspend fun returnBook(@Query("studentId") studentId: StudentId, @Query("bookId") bookId: BookId): Response<Unit>
 
 }

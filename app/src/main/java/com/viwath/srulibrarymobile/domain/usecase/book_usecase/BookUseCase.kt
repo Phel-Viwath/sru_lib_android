@@ -5,6 +5,8 @@
  *
  */
 
+@file:Suppress("KDocUnresolvedReference")
+
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
 import com.viwath.srulibrarymobile.domain.usecase.entry_usecase.GetStudentByIDUseCase
@@ -40,5 +42,6 @@ data class BookUseCase(
     val getSummaryUseCase: GetSummaryUseCase,
     val uploadBookUseCase: UploadBookUseCase,
     val getStudentByIDUseCase: GetStudentByIDUseCase,
-    val searchBookUseCase: SearchBookUseCase
+    val searchBookUseCase: SearchBookUseCase,
+    val deleteBookUseCase: DeleteBookUseCase
 )

@@ -38,7 +38,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:contentDescription="@string/themeText"
-                    android:src="@drawable/img_sru_image"
+                    android:src="@drawable/img_lib_app"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"

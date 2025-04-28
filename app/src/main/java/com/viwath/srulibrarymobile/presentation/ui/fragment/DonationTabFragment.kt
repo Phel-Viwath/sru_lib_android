@@ -8,13 +8,14 @@
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
 import android.Manifest
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -46,8 +47,8 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.LanguageViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
-import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
+import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import kotlinx.coroutines.launch
 
 class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
@@ -107,11 +108,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         mainActivity = (requireActivity() as MainActivity)
         permission = PermissionRequest(this)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
-            if (isConnected)
-                observeViewModel(isDarkMode, isClassicMode)
-        }
+        viewEvent()
 
         settingViewModel.viewMode.observe(viewLifecycleOwner){ mode ->
             isClassicMode = when(mode){
@@ -124,16 +121,39 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
 
         }
 
-        viewEvent(isDarkMode)
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
+            if (isConnected)
+                observeViewModel(isDarkMode, isClassicMode)
+        }
+
     }
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         dialog?.dismiss()
+        _binding = null
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun viewEvent(isDarkMode: Boolean){
+    private fun viewEvent(){
+
+        binding.swipeRefreshDonation.apply {
+            setOnRefreshListener {
+                binding.spinnerFilter.setSelection(0)
+                if (binding.edtSearchDonation.isFocused)
+                    binding.edtSearchDonation.clearFocus()
+                mainActivity.hideKeyboard()
+                lifecycleScope.launch {
+                    viewModel.loadInitData()
+                }
+                Handler(Looper.getMainLooper()).postDelayed({
+                    isRefreshing = false
+                }, 2000)
+            }
+
+        }
+
         binding.edtSearchDonation.setOnFocusChangeListener {_ , hasFocus ->
             mainActivity.apply {
                 if (hasFocus) hideBottomNav() else showBottomNav()
@@ -146,21 +166,6 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         }
         binding.fabAddDonation.setOnClickListener{
             showDonationDialog()
-        }
-        binding.imgRefresh.apply {
-            setImageResource(if (isDarkMode) R.drawable.ic_refresh_light_24 else R.drawable.ic_refresh_night_24)
-            setOnClickListener{
-                binding.spinnerFilter.setSelection(0)
-                if (binding.edtSearchDonation.isFocused)
-                    binding.edtSearchDonation.clearFocus()
-                mainActivity.hideKeyboard()
-                lifecycleScope.launch {
-                    viewModel.loadInitData()
-                }
-                val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
-                animator.duration = 1000
-                animator.start()
-            }
         }
 
         binding.spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{

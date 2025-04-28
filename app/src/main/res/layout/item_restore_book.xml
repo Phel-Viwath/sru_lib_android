@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurViewBorrowed"
+            android:id="@+id/blurViewRestore"
             android:background="@drawable/blur_view_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -58,26 +58,14 @@
                             android:layout_height="wrap_content"/>
 
                         <TextView
-                            android:id="@+id/tvStudentId"
-                            android:text="@string/student_id"
+                            android:id="@+id/tvBookTitle"
+                            android:text="@string/book_title"
                             android:textSize="14sp"
+                            android:layout_marginStart="16dp"
                             android:textColor="?android:attr/textColorPrimary"
                             app:layout_constraintStart_toEndOf="@+id/tvNo"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/tvBookId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:id="@+id/tvBookId"
-                            android:text="@string/book_id"
-                            android:textSize="14sp"
-                            android:textColor="?android:attr/textColorPrimary"
-                            app:layout_constraintStart_toEndOf="@+id/tvStudentId"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/arrow_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -89,7 +77,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/next"
-                            android:src="@drawable/ic_expand_more_light_24"
+                            android:src="@drawable/ic_expand_more_dark_24"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
@@ -119,128 +107,108 @@
                             tools:ignore="UselessParent">
 
                             <!--  Right side of the card view -->
+
                             <TextView
-                                android:id="@+id/tvBookTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/book_title"
+                                android:text="@string/book_id"
                                 android:textColor="?android:attr/textColorPrimary"
-                                android:textStyle="bold"
                                 android:textSize="12sp"
+                                android:textStyle="bold"
                                 android:layout_row="0"
                                 android:layout_column="0" />
 
                             <TextView
-                                android:id="@+id/tvBookTitleValue"
+                                android:id="@+id/tvBookIdValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/book_title"
+                                android:text="@string/book_id"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:layout_row="0"
                                 android:layout_column="1" />
 
                             <TextView
-                                android:id="@+id/tvStudentName"
+                                android:id="@+id/tvCollege"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/student_name"
+                                android:text="@string/college"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_row="1"
                                 android:layout_column="0" />
-
                             <TextView
-                                android:id="@+id/tvStudentNameValue"
+                                android:id="@+id/tvCollegeValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/student_name"
+                                android:text="@string/college"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:layout_row="1"
                                 android:layout_column="1" />
 
                             <TextView
-                                android:id="@+id/tvBorrowQuan"
+                                android:id="@+id/tvAuthor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/borrow_quan"
+                                android:text="@string/author"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_row="2"
                                 android:layout_column="0" />
                             <TextView
-                                android:id="@+id/tvBorrowQuanValue"
+                                android:id="@+id/tvAuthorValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/zero"
+                                android:text="@string/author"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:layout_row="2"
                                 android:layout_column="1" />
 
                             <TextView
-                                android:id="@+id/tvBorrowDate"
+                                android:id="@+id/tvGenre"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/borrow_date"
+                                android:text="@string/book_genre"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_row="3"
                                 android:layout_column="0" />
                             <TextView
-                                android:id="@+id/tvBorrowDateValue"
+                                android:id="@+id/tvGenreValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/date"
+                                android:text="@string/book_genre"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:layout_row="3"
                                 android:layout_column="1" />
 
                             <TextView
-                                android:id="@+id/tvReturnDate"
+                                android:id="@+id/tvPublicYear"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/return_date"
+                                android:text="@string/public_year"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:layout_row="4"
                                 android:layout_column="0" />
+
                             <TextView
-                                android:id="@+id/tvReturnDateValue"
+                                android:id="@+id/tvPublicYearValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/date"
+                                android:text="@string/publication"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:textSize="12sp"
                                 android:layout_row="4"
                                 android:layout_column="1" />
 
-                            <TextView
-                                android:id="@+id/tvReturned"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/returned"
-                                android:textColor="?android:attr/textColorPrimary"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:layout_row="5"
-                                android:layout_column="0" />
-                            <TextView
-                                android:id="@+id/tvReturnedValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/no"
-                                android:textColor="@color/red"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:layout_row="5"
-                                android:layout_column="1" />
                         </GridLayout>
                     </LinearLayout>
 

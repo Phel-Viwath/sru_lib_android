@@ -46,6 +46,7 @@ class CoreRepositoryImp @Inject constructor(
 ) : CoreRepository {
     override suspend fun getDashboard(): Dashboard {
         val response = api.dashboard()
+        Log.d("Dashboard", "Response body: $response")
         return if (response.isSuccessful){
             response.body()?.let {
                 Dashboard(
@@ -123,7 +124,9 @@ class CoreRepositoryImp @Inject constructor(
     }
 
     override suspend fun getBooksInTrash(): Result<List<BookDto>, DataError.Remote> {
-        return safeCall { api.bookInTrash() }
+        val data =  safeCall { api.bookInTrash() }
+        Log.d("CoreRepositoryImp", "getBooksInTrash: $data")
+        return data
     }
 
     override suspend fun getSummaryBook(): Result<BookSummary, DataError.Remote>{
@@ -136,6 +139,10 @@ class CoreRepositoryImp @Inject constructor(
 
     override suspend fun recoverBook(bookId: String): Result<Unit, DataError.Remote> {
         return safeCall { api.recoverBook(bookId) }
+    }
+
+    override suspend fun deleteBook(bookId: BookId): Result<Unit, DataError.Remote> {
+        return safeCall { api.deleteBook(bookId) }
     }
 
     override suspend fun bookLanguages(): Result<List<Language>, DataError.Remote> {

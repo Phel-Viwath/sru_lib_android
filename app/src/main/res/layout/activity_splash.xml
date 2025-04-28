@@ -19,7 +19,7 @@
         android:id="@+id/appCompatImageView"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@drawable/img_sru_image"
+        android:src="@drawable/img_lib_app"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tvDevName"
         app:layout_constraintHorizontal_bias="0.5"

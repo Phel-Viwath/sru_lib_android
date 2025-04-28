@@ -227,8 +227,7 @@ class QrEntryFragment: Fragment(){
                 // card section
                 binding.cardSection.apply {
                     setCardBackgroundColor(transparentColor)
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
+
                 }
                 binding.blurCardSection.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
                 binding.blurEntryCard.applyBlur(requireActivity(), 50f, innerCardTranslucentColor)
@@ -239,16 +238,12 @@ class QrEntryFragment: Fragment(){
 
                 binding.cardCameraFrame.apply {
                     setCardBackgroundColor(transparentColor)
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
                 }
                 binding.blurViewScanSection.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
 
                 // student detail section
                 binding.cardStudentSection.apply {
                     setCardBackgroundColor(transparentColor)
-                    if (isDarkMode)
-                        strokeColor = requireContext().getColor(R.color.purple)
                 }
                 binding.blurViewStudentDetail.applyBlur(activity = requireActivity(), translucentColor = translucentColor)
             }

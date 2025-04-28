@@ -99,8 +99,8 @@ class ChangePasswordActivity : AppCompatActivity(){
 
 
 
-    private fun loadingStart(): Unit = runOnUiThread{ loading.loadingStart() }
-    private fun loadingStop(): Unit = runOnUiThread{ loading.loadingDismiss() }
+    private fun loadingStart(): Unit = runOnUiThread{ loading.startLoading() }
+    private fun loadingStop(): Unit = runOnUiThread{ loading.stopLoading() }
     private fun showToast(message: String): Unit = runOnUiThread{
         Toast.makeText(this@ChangePasswordActivity, message, Toast.LENGTH_LONG).show()
     }

@@ -7,10 +7,12 @@
 
 package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 
+import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
+import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -61,12 +63,40 @@ import javax.inject.Inject
 class GetBookInTrashUseCase @Inject constructor(
     private val repository: CoreRepository
 ) {
-    operator fun invoke() : Flow<Resource<List<BookDto>>> = flow {
+    operator fun invoke() : Flow<Resource<List<BookInTrash>>> = flow {
         emit(Resource.Loading())
-        when(val result = repository.getBooksInTrash()){
+
+        val collegeMap = when(val collegeResult = repository.college()){
             is Result.Success -> {
-                val books = result.data.toList()
-                emit(Resource.Success(books))
+                collegeResult.data.toList().associateBy { it.collegeId }
+            }
+            is Result.Error -> {
+                val error = collegeResult.error
+                val message = error.handleRemoteError()
+                emit(Resource.Error(message))
+                emptyMap()
+            }
+        }
+        Log.d("GetBookInTrashUseCase", "invoke: $collegeMap")
+
+        val result = repository.getBooksInTrash()
+        Log.d("GetBookInTrashUseCase", "invoke: $result")
+        when(result){
+            is Result.Success -> {
+                val bookInTrash = result.data.mapNotNull { dto ->
+                    collegeMap[dto.collegeId]?.let {
+                        BookInTrash(
+                            bookId = dto.bookId,
+                            bookTitle = dto.bookTitle,
+                            bookQuan = dto.bookQuan,
+                            collegeName = it.collegeName,
+                            author = dto.author,
+                            publicationYear = dto.publicationYear,
+                            genre = dto.genre
+                        )
+                    }
+                }
+                emit(Resource.Success(bookInTrash))
             }
             is Result.Error ->  emit(Resource.Error(result.error.handleRemoteError()))
         }

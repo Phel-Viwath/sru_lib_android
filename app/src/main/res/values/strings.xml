@@ -6,7 +6,7 @@
   -->
 
 <resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">SRU Library Mobile</string>
+    <string name="app_name">Library App</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -203,6 +203,7 @@
 
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
     <string name="borrow">Borrow</string>
 
     <string name="cancel_ic">⌫</string>

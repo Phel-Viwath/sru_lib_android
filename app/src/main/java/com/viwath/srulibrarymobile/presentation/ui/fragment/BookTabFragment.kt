@@ -8,7 +8,6 @@
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
 import android.Manifest
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -17,6 +16,8 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,10 +66,10 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Compa
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.requestBiometricEnrollment
 import com.viwath.srulibrarymobile.utils.BiometricPromptUtils.Companion.resetBiometricEnrollmentRequest
-import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
-import com.viwath.srulibrarymobile.utils.uriToFile
 import com.viwath.srulibrarymobile.utils.permission.PermissionLauncher.storagePermissionLauncher
+import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
+import com.viwath.srulibrarymobile.utils.uriToFile
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -257,6 +258,20 @@ class BookTabFragment : Fragment() {
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun setupUI(isDarkMode: Boolean) {
+        binding.swipeRefreshBook.apply {
+            setOnRefreshListener {
+                binding.spinnerFilter.setSelection(0)
+                lifecycleScope.launch {
+                    if (binding.edtSearch.isFocused)
+                        binding.edtSearch.clearFocus()
+                    mainActivity.hideKeyboard()
+                    viewModel.loadInitData()
+                }
+                Handler(Looper.getMainLooper()).postDelayed({
+                    isRefreshing = false
+                },0)
+            }
+        }
 
         binding.edtSearch.setOnFocusChangeListener { _, hasFocus ->
             (requireActivity() as? MainActivity)?.apply {
@@ -269,21 +284,7 @@ class BookTabFragment : Fragment() {
             false
         }
         binding.fabAddBook.setOnClickListener { showDialogAddUpdateBook() }
-        binding.imgRefresh.apply {
-            setImageResource(if (isDarkMode) R.drawable.ic_refresh_light_24 else R.drawable.ic_refresh_night_24)
-            setOnClickListener{
-                binding.spinnerFilter.setSelection(0)
-                lifecycleScope.launch {
-                    if (binding.edtSearch.isFocused)
-                        binding.edtSearch.clearFocus()
-                    mainActivity.hideKeyboard()
-                    viewModel.loadInitData()
-                }
-                val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
-                animator.duration = 1000
-                animator.start()
-            }
-        }
+
         binding.spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (parent?.selectedItem != null) {
@@ -431,7 +432,7 @@ class BookTabFragment : Fragment() {
             onMenuItemClicked = { book, action ->
                 when(action){
                     "update" -> showDialogAddUpdateBook(book)
-                    "delete" -> dialogDelete(book.bookId, isDarkMode)
+                    "remove" -> dialogRemove(book.bookId, isDarkMode)
                     "borrow" -> dialogBorrow(book)
                 }
             },
@@ -555,12 +556,12 @@ class BookTabFragment : Fragment() {
         progressDialog?.dismiss()
     }
 
-    private fun dialogDelete(bookId: BookId, isDarkMode: Boolean){
+    private fun dialogRemove(bookId: BookId, isDarkMode: Boolean){
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete")
+            .setTitle("Remove")
             .setMessage("Are you sure you want to delete this book?")
             .setCancelable(true)
-            .setPositiveButton("Delete"){_, _ ->
+            .setPositiveButton("Remove"){_, _ ->
                 viewModel.onEvent(BookTabEvent.Remove)
             }
             .setNegativeButton("Cancel"){d, _ ->
@@ -630,8 +631,8 @@ class BookTabFragment : Fragment() {
             storagePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
     }
-    private fun startLoading(): Unit = loading.loadingStart() // Start loading animation
-    private fun stopLoading(): Unit = loading.loadingDismiss() // Stop loading animation
+    private fun startLoading(): Unit = loading.startLoading() // Start loading animation
+    private fun stopLoading(): Unit = loading.stopLoading() // Stop loading animation
     private fun showToast(message: String): Unit = requireActivity().runOnUiThread{
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }

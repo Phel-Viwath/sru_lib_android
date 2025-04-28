@@ -34,26 +34,25 @@ import retrofit2.http.Query
  */
 interface CoreApi : BookApi, BorrowApi, DonationApi{
     /// core api
-    @GET("/dashboard")
+    @GET("/api/v1/dashboard")
     suspend fun dashboard(): Response<Dashboard>
 
     /// Entry : http://localhost:8090/api/v1/entry
-    @GET("/entry/{id}")
+    @GET("/api/v1/entry/{id}")
     suspend fun getStudentById(@Path("id") id: Long): Response<Students>
 
-    @POST("/entry")
+    @POST("/api/v1/entry")
     suspend fun newAttend(
         @Query("entryId") studentId: String,
         @Query("purpose") purpose: String
     ): Response<Attend>
 
-    @GET("/entry")
+    @GET("/api/v1/entry")
     suspend fun recentEntryData(): Response<Entry>
 
     @GET("/entry/check")
     suspend fun checkExistingStudent(@Query("entryId") entryId: String): Response<EntryStatus>
 
-    @PUT("/entry")
+    @PUT("/api/v1/entry")
     suspend fun updateExitingTime(@Query("entryId") id: Long): Response<String>
-
 }

@@ -8,6 +8,7 @@
 package com.viwath.srulibrarymobile.presentation.ui.adapter
 
 import android.app.Activity
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -46,8 +47,15 @@ class BookCardAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item)
         val translucentColor = context.getTranslucentColor(isDarkMode)
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        holder.cardView.apply {
+            layoutParams.width = (screenWidth * 0.44).toInt()
+            requestLayout()
+        }
+
+        holder.bind(item)
+
 
         if (!isClassicMode){
             holder.cardView.setCardBackgroundColor(context.getTransparent())

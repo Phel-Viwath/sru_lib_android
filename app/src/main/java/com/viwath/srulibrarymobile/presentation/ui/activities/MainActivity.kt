@@ -13,11 +13,9 @@ package com.viwath.srulibrarymobile.presentation.ui.activities
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -41,10 +39,9 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
+import com.viwath.srulibrarymobile.utils.applyBlur
+import com.viwath.srulibrarymobile.utils.getTranslucentColor
 import dagger.hilt.android.AndroidEntryPoint
-import eightbitlab.com.blurview.BlurView
-import eightbitlab.com.blurview.RenderEffectBlur
-import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.coroutines.launch
 
 
@@ -90,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        setUpBlurView(binding.bottomNavViewBlurView)
+        binding.bottomNavViewBlurView.applyBlur(this, 10f, this.getTranslucentColor(isDarkMode))
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -159,9 +156,9 @@ class MainActivity : AppCompatActivity() {
 
     fun showBottomNav() { binding.bottomNavView.visibility = View.VISIBLE }
 
-    fun startLoading(): Unit = runOnUiThread{ loading.loadingStart() }
+    fun startLoading(): Unit = runOnUiThread{ loading.startLoading() }
 
-    fun stopLoading(): Unit = runOnUiThread{ loading.loadingDismiss()}
+    fun stopLoading(): Unit = runOnUiThread{ loading.stopLoading()}
 
     fun showTopSnackbar(message: String){
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
@@ -243,25 +240,6 @@ class MainActivity : AppCompatActivity() {
 
     fun showToast(message: String): Unit = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
-    @Suppress("DEPRECATION")
-    private fun setUpBlurView(blurView: BlurView) {
-        val rootView = binding.root
-
-        val blurAlgorithm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            RenderEffectBlur()
-        } else {
-            RenderScriptBlur(this)
-        }
-
-        blurView.setupWith(rootView, blurAlgorithm)
-            .setFrameClearDrawable(window.decorView.background ?: ContextCompat.getDrawable(this, R.drawable.translution_bg))
-            .setBlurRadius(20f) // Increase blur intensity
-            .setBlurAutoUpdate(true)
-            .setBlurEnabled(true) // Ensure blur is enabled
-
-        blurView.outlineProvider = ViewOutlineProvider.BACKGROUND
-        blurView.clipToOutline = true
-    }
 
     private fun setUpView(isDarkMode: Boolean, isClassicMode: Boolean){
         when(isClassicMode){

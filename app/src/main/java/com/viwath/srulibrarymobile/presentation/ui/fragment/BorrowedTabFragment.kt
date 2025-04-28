@@ -7,9 +7,10 @@
 
 package com.viwath.srulibrarymobile.presentation.ui.fragment
 
-import android.animation.ObjectAnimator
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.widget.doOnTextChanged
@@ -66,11 +67,7 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         _binding = FragmentBorrowedTabBinding.bind(view)
         mainActivity = (requireActivity() as MainActivity)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
-        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
-            if (isConnected)
-                observerViewModel(isDarkMode, isClassicMode)
-        }
+        setUpUi()
 
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
             isClassicMode = when(viewMode){
@@ -83,20 +80,24 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
                 borrowRecyclerAdapter.updateViewMode(isClassicMode)
         }
 
-        setUpUi(isDarkMode)
+        connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected)
+                observerViewModel(isDarkMode, isClassicMode)
+        }
+
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
     }
 
     private fun observerViewModel(isDarkMode: Boolean, isClassicMode: Boolean){
         viewLifecycleOwner.lifecycleScope.launch{
             viewModel.state.collect{state ->
                 when{
-                    state.isLoading -> {
-                        mainActivity.startLoading()
-                    }
+                    state.isLoading -> mainActivity.startLoading()
                     state.borrowList.isNotEmpty() -> {
                         mainActivity.stopLoading()
                         setUpRecyclerView(state.borrowList, isDarkMode, isClassicMode)
@@ -124,21 +125,23 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
     }
 
-    private fun setUpUi(isDarkMode: Boolean){
-        binding.imgRefresh.apply {
-            setImageResource(if (isDarkMode) R.drawable.ic_refresh_light_24 else R.drawable.ic_refresh_night_24)
-            setOnClickListener{
+    private fun setUpUi(){
+
+        binding.swipeRefreshBorrowed.apply {
+            setOnRefreshListener {
+                this.isRefreshing = false
                 lifecycleScope.launch {
                     if (binding.edtSearch.isFocused)
                         binding.edtSearch.clearFocus()
                     mainActivity.hideKeyboard()
                     viewModel.loadInitData()
                 }
-                val animator = ObjectAnimator.ofFloat(binding.imgRefresh, View.ROTATION, 0f, 360f)
-                animator.duration = 1000
-                animator.start()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    this@apply.isRefreshing = false
+                },2000)
             }
         }
+
         binding.checkboxFilterBorrow.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {

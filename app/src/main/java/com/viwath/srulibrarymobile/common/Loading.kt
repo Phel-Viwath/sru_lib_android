@@ -22,7 +22,7 @@ import com.viwath.srulibrarymobile.R
 class Loading(private val activity: Activity) {
     private var dialog: AlertDialog? = null
 
-    fun loadingStart(){
+    fun startLoading(){
         if (dialog?.isShowing == true) return
         val builder = AlertDialog.Builder(activity)
         val inflater = activity.layoutInflater
@@ -34,7 +34,7 @@ class Loading(private val activity: Activity) {
         dialog?.show()
     }
 
-    fun loadingDismiss(){
+    fun stopLoading(){
         dialog?.takeIf { it.isShowing }?.dismiss()
         dialog = null
     }

@@ -117,6 +117,7 @@ class DonationRecycleViewAdapter(
         if (!isClassicMode){
             holder.root.apply {
                 setCardBackgroundColor(activity.getTransparent())
+                strokeColor = context.getTransparent()
                 radius = 5f
             }
             holder.blurViewDonationItem.applyBlur(
