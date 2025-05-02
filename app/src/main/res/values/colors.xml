@@ -117,4 +117,10 @@
     <!-- 90% opacity -->
     <color name="translucent_white_90">#E6FFFFFF</color>
 
+    <!-- ZXing scanner colors -->
+    <color name="zxing_custom_possible_result_points">#c0ffbd21</color>
+    <color name="zxing_custom_result_view">#b0000000</color>
+    <color name="zxing_custom_viewfinder_laser">#ffcc0000</color>
+    <color name="zxing_custom_viewfinder_mask">#60000000</color>
+
 </resources>

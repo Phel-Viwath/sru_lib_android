@@ -2,11 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="12dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingBottom="12dp">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
@@ -213,14 +213,17 @@
                             <FrameLayout
                                 android:id="@+id/frame_camera"
                                 android:layout_below="@+id/scan_here"
+                                android:background="@drawable/frame_camera_bg_modern"
                                 android:layout_margin="10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp">
-                                <androidx.camera.view.PreviewView
-                                    android:id="@+id/cameraPreviewView"
-                                    android:background="@drawable/frame_camera_bg_modern"
+                                <com.journeyapps.barcodescanner.DecoratedBarcodeView
+                                    android:id="@+id/barcodeScannerView"
+                                    android:visibility="invisible"
+                                    android:padding="2dp"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"/>
+                                    android:layout_height="match_parent"
+                                    app:zxing_scanner_layout="@layout/custom_barcode_scanner"/>
                                 <TextView
                                     android:id="@+id/tvClickScan"
                                     android:text="@string/tab_to_scan"
@@ -247,7 +250,7 @@
                                     android:background="@android:color/transparent"
                                     android:contentDescription="@string/flashlight"
                                     android:padding="8dp"
-                                    android:src="@drawable/ic_white_flash_off_36"
+                                    android:src="@drawable/ic_flashlight_off_white_36"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintBottom_toBottomOf="parent"/>
@@ -338,43 +341,47 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <!--Radio Button -->
-                            <com.google.android.material.radiobutton.MaterialRadioButton
-                                android:id="@+id/radioUsePc"
+                            <com.google.android.material.checkbox.MaterialCheckBox
+                                android:id="@+id/cbUsePc"
                                 android:checked="true"
                                 android:text="@string/use_pc"
                                 android:textSize="18sp"
-                                android:buttonTint="?android:attr/textColorPrimary"
+                                app:buttonIconTint="@color/white"
+                                app:buttonTint="@color/green"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/Widget.AppCompat.CompoundButton.CheckBox"/>
-                            <androidx.appcompat.widget.AppCompatRadioButton
-                                android:id="@+id/radioReadBook"
+                                style="@style/Widget.Material3.CompoundButton.CheckBox"/>
+                            <com.google.android.material.checkbox.MaterialCheckBox
+                                android:id="@+id/cbReadBook"
                                 android:text="@string/reading"
                                 android:textSize="18sp"
-                                android:buttonTint="?android:attr/textColorPrimary"
+                                app:buttonIconTint="@color/white"
+                                app:buttonTint="@color/green"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/Widget.AppCompat.CompoundButton.CheckBox"/>
-                            <androidx.appcompat.widget.AppCompatRadioButton
-                                android:id="@+id/radioAssignment"
+                                style="@style/Widget.Material3.CompoundButton.CheckBox"/>
+                            <com.google.android.material.checkbox.MaterialCheckBox
+                                android:id="@+id/cbAssignment"
                                 android:text="@string/assignment"
                                 android:textSize="18sp"
-                                android:buttonTint="?android:attr/textColorPrimary"
+                                app:buttonIconTint="@color/white"
+                                app:buttonTint="@color/green"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/Widget.AppCompat.CompoundButton.CheckBox"/>
-                            <androidx.appcompat.widget.AppCompatRadioButton
-                                android:id="@+id/radioOther"
+                                style="@style/Widget.Material3.CompoundButton.CheckBox"/>
+                            <com.google.android.material.checkbox.MaterialCheckBox
+                                android:id="@+id/cbOther"
                                 android:text="@string/other"
                                 android:textSize="18sp"
-                                android:buttonTint="?android:attr/textColorPrimary"
+                                app:buttonIconTint="@color/white"
+                                app:buttonTint="@color/green"
                                 android:textColor="?android:attr/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/Widget.AppCompat.CompoundButton.CheckBox"/>
+                                style="@style/Widget.Material3.CompoundButton.CheckBox"/>
                             <GridLayout
                                 android:columnCount="2"
                                 android:rowCount="1"

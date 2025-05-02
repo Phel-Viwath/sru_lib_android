@@ -28,8 +28,8 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
-import com.viwath.srulibrarymobile.utils.applyBlur
-import com.viwath.srulibrarymobile.utils.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
 import kotlinx.coroutines.launch
 
 /**
@@ -57,6 +57,15 @@ class BookFragment : Fragment(){
 
     private var isClassicMode = true
 
+    val fragmentList by lazy {
+        listOf(
+            BookTabFragment(),
+            BorrowedTabFragment(),
+            DonationTabFragment(),
+            TrashBookFragment()
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,18 +80,14 @@ class BookFragment : Fragment(){
         _binding = FragmentBookBinding.bind(view)
         mainActivity = (requireActivity() as MainActivity)
 
-        val fragmentList = listOf(
-            BookTabFragment(),
-            BorrowedTabFragment(),
-            DonationTabFragment(),
-            TrashBookFragment()
-        )
-        val tabTitle = listOf(
-            getString(R.string.add_book),
-            getString(R.string.borrowed),
-            getString(R.string.donation),
-            getString(R.string.backup)
-        )
+        val tabTitle by lazy {
+            listOf(
+                getString(R.string.add_book),
+                getString(R.string.borrowed),
+                getString(R.string.donation),
+                getString(R.string.backup)
+            )
+        }
 
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 

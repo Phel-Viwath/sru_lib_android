@@ -107,6 +107,7 @@ dependencies {
     // qrcode reader
     implementation(libs.zxing)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.code.scanner)
     // CameraX
     implementation (libs.androidx.camera.core)
     implementation (libs.androidx.camera.camera2)

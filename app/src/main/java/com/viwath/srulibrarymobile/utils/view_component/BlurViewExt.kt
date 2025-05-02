@@ -7,7 +7,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package com.viwath.srulibrarymobile.utils
+package com.viwath.srulibrarymobile.utils.view_component
 
 import android.app.Activity
 import android.graphics.Color
@@ -16,6 +16,8 @@ import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import eightbitlab.com.blurview.BlurView
 import androidx.core.graphics.drawable.toDrawable
+import eightbitlab.com.blurview.RenderEffectBlur
+import eightbitlab.com.blurview.RenderScriptBlur
 
 fun BlurView.applyBlur(
     activity: Activity,
@@ -26,9 +28,9 @@ fun BlurView.applyBlur(
     val windowBackground = activity.window.decorView.background ?: Color.TRANSPARENT.toDrawable()
 
     val blurAlgorithm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        eightbitlab.com.blurview.RenderEffectBlur()
+        RenderEffectBlur()
     } else {
-        eightbitlab.com.blurview.RenderScriptBlur(activity)
+        RenderScriptBlur(activity)
     }
 
     this@applyBlur.apply{

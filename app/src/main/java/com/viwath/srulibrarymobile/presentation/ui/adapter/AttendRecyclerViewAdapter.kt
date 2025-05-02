@@ -21,7 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemEntryBinding
 import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
-import com.viwath.srulibrarymobile.utils.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 
 class AttendRecyclerViewAdapter(
     private val context: Activity,

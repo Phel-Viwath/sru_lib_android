@@ -11,6 +11,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.widget.doOnTextChanged
@@ -20,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBorrowedTabBinding
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.presentation.event.BorrowedTabEvent
@@ -59,15 +61,23 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
     private lateinit var mainActivity: MainActivity
     private lateinit var dialogExtendOrReturn: DialogExtendOrReturn
     private lateinit var borrowRecyclerAdapter: BorrowRecyclerAdapter
+    private lateinit var loading: Loading
 
     private var isClassicMode = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("BorrowedTabFragment", "onViewCreated: BorrowedTabFragment created")
         _binding = FragmentBorrowedTabBinding.bind(view)
+        loading = Loading(requireActivity())
         mainActivity = (requireActivity() as MainActivity)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        setUpUi()
+        //
+        borrowRecyclerAdapter = setUpRecyclerView(emptyList(), isDarkMode, isClassicMode)
+        binding.recyclerBorrow.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = borrowRecyclerAdapter
+        }
 
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
             isClassicMode = when(viewMode){
@@ -82,10 +92,10 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
         connectivityViewModel.networkStatus.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected)
-                observerViewModel(isDarkMode, isClassicMode)
+                observerViewModel()
         }
 
-
+        setUpUi()
     }
 
     override fun onDestroyView() {
@@ -93,18 +103,18 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         _binding = null
     }
 
-    private fun observerViewModel(isDarkMode: Boolean, isClassicMode: Boolean){
+    private fun observerViewModel(){
         viewLifecycleOwner.lifecycleScope.launch{
             viewModel.state.collect{state ->
                 when{
-                    state.isLoading -> mainActivity.startLoading()
+                    state.isLoading -> loading.startLoading()
                     state.borrowList.isNotEmpty() -> {
-                        mainActivity.stopLoading()
-                        setUpRecyclerView(state.borrowList, isDarkMode, isClassicMode)
+                        loading.stopLoading()
+                        borrowRecyclerAdapter.updateBorrowList(state.borrowList)
                     }
                     else -> {
-                        mainActivity.stopLoading()
-                        setUpRecyclerView(emptyList(), isDarkMode, isClassicMode)
+                       loading.stopLoading()
+                       borrowRecyclerAdapter.updateBorrowList(emptyList())
                     }
                 }
             }
@@ -176,14 +186,19 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
     }
 
-    private fun setUpRecyclerView(list: List<Borrow>, isDarkMode: Boolean, isClassicMode: Boolean){
-        binding.recyclerBorrow.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = BorrowRecyclerAdapter(list.reversed(), isClassicMode, isDarkMode, requireActivity()){
-            showDialogReturnOrExtend(it, isDarkMode)
-        }
-        borrowRecyclerAdapter = adapter
-        binding.recyclerBorrow.adapter = adapter
+    private fun setUpRecyclerView(
+        list: List<Borrow>, isDarkMode:
+        Boolean, isClassicMode: Boolean
+    ): BorrowRecyclerAdapter = BorrowRecyclerAdapter(
+        list.reversed(),
+        isClassicMode,
+        isDarkMode,
+        requireActivity()
+    ){
+        showDialogReturnOrExtend(it, isDarkMode)
     }
+
+
 
     private fun showDialogReturnOrExtend(borrow: Borrow, isDarkMode: Boolean){
         val view = LayoutInflater.from(requireContext())

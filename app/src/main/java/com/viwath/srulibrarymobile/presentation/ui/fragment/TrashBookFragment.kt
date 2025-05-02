@@ -11,6 +11,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
@@ -50,6 +51,9 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("TrashFragment", "onViewCreated: TrashFragment5 created")
+
         _binding = FragmentBackupTabBinding.bind(view)
         loading = Loading(requireActivity())
 

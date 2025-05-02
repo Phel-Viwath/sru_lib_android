@@ -26,10 +26,10 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.KeyStoreManager
-import com.viwath.srulibrarymobile.utils.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.datastore.SettingPreferences
-import com.viwath.srulibrarymobile.utils.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.getTransparent
+import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 import kotlinx.coroutines.launch
 
 /**

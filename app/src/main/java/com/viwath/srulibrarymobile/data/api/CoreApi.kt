@@ -50,7 +50,7 @@ interface CoreApi : BookApi, BorrowApi, DonationApi{
     @GET("/api/v1/entry")
     suspend fun recentEntryData(): Response<Entry>
 
-    @GET("/entry/check")
+    @GET("/api/v1/entry/check")
     suspend fun checkExistingStudent(@Query("entryId") entryId: String): Response<EntryStatus>
 
     @PUT("/api/v1/entry")

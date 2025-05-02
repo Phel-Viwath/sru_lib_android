@@ -13,19 +13,12 @@ import android.view.ViewGroup
 import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.BinaryBitmap
-import com.google.zxing.DecodeHintType
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.PlanarYUVLuminanceSource
-import com.google.zxing.common.HybridBinarizer
-import java.nio.ByteBuffer
+import com.viwath.srulibrarymobile.utils.qr_reader.QRCodeAnalyzer
 
 // Class to handle camera preview and QR code scanning functionality.
 class CameraPreview(
@@ -60,7 +53,10 @@ class CameraPreview(
                 .build()
                 .also {
                     // Set a QRCodeAnalyzer to process image frames
-                    it.setAnalyzer(ContextCompat.getMainExecutor(context), QRCodeAnalyzer(resultHandler))
+                    it.setAnalyzer(
+                        ContextCompat.getMainExecutor(context),
+                        QRCodeAnalyzer(resultHandler)
+                    )
                 }
 
             try {
@@ -91,56 +87,16 @@ class CameraPreview(
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get() // Retrieve CameraProvider
             cameraProvider.unbindAll() // Unbind all use cases
-            clearPreview() // Clear and reset the PreviewView
+
+            // Clear preview by reattaching the view
+            val parent = previewView.parent as? ViewGroup
+            val index = parent?.indexOfChild(previewView) ?: -1
+            if (parent != null && index != -1) {
+                parent.removeView(previewView)
+                parent.addView(previewView, index)
+            }
+
         }, ContextCompat.getMainExecutor(context))
     }
 
-    // Clears the preview view to reset its state
-    private fun clearPreview() {
-        val parent = previewView.parent as ViewGroup // Get the parent ViewGroup
-        val index = parent.indexOfChild(previewView) // Get the index of PreviewView in parent
-        parent.removeView(previewView) // Remove the view
-        parent.addView(previewView, index) // Re-add the view at the same index
-    }
-
-    // Inner class for analyzing image frames for QR codes
-    inner class QRCodeAnalyzer(private val resultHandler: (String) -> Unit) : ImageAnalysis.Analyzer {
-
-        // QR code reader from ZXing library, configured for QR codes
-        private val reader = MultiFormatReader().apply {
-            setHints(mapOf(DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)))
-        }
-
-        // Analyzes a single image frame for QR codes
-        override fun analyze(image: ImageProxy) {
-            val buffer = image.planes[0].buffer // Get image data from the first plane
-            val data = buffer.toByteArray() // Convert buffer to a byte array
-            val width = image.width
-            val height = image.height
-
-            // Convert image data to a format usable for QR code decoding
-            val source = PlanarYUVLuminanceSource(
-                data, width, height, 0, 0, width, height, false
-            )
-            val bitmap = BinaryBitmap(HybridBinarizer(source))
-
-            try {
-                // Decode the QR code and pass the result to the handler
-                val result = reader.decode(bitmap)
-                resultHandler(result.text)
-            } catch (e: Exception) {
-                // Ignore errors when no QR code is found
-            } finally {
-                image.close() // Close the image frame to free resources
-            }
-        }
-
-        // Extension function to convert ByteBuffer to a ByteArray
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind() // Reset the buffer's position to zero
-            val data = ByteArray(remaining()) // Create a byte array of the correct size
-            get(data) // Copy the buffer's contents into the byte array
-            return data
-        }
-    }
 }

@@ -42,7 +42,7 @@ import javax.inject.Inject
  * @property api The [CoreApi] instance used for making network requests.
  */
 class CoreRepositoryImp @Inject constructor(
-    private val api: CoreApi,
+    private val api: CoreApi
 ) : CoreRepository {
     override suspend fun getDashboard(): Dashboard {
         val response = api.dashboard()
@@ -100,6 +100,7 @@ class CoreRepositoryImp @Inject constructor(
 
     override suspend fun checkExitingAttend(id: String): String {
         val response = api.checkExistingStudent(id)
+        Log.e("CoreRepositoryImp", "checkExitingAttend: $response", )
         if (!response.isSuccessful)
             throw CoreException("Network Error!, ${response.code()} + $id + ${response.message()}")
         val body = response.body()

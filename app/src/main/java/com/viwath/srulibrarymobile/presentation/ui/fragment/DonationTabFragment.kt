@@ -25,11 +25,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentDonationTabBinding
 import com.viwath.srulibrarymobile.domain.model.College
 import com.viwath.srulibrarymobile.domain.model.Donation
@@ -73,6 +76,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private var isClassicMode = true
 
     private lateinit var donationRecycleViewAdapter: DonationRecycleViewAdapter
+    private lateinit var loading: Loading
 
     // permission
     private lateinit var permission: PermissionRequest
@@ -91,24 +95,34 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private val contract = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
         if (uri != null){
             fileUri = uri
-            val filePath = uri.getFileNameFromUri(requireContext())
-            if (filePath != null){
-                mainActivity.showSnackbar("File selected: $filePath.")
+            val fileName = uri.getFileNameFromUri(requireContext())
+            if (fileName != null){
+                mainActivity.showSnackbar("File selected: $fileName.")
             }
             else{
                 mainActivity.showToast("Unable to retrieve the file name.")
-            }
+                }
         }
         else mainActivity.showToast("No file selected.")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("DonationTabFragment", "onViewCreated: DonationTabFragment created")
+
         _binding = FragmentDonationTabBinding.bind(view)
+        loading = Loading(requireActivity())
         mainActivity = (requireActivity() as MainActivity)
         permission = PermissionRequest(this)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        viewEvent()
+
+
+        donationRecycleViewAdapter = setUpRecyclerView(emptyList(), isDarkMode, isClassicMode)
+        binding.recyclerBookDonation.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = donationRecycleViewAdapter
+        }
 
         settingViewModel.viewMode.observe(viewLifecycleOwner){ mode ->
             isClassicMode = when(mode){
@@ -123,9 +137,14 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
 
         connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
             if (isConnected)
-                observeViewModel(isDarkMode, isClassicMode)
+                observeViewModel()
         }
+        viewEvent()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onEvent(DonationTabEvent.OnReloadList)
     }
 
     override fun onDestroyView() {
@@ -145,7 +164,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                     binding.edtSearchDonation.clearFocus()
                 mainActivity.hideKeyboard()
                 lifecycleScope.launch {
-                    viewModel.loadInitData()
+                    viewModel.onEvent(DonationTabEvent.OnReloadList)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     isRefreshing = false
@@ -179,62 +198,66 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-
         }
 
     }
 
-    private fun observeViewModel(isDarkMode: Boolean, isClassicMode: Boolean){
+    private fun observeViewModel() {
 
-        viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.state.collect{ state ->
-                when{
-                    state.isLoading -> mainActivity.startLoading()
-                    state.donationList.isNotEmpty() -> {
-                        mainActivity.stopLoading()
-                        Log.d("DonationTabFragment", "observeViewModel: ${state.donationList}")
-                        setUpRecyclerView(state.donationList, isDarkMode, isClassicMode)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.donationList.isNotEmpty() -> {
+                            loading.stopLoading()
+                            donationRecycleViewAdapter.updateDonationList(state.donationList)
+                        }
+                        else -> {
+                            loading.stopLoading()
+                            donationRecycleViewAdapter.updateDonationList(emptyList())
+                        }
                     }
-                    else -> mainActivity.stopLoading()
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.resultEvent.collect{ result ->
-                when(result){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.resultEvent.collect { result ->
+                when (result) {
                     is ResultEvent.ShowError -> mainActivity.showSnackbar(result.errorMsg)
                     is ResultEvent.ShowSuccess -> mainActivity.showSnackbar(result.message)
                 }
             }
         }
 
-        lifecycleScope.launch{
-            languageViewModel.state.collect{
-                when{
-                    it.isLoading -> mainActivity.startLoading()
+        lifecycleScope.launch {
+            languageViewModel.state.collect {
+                when {
+                    it.isLoading -> loading.startLoading()
                     it.error.isNotEmpty() -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         mainActivity.showToast(it.error)
                     }
                     else -> {
                         _language.clear()
                         _language.addAll(it.languages)
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                     }
                 }
             }
         }
-        lifecycleScope.launch{
-            collegeViewModel.state.collect{
-                when{
-                    it.isLoading -> mainActivity.startLoading()
+
+        lifecycleScope.launch {
+            collegeViewModel.state.collect {
+                when {
+                    it.isLoading -> loading.startLoading()
                     it.error.isNotEmpty() -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         mainActivity.showToast(it.error)
                     }
                     else -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         _colleges.clear()
                         _colleges.addAll(it.colleges)
                     }
@@ -242,41 +265,29 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
             }
         }
 
-        lifecycleScope.launch{
-            viewModel.genreList.collect{
-                ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item, it
-                ).also { adapter ->
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    binding.spinnerFilter.adapter = adapter
-                }
-            }
-        }
-
-        lifecycleScope.launch{
-            viewModel.genreList.collect{
-                if (it.isNotEmpty()){
+        lifecycleScope.launch {
+            viewModel.genreList.collect {
+                if (it.isNotEmpty()) {
                     _genres.clear()
                     _genres.addAll(it)
-                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, it).also { adapter ->
+                    ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        it
+                    ).also { adapter ->
                         binding.spinnerFilter.adapter = adapter
                     }
                 }
             }
         }
-
     }
 
-    private fun setUpRecyclerView(donationList: List<Donation>, isDarkMode: Boolean, isClassicMode: Boolean){
+
+    private fun setUpRecyclerView(donationList: List<Donation>, isDarkMode: Boolean, isClassicMode: Boolean): DonationRecycleViewAdapter{
         val adapter = DonationRecycleViewAdapter(requireActivity(), isClassicMode, donationList, isDarkMode){ donation: Donation ->
             showDonationDialog(donation)
         }
-        donationRecycleViewAdapter = adapter
-        binding.recyclerBookDonation.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = adapter
-        }
+        return adapter
     }
 
     private fun showDonationDialog(initDonation: Donation? = null){

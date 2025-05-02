@@ -154,7 +154,7 @@
     <string name="overdue">Over Due</string>
     <string name="all">All</string>
 
-    <string name="add_book">Add Books</string>
+    <string name="add_book">Books</string>
     <string name="borrowed">Borrowed</string>
     <string name="donation">Donation</string>
     <string name="backup">Backup</string>

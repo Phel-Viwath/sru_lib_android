@@ -5,7 +5,7 @@
  *
  */
 
-package com.viwath.srulibrarymobile.common.di
+package com.viwath.srulibrarymobile.di
 
 import android.content.Context
 import com.google.gson.Gson

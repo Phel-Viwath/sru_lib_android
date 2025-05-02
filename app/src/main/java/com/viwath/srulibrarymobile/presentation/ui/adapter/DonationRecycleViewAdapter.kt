@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemDonationBinding
 import com.viwath.srulibrarymobile.domain.model.Donation
-import com.viwath.srulibrarymobile.utils.applyBlur
-import com.viwath.srulibrarymobile.utils.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.getTransparent
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 class DonationRecycleViewAdapter(
     private val activity: Activity,
     private var isClassicMode: Boolean,
-    private val donationList: List<Donation>,
+    private var donationList: List<Donation>,
     private val isDarkMode: Boolean,
     private val onEditClick: (Donation) -> Unit
 ): RecyclerView.Adapter<DonationRecycleViewAdapter.ViewHolder>(){
@@ -139,6 +139,12 @@ class DonationRecycleViewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateViewMode(newMode: Boolean){
         isClassicMode = newMode
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateDonationList(newDonation: List<Donation>){
+        donationList = newDonation
         notifyDataSetChanged()
     }
 

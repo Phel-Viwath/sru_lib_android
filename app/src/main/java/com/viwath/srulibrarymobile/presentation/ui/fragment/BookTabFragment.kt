@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -210,9 +211,13 @@ class BookTabFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainActivity = (requireActivity() as MainActivity)
+
+        Log.d("BookTabFragment", "onViewCreated: BookTabFragment created")
+
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         loading = Loading(requireActivity())
         permission = PermissionRequest(this)
+
         setupUI(isDarkMode)
 
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
@@ -372,7 +377,8 @@ class BookTabFragment : Fragment() {
         // handle student search
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.findStudentChannel.collect { isFound ->
-                dialogBorrow.btBorrow.isEnabled = isFound
+                if (::dialogBorrow.isInitialized)
+                    dialogBorrow.btBorrow.isEnabled = isFound
             }
         }
 
@@ -433,7 +439,7 @@ class BookTabFragment : Fragment() {
                 when(action){
                     "update" -> showDialogAddUpdateBook(book)
                     "remove" -> dialogRemove(book.bookId, isDarkMode)
-                    "borrow" -> dialogBorrow(book)
+                    "borrow" -> borrowBookDialog(book)
                 }
             },
             onItemClicked = { book ->
@@ -584,7 +590,7 @@ class BookTabFragment : Fragment() {
 
     }
 
-    private fun dialogBorrow(book: Book){
+    private fun borrowBookDialog(book: Book){
         val view = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_borrow, null)
         val dialog = MaterialAlertDialogBuilder(requireContext())

@@ -3,6 +3,7 @@ agp = "8.9.2"
 biometric = "1.2.0-alpha05"
 blurview = "version-2.0.3"
 cameraCamera2 = "1.4.2"
+codeScanner = "2.1.0"
 core = "3.5.3"
 datastorePreferences = "1.1.4"
 desugar_jdk_libs = "2.1.5"
@@ -55,6 +56,7 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+code-scanner = { module = "com.github.yuriy-budiyev:code-scanner", version.ref = "codeScanner" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -8,7 +8,7 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/zxing_transparent"/>
-    <stroke android:color="@color/white"
+    <stroke android:color="#949494"
         android:width="2dp"/>
     <corners android:radius="12dp"/>
 </shape>

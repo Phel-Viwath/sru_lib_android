@@ -35,7 +35,7 @@ class LanguageViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadLanguage(){
+    suspend fun loadLanguage(){
         useCase.invoke().collectResource(
             onLoading = { _state.updateState { copy(isLoading = true) }},
             onSuccess = {language -> _state.updateState { copy(isLoading = false, languages = language) }},

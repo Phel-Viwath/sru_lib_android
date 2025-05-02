@@ -56,6 +56,7 @@ class QrFragmentViewModel @Inject constructor(
                     is Resource.Error -> _state.value = QrFragmentState.Error(result.message ?: "Unknown error.")
                     is Resource.Success -> {
                         result.data?.let {
+                            Log.d("QrFragmentViewModel", "loadStudent: $it")
                             _state.value = QrFragmentState.StudentLoaded(it)
                         } ?: run {
                             _state.value = QrFragmentState.Error("Student data is null")

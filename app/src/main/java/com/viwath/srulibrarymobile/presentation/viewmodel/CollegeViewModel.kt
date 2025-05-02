@@ -35,7 +35,7 @@ class CollegeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCollege(){
+    suspend fun loadCollege(){
         useCase.invoke().collectResource(
             onLoading = { _state.updateState { copy(isLoading = true) }},
             onSuccess = {college -> _state.updateState { copy(isLoading = false, colleges = college) }},

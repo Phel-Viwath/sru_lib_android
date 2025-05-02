@@ -18,9 +18,9 @@ import androidx.transition.TransitionManager
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemRestoreBookBinding
 import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
-import com.viwath.srulibrarymobile.utils.applyBlur
-import com.viwath.srulibrarymobile.utils.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.getTransparent
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 class TrashRecyclerViewAdapter(
     private var isClassicMode: Boolean,

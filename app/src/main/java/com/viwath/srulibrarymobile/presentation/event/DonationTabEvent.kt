@@ -24,6 +24,7 @@ sealed class DonationTabEvent {
     data object OnUpdate: DonationTabEvent()
     data object OnFilter: DonationTabEvent()
     data object OnSearch: DonationTabEvent()
+    data object OnReloadList: DonationTabEvent()
 
     data class OnFilterGenreChange(val filter: String): DonationTabEvent()
     data class OnSearchChange(val search: String): DonationTabEvent()

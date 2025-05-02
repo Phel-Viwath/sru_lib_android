@@ -18,9 +18,9 @@ import androidx.transition.TransitionManager
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemBorrowedBinding
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
-import com.viwath.srulibrarymobile.utils.applyBlur
-import com.viwath.srulibrarymobile.utils.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.getTransparent
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 /**
  * [BorrowRecyclerAdapter] is a RecyclerView adapter that displays a list of [Borrow] objects.
@@ -36,7 +36,7 @@ import com.viwath.srulibrarymobile.utils.getTransparent
  *                      It receives the clicked [Borrow] object as a parameter.
  */
 class BorrowRecyclerAdapter(
-    private val borrow: List<Borrow>,
+    private var borrow: List<Borrow>,
     private var isClassicMode: Boolean,
     private val isDarkMode: Boolean,
     private val context: Activity,
@@ -142,6 +142,12 @@ class BorrowRecyclerAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateViewMode(newMode: Boolean) {
         isClassicMode = newMode
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateBorrowList(newBorrow: List<Borrow>){
+        borrow = newBorrow
         notifyDataSetChanged()
     }
 }

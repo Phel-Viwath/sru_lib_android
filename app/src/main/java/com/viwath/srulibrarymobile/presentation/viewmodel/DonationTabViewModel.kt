@@ -62,6 +62,11 @@ class DonationTabViewModel @Inject constructor(
                 isInitialLoad = false
             }
             is DonationTabEvent.OnSearch -> {}
+            is DonationTabEvent.OnReloadList -> {
+                viewModelScope.launch {
+                    loadInitData()
+                }
+            }
 
             is DonationTabEvent.OnFilterGenreChange ->
                 _state.updateState { copy(filterGenreChange = event.filter) }
@@ -93,7 +98,7 @@ class DonationTabViewModel @Inject constructor(
         }
     }
 
-    suspend fun loadInitData() = coroutineScope{
+    private suspend fun loadInitData() = coroutineScope{
         val donationDeferred = async{ loadDonationList() }
         donationDeferred.await()
     }
