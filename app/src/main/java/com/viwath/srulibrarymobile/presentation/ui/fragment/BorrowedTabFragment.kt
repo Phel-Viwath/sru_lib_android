@@ -26,7 +26,6 @@ import com.viwath.srulibrarymobile.databinding.FragmentBorrowedTabBinding
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.presentation.event.BorrowedTabEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
-import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.BorrowRecyclerAdapter
 import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogExtendOrReturn
 import com.viwath.srulibrarymobile.presentation.viewmodel.BorrowTabViewModel
@@ -34,6 +33,9 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
+import com.viwath.srulibrarymobile.utils.system.SystemFeature.hideKeyboard
+import com.viwath.srulibrarymobile.utils.view_component.showSnackbar
+import com.viwath.srulibrarymobile.utils.view_component.showToast
 import kotlinx.coroutines.launch
 
 
@@ -46,7 +48,6 @@ import kotlinx.coroutines.launch
  * @constructor Creates a [BorrowedTabFragment] instance.
  * @property viewModel The [BorrowTabViewModel] instance used to interact with the data layer.
  * @property connectivityViewModel The [ConnectivityViewModel] instance used to observe network connectivity.
- * @property mainActivity The parent [MainActivity] instance.
  * @property dialogExtendOrReturn A custom dialog [DialogExtendOrReturn] for returning or extending an item.
  */
 class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
@@ -58,7 +59,6 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
     private val settingViewModel by activityViewModels<SettingViewModel>()
 
-    private lateinit var mainActivity: MainActivity
     private lateinit var dialogExtendOrReturn: DialogExtendOrReturn
     private lateinit var borrowRecyclerAdapter: BorrowRecyclerAdapter
     private lateinit var loading: Loading
@@ -67,10 +67,9 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("BorrowedTabFragment", "onViewCreated: BorrowedTabFragment created")
+        Log.d("BorrowedTabFragment", "onViewCreated: BorrowedTabFragment is created")
         _binding = FragmentBorrowedTabBinding.bind(view)
         loading = Loading(requireActivity())
-        mainActivity = (requireActivity() as MainActivity)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         //
         borrowRecyclerAdapter = setUpRecyclerView(emptyList(), isDarkMode, isClassicMode)
@@ -124,10 +123,10 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
             viewModel.resultEvent.collect { event ->
                 when (event) {
                     is ResultEvent.ShowSuccess -> {
-                        mainActivity.showSnackbar(event.message)
+                        showSnackbar(binding.root,event.message)
                     }
                     is ResultEvent.ShowError -> {
-                        mainActivity.showToast(event.errorMsg)
+                        requireContext().showToast(event.errorMsg)
                     }
                 }
             }
@@ -143,8 +142,8 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
                 lifecycleScope.launch {
                     if (binding.edtSearch.isFocused)
                         binding.edtSearch.clearFocus()
-                    mainActivity.hideKeyboard()
-                    viewModel.loadInitData()
+                    requireActivity().hideKeyboard(binding.root)
+                    viewModel.onEvent(BorrowedTabEvent.LoadBorrowList)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     this@apply.isRefreshing = false

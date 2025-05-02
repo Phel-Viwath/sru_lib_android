@@ -25,9 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -40,7 +38,6 @@ import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.presentation.event.DonationTabEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
-import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.DonationRecycleViewAdapter
 import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogAddDonation
 import com.viwath.srulibrarymobile.presentation.viewmodel.CollegeViewModel
@@ -50,14 +47,17 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.LanguageViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
+import com.viwath.srulibrarymobile.presentation.viewmodel.ShareMainActivityViewModel
 import com.viwath.srulibrarymobile.utils.getFileNameFromUri
 import com.viwath.srulibrarymobile.utils.permission.PermissionRequest
+import com.viwath.srulibrarymobile.utils.system.SystemFeature.hideKeyboard
+import com.viwath.srulibrarymobile.utils.view_component.showSnackbar
+import com.viwath.srulibrarymobile.utils.view_component.showToast
 import kotlinx.coroutines.launch
 
 class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private var _binding: FragmentDonationTabBinding? = null
     private val binding get() = _binding!!
-    private lateinit var mainActivity: MainActivity
 
     // dialog
     private var dialog: Dialog? = null
@@ -72,6 +72,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private val collegeViewModel: CollegeViewModel by activityViewModels()
     private val languageViewModel: LanguageViewModel by activityViewModels()
     private val settingViewModel by activityViewModels<SettingViewModel>()
+    private val shareMainActivityViewModel by activityViewModels<ShareMainActivityViewModel>()
 
     private var isClassicMode = true
 
@@ -97,23 +98,22 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
             fileUri = uri
             val fileName = uri.getFileNameFromUri(requireContext())
             if (fileName != null){
-                mainActivity.showSnackbar("File selected: $fileName.")
+                showSnackbar(binding.root, "File selected: $fileName.")
             }
             else{
-                mainActivity.showToast("Unable to retrieve the file name.")
+                requireContext().showToast("Unable to retrieve the file name.")
                 }
         }
-        else mainActivity.showToast("No file selected.")
+        else requireContext().showToast("No file selected.")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("DonationTabFragment", "onViewCreated: DonationTabFragment created")
-
         _binding = FragmentDonationTabBinding.bind(view)
+
+        Log.d("DonationTabFragment", "onViewCreated: DonationTabFragment is created.")
+
         loading = Loading(requireActivity())
-        mainActivity = (requireActivity() as MainActivity)
         permission = PermissionRequest(this)
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
@@ -142,11 +142,14 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         viewEvent()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onEvent(DonationTabEvent.OnReloadList)
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            Log.d("YourFragment", "Fragment is visible to user")
+        }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         dialog?.dismiss()
@@ -162,7 +165,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                 binding.spinnerFilter.setSelection(0)
                 if (binding.edtSearchDonation.isFocused)
                     binding.edtSearchDonation.clearFocus()
-                mainActivity.hideKeyboard()
+                requireActivity().hideKeyboard(binding.root)
                 lifecycleScope.launch {
                     viewModel.onEvent(DonationTabEvent.OnReloadList)
                 }
@@ -174,12 +177,13 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         }
 
         binding.edtSearchDonation.setOnFocusChangeListener {_ , hasFocus ->
-            mainActivity.apply {
-                if (hasFocus) hideBottomNav() else showBottomNav()
-            }
+            if (hasFocus)
+                shareMainActivityViewModel.hideBottomNav()
+            else
+                shareMainActivityViewModel.showBottomNav()
         }
         binding.rootLayout.setOnTouchListener { _, _ ->
-            mainActivity.hideKeyboard()
+            requireActivity().hideKeyboard(binding.root)
             binding.edtSearchDonation.clearFocus()
             false
         }
@@ -205,18 +209,16 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private fun observeViewModel() {
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    when {
-                        state.isLoading -> loading.startLoading()
-                        state.donationList.isNotEmpty() -> {
-                            loading.stopLoading()
-                            donationRecycleViewAdapter.updateDonationList(state.donationList)
-                        }
-                        else -> {
-                            loading.stopLoading()
-                            donationRecycleViewAdapter.updateDonationList(emptyList())
-                        }
+            viewModel.state.collect { state ->
+                when {
+                    state.isLoading -> loading.startLoading()
+                    state.donationList.isNotEmpty() -> {
+                        loading.stopLoading()
+                        donationRecycleViewAdapter.updateDonationList(state.donationList)
+                    }
+                    else -> {
+                        loading.stopLoading()
+                        donationRecycleViewAdapter.updateDonationList(emptyList())
                     }
                 }
             }
@@ -225,8 +227,8 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.resultEvent.collect { result ->
                 when (result) {
-                    is ResultEvent.ShowError -> mainActivity.showSnackbar(result.errorMsg)
-                    is ResultEvent.ShowSuccess -> mainActivity.showSnackbar(result.message)
+                    is ResultEvent.ShowError -> showSnackbar(binding.root, result.errorMsg)
+                    is ResultEvent.ShowSuccess -> showSnackbar(binding.root, result.message)
                 }
             }
         }
@@ -237,7 +239,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                     it.isLoading -> loading.startLoading()
                     it.error.isNotEmpty() -> {
                         loading.stopLoading()
-                        mainActivity.showToast(it.error)
+                        requireContext().showToast(it.error)
                     }
                     else -> {
                         _language.clear()
@@ -254,7 +256,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                     it.isLoading -> loading.startLoading()
                     it.error.isNotEmpty() -> {
                         loading.stopLoading()
-                        mainActivity.showToast(it.error)
+                        requireContext().showToast(it.error)
                     }
                     else -> {
                         loading.stopLoading()
@@ -303,10 +305,10 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
             }
         dialog.setOnShowListener{
             dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.material_dialog_background))
-            (requireActivity() as? MainActivity)?.hideBottomNav()
+            shareMainActivityViewModel.hideBottomNav()
         }
         dialog.setOnDismissListener{
-            (requireActivity() as? MainActivity)?.showBottomNav()
+            shareMainActivityViewModel.showBottomNav()
         }
         this.dialog = dialog
 

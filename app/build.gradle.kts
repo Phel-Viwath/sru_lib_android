@@ -53,14 +53,14 @@ android {
         exclude("META-INF/gradle/incremental.annotation.processors")
     }
 }
-kapt {
-    correctErrorTypes = true
-    includeCompileClasspath = false
-    arguments {
-        arg("dagger.fastInit", "enabled")
-        arg("kapt.kotlin.generated", "true")
-    }
-}
+//kapt {
+//    correctErrorTypes = true
+//    includeCompileClasspath = false
+//    arguments {
+//        arg("dagger.fastInit", "enabled")
+//        arg("kapt.kotlin.generated", "true")
+//    }
+//}
 hilt {
     enableAggregatingTask = true
 }

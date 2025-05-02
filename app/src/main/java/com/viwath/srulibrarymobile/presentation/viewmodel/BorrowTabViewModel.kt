@@ -65,6 +65,7 @@ class BorrowTabViewModel @Inject constructor(
             is BorrowedTabEvent.FilterByTextSearch -> { filterByTextChange() }
             is BorrowedTabEvent.GetAllBorrow -> { loadAllBorrows() }
             is BorrowedTabEvent.ReturnBook -> { returnBook() }
+            is BorrowedTabEvent.LoadBorrowList -> {viewModelScope.launch { loadInitData() }}
 
             is BorrowedTabEvent.OnSearchTextChange -> { _state.updateState { copy(searchKeywordChange = event.keyword) } }
             is BorrowedTabEvent.OnFilterChange -> { _state.updateState { copy(isFilter = event.isFilter) } }
@@ -73,7 +74,7 @@ class BorrowTabViewModel @Inject constructor(
         }
     }
 
-    suspend fun loadInitData() = coroutineScope {
+    private suspend fun loadInitData() = coroutineScope {
         val borrowDeferred = async{ loadBorrowList() }
         borrowDeferred.await()
     }
@@ -93,8 +94,7 @@ class BorrowTabViewModel @Inject constructor(
                     emitEvent(ResultEvent.ShowError(it))
                 },
                 onSuccess = {
-                    _state.updateState { copy(isLoading = false) }
-                    _state.updateState { copy(borrowList = it) }
+                    _state.updateState { copy(borrowList = it, isLoading = false) }
                 }
             )
         }

@@ -41,13 +41,13 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentDashboardBinding
 import com.viwath.srulibrarymobile.domain.model.dashboard.Day
 import com.viwath.srulibrarymobile.domain.model.dashboard.TotalMajorVisitor
 import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
 import com.viwath.srulibrarymobile.presentation.event.DashboardEntryEvent
 import com.viwath.srulibrarymobile.presentation.state.StudentState
-import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.AttendRecyclerViewAdapter
 import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
@@ -56,6 +56,7 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.showSnackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,7 +66,6 @@ import kotlinx.coroutines.withContext
  * It fetches data from the */
 class DashboardFragment : Fragment() {
 
-    private lateinit var mainActivity: MainActivity
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
 
@@ -78,6 +78,8 @@ class DashboardFragment : Fragment() {
     private val viewModel: DashboardViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
     private val settingViewModel: SettingViewModel by activityViewModels()
+
+    private lateinit var loading: Loading
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,7 +94,7 @@ class DashboardFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivity = (requireActivity() as MainActivity)
+        loading = Loading(requireActivity())
         isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         lifecycleScope.launch {
@@ -114,7 +116,7 @@ class DashboardFragment : Fragment() {
         // observe network status
         connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
             when(isConnected){
-                false -> mainActivity.showTopSnackbar("No Internet Connection", true)
+                false -> showSnackbar(binding.root, "No Internet Connection")
                 true -> observeViewModel(isDarkMode)
             }
         }
@@ -157,10 +159,10 @@ class DashboardFragment : Fragment() {
         viewModel.state.removeObservers(viewLifecycleOwner)
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when{
-                state.isLoading -> mainActivity.startLoading()
+                state.isLoading -> loading.startLoading()
                 state.dashboard != null -> {
                     state.dashboard.let { dashboard ->
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         // entry card
                         val cardData = dashboard.cardData
                         binding.tvCard1.text = cardData[0].cardType
@@ -233,7 +235,7 @@ class DashboardFragment : Fragment() {
                     binding.swipeRefresh.isRefreshing = false
                 }
                 state.error.isNotEmpty() -> {
-                    mainActivity.stopLoading()
+                    loading.stopLoading()
                     Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
                     binding.swipeRefresh.isRefreshing = false
                 }
@@ -487,9 +489,9 @@ class DashboardFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.eventFlow.collect { result ->
                 when(result){
-                    is StudentState.GetStudentLoading -> mainActivity.startLoading()
+                    is StudentState.GetStudentLoading -> loading.startLoading()
                     is StudentState.GetStudentSuccess -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         with(result.students){
                             input.setSearchResult(studentName, majorName, generation)
                         }
@@ -498,17 +500,17 @@ class DashboardFragment : Fragment() {
                         }
                     }
                     is StudentState.GetStudentError -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
-                    is StudentState.SaveAttendLoading -> mainActivity.startLoading()
+                    is StudentState.SaveAttendLoading -> loading.startLoading()
                     is StudentState.SaveAttendSuccess -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
                         dialog.dismiss()
                     }
                     is StudentState.SaveAttendError -> {
-                        mainActivity.stopLoading()
+                        loading.stopLoading()
                         Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
                     }
 

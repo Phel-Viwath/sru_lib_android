@@ -16,9 +16,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +37,7 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
+import com.viwath.srulibrarymobile.presentation.viewmodel.ShareMainActivityViewModel
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     private var activeFragmentTag: String? = null
     private val connectivityViewModel: ConnectivityViewModel by viewModels()
     private val settingViewModel: SettingViewModel by viewModels()
+    private val shareMainActivityViewModel by viewModels<ShareMainActivityViewModel>()
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,6 +129,9 @@ class MainActivity : AppCompatActivity() {
                 else R.color.bottom_nav_light_icon_color
             )
 
+        shareMainActivityViewModel.shouldShowBottomNav.observe(this) {
+            binding.bottomNavView.visibility = if (it) View.VISIBLE else View.GONE
+        }
     }
 
 
@@ -150,41 +153,6 @@ class MainActivity : AppCompatActivity() {
                 connectivityViewModel.onSnackBarShown()
             }
         }
-    }
-
-    fun hideBottomNav() { binding.bottomNavView.visibility = View.GONE }
-
-    fun showBottomNav() { binding.bottomNavView.visibility = View.VISIBLE }
-
-    fun startLoading(): Unit = runOnUiThread{ loading.startLoading() }
-
-    fun stopLoading(): Unit = runOnUiThread{ loading.stopLoading()}
-
-    fun showTopSnackbar(message: String){
-        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
-        val view = snackbar.view
-
-        val textView = view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        textView.gravity = Gravity.CENTER
-        textView.textSize = 16f
-        textView.setTextColor(Color.WHITE)
-        textView.setTypeface(textView.typeface, Typeface.BOLD)
-
-        view.setBackgroundColor(getColor(R.color.dark_shade_purple))
-        view.backgroundTintList = null
-        view.backgroundTintMode = null
-
-        val param = view.layoutParams as CoordinatorLayout.LayoutParams
-        param.gravity = Gravity.TOP
-        view.layoutParams = param
-        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-            param.topMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            v.layoutParams = param
-            WindowInsetsCompat.CONSUMED
-        }
-
-        snackbar.show()
     }
 
     fun showTopSnackbar(message: String, isDisconnected: Boolean){
@@ -228,18 +196,11 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    fun showSnackbar(message: String){
-        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
-        snackbar.show()
-    }
 
-    fun hideKeyboard(){
-        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-    }
-
-    fun showToast(message: String): Unit = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
+//    fun hideKeyboard(){
+//        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+//    }
 
     private fun setUpView(isDarkMode: Boolean, isClassicMode: Boolean){
         when(isClassicMode){

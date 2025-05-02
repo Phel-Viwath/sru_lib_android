@@ -18,6 +18,7 @@ sealed class BorrowedTabEvent {
     data object FilterByTextSearch: BorrowedTabEvent()
     data object GetAllBorrow: BorrowedTabEvent()
     data object ReturnBook: BorrowedTabEvent()
+    data object LoadBorrowList: BorrowedTabEvent()
 
     //
     data class OnSearchTextChange(val keyword: String): BorrowedTabEvent()

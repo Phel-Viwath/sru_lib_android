@@ -16,20 +16,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.viwath.srulibrarymobile.R
+import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBookBinding
 import com.viwath.srulibrarymobile.domain.model.book.BookCard
-import com.viwath.srulibrarymobile.presentation.ui.activities.MainActivity
 import com.viwath.srulibrarymobile.presentation.ui.adapter.BookCardAdapter
-import com.viwath.srulibrarymobile.presentation.ui.adapter.ViewPagerAdapter
+import com.viwath.srulibrarymobile.presentation.ui.adapter.BookPagerAdapter
 import com.viwath.srulibrarymobile.presentation.viewmodel.BookFragmentViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.showSnackbar
 import kotlinx.coroutines.launch
 
 /**
@@ -42,7 +42,6 @@ import kotlinx.coroutines.launch
  * @property _binding The binding instance for the fragment's layout. Nullable before onViewCreated.
  * @property binding The non-null binding instance for the fragment's layout.
  * @property viewModel The shared ViewModel for managing book-related data.
- * @property mainActivity The parent MainActivity instance.
  */
 class BookFragment : Fragment(){
 
@@ -52,8 +51,9 @@ class BookFragment : Fragment(){
     private val viewModel: BookFragmentViewModel by activityViewModels()
     private val settingViewModel by activityViewModels<SettingViewModel>()
 
-    private lateinit var mainActivity: MainActivity
     private var bookCardAdapter: BookCardAdapter? = null
+    private lateinit var loading: Loading
+    private lateinit var bookPagerAdapter: BookPagerAdapter
 
     private var isClassicMode = true
 
@@ -78,8 +78,17 @@ class BookFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBookBinding.bind(view)
-        mainActivity = (requireActivity() as MainActivity)
+        loading = Loading(requireActivity())
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
+        // bind data
+        setupViewPager()
+        observeViewmodel(isDarkMode)
+
+    }
+
+    private fun setupViewPager(){
+        bookPagerAdapter = BookPagerAdapter(this, fragmentList)
         val tabTitle by lazy {
             listOf(
                 getString(R.string.add_book),
@@ -88,14 +97,14 @@ class BookFragment : Fragment(){
                 getString(R.string.backup)
             )
         }
-
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
-        binding.viewPagerBook.adapter = ViewPagerAdapter(fragmentList, requireActivity())
+        binding.viewPagerBook.offscreenPageLimit = 3
+        binding.viewPagerBook.adapter = bookPagerAdapter
         TabLayoutMediator(binding.tabLayout, binding.viewPagerBook){tab, position ->
             tab.text = tabTitle[position]
         }.attach()
-        // bind data
+    }
+
+    private fun observeViewmodel(isDarkMode: Boolean){
 
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
             isClassicMode = when(viewMode){
@@ -113,10 +122,10 @@ class BookFragment : Fragment(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect{ state ->
                 if (state.isLoading){
-                    mainActivity.startLoading()
+                    loading.startLoading()
                 }
                 if (state.error.isEmpty()){
-                    mainActivity.stopLoading()
+                    loading.stopLoading()
                     val cardList = listOf(
                         BookCard(resources.getString(R.string.total_book), R.drawable.img_stack_of_books, state.totalBook),
                         BookCard(resources.getString(R.string.total_donate_book), R.drawable.img_books_stack, state.totalDonation),
@@ -132,12 +141,11 @@ class BookFragment : Fragment(){
                     binding.recyclerBookCard.adapter = adapter
                 }
                 if (state.error.isNotEmpty()){
-                    mainActivity.stopLoading()
-                    Snackbar.make(view, state.error, Snackbar.LENGTH_LONG).show()
+                    loading.stopLoading()
+                    showSnackbar(binding.root, state.error)
                 }
             }
         }
-
 
     }
 
