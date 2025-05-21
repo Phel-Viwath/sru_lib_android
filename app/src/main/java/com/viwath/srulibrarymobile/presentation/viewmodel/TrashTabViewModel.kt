@@ -9,6 +9,8 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.viwath.srulibrarymobile.domain.model.Genre
+import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.presentation.event.InTrashEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
@@ -25,15 +27,22 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BookInTrashViewModel @Inject constructor(
+class TrashTabViewModel @Inject constructor(
     private val useCase: BookUseCase
 ): ViewModel(){
+    private var _genres = MutableStateFlow<List<Genre>>(emptyList())
+    val genres: StateFlow<List<Genre>> get() = _genres
 
     private val _state = MutableStateFlow(InTrashState())
     val state: StateFlow<InTrashState> get() = _state
 
     private val _resultEvent = MutableSharedFlow<ResultEvent>()
     val resultEvent: SharedFlow<ResultEvent> get() = _resultEvent
+
+    private val listOfBookInTrash = mutableListOf<BookInTrash>()
+
+    private var isInitialize = false
+
 
     init {
         viewModelScope.launch {
@@ -47,7 +56,11 @@ class BookInTrashViewModel @Inject constructor(
             is InTrashEvent.RestoreBook -> restoreBook()
             is InTrashEvent.SearchInTrash -> {}
             is InTrashEvent.DeleteBook -> deleteBook()
-            is InTrashEvent.FilterByTextSearch -> {}
+            is InTrashEvent.Filter -> {
+                if (!isInitialize)
+                    filterTrash()
+                else isInitialize = false
+            }
             is InTrashEvent.RefreshData -> {
                 viewModelScope.launch {
                     loadBookInTrash()
@@ -56,10 +69,10 @@ class BookInTrashViewModel @Inject constructor(
 
             is InTrashEvent.OnDeleteClicked -> _state.updateState { copy(bookId = event.bookId) }
             is InTrashEvent.OnRestoreClicked -> _state.updateState { copy(bookId = event.bookId) }
+            is InTrashEvent.FilterGenreChange -> _state.updateState { copy(genreFilter = event.filter) }
+            is InTrashEvent.SearchTextChange -> {}
         }
     }
-
-
 
     private fun emitEvent(event: ResultEvent){
         viewModelScope.launch {
@@ -76,6 +89,7 @@ class BookInTrashViewModel @Inject constructor(
             },
             onSuccess = {
                 _state.updateState { copy(isLoading = false, booksInTrash = it) }
+                listOfBookInTrash.addAll(it)
             }
         )
     }
@@ -113,6 +127,18 @@ class BookInTrashViewModel @Inject constructor(
                     emitEvent(ResultEvent.ShowSuccess("Book restored"))
                 }
             )
+        }
+    }
+
+    private fun filterTrash(){
+        val genre = _state.value.genreFilter
+        if (genre == "all"){
+            viewModelScope.launch {
+                loadBookInTrash()
+            }
+        }else{
+            val filter = listOfBookInTrash.filter { it.genre == genre }
+            _state.updateState { copy(booksInTrash = filter, isLoading = false) }
         }
     }
 

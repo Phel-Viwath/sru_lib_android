@@ -229,6 +229,8 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
                     else -> return@onReturnOrExtendClick
                 }
             }
+
+            (borrow.isBringBack || borrow.isExtend).disableButton()
         }
 
 

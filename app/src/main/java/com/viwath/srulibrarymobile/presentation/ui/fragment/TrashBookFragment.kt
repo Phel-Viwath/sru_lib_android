@@ -13,6 +13,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,12 +26,13 @@ import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
 import com.viwath.srulibrarymobile.databinding.FragmentBackupTabBinding
 import com.viwath.srulibrarymobile.domain.model.BookId
+import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.Message
 import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
 import com.viwath.srulibrarymobile.presentation.event.InTrashEvent
 import com.viwath.srulibrarymobile.presentation.event.ResultEvent
 import com.viwath.srulibrarymobile.presentation.ui.adapter.TrashRecyclerViewAdapter
-import com.viwath.srulibrarymobile.presentation.viewmodel.BookInTrashViewModel
+import com.viwath.srulibrarymobile.presentation.viewmodel.TrashTabViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
@@ -40,7 +43,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
     private var _binding: FragmentBackupTabBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by activityViewModels<BookInTrashViewModel>()
+    private val viewModel by activityViewModels<TrashTabViewModel>()
     private val settingViewModel by activityViewModels<SettingViewModel>()
     private val connectivityViewModel by activityViewModels<ConnectivityViewModel>()
 
@@ -48,6 +51,8 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
 
     private lateinit var loading: Loading
     private lateinit var trashRecyclerViewAdapter: TrashRecyclerViewAdapter
+
+    private val _genres = mutableListOf<Genre>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,6 +103,25 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
                 },2000)
             }
         }
+
+        binding.spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (parent?.selectedItem != null){
+                    val selectedItem = _genres[position]
+                    viewModel.apply {
+                        onEvent(InTrashEvent.FilterGenreChange(selectedItem))
+                        onEvent(InTrashEvent.Filter)
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
 
@@ -124,6 +148,19 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
                 when(it){
                     is ResultEvent.ShowSuccess -> showSnackbar(it.message)
                     is ResultEvent.ShowError -> showSnackbar(it.errorMsg)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.genres.collect { g ->
+                if (g.isNotEmpty()){
+                    _genres.clear()
+                    _genres.addAll(g)
+                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, g).also{
+                        it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.spinnerFilter.adapter = it
+                    }
                 }
             }
         }

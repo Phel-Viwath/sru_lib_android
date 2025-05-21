@@ -10,6 +10,7 @@ package com.viwath.srulibrarymobile.presentation.ui.dialog
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -98,6 +99,11 @@ class DialogExtendOrReturn(
                 onReturnOrExtendClick(null, null, borrow.borrowId)
             }
         }
+    }
+
+    fun Boolean.disableButton(){
+        binding.btReturnOrExtend.isEnabled = !this
+        binding.btReturnOrExtend.setBackgroundColor(Color.DKGRAY)
     }
 
 

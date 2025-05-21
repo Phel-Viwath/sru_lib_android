@@ -27,12 +27,6 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:icon="@drawable/ic_person_24"
-        android:id="@+id/nav_student"
-        android:title="@string/student"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:icon="@drawable/ic_settings_24"
         android:id="@+id/nav_setting"
         android:title="@string/setting"

@@ -8,10 +8,12 @@
 package com.viwath.srulibrarymobile.presentation.state
 
 import com.viwath.srulibrarymobile.domain.model.BookId
+import com.viwath.srulibrarymobile.domain.model.Genre
 import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
 
 data class InTrashState(
     val booksInTrash: List<BookInTrash> = emptyList(),
     val isLoading: Boolean = false,
-    val bookId: BookId = ""
+    val bookId: BookId = "",
+    val genreFilter: Genre = ""
 )

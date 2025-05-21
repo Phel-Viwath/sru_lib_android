@@ -225,7 +225,7 @@ class BookTabFragment : Fragment() {
         loading = Loading(requireActivity())
         permission = PermissionRequest(this)
 
-        setupUI(isDarkMode)
+        setupUI()
 
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
             isClassicMode = when(viewMode){
@@ -269,7 +269,7 @@ class BookTabFragment : Fragment() {
      * @param isDarkMode Boolean indicating whether dark mode is enabled. This is used to change the color of refresh icon.
      */
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupUI(isDarkMode: Boolean) {
+    private fun setupUI() {
         binding.swipeRefreshBook.apply {
             setOnRefreshListener {
                 binding.spinnerFilter.setSelection(0)
