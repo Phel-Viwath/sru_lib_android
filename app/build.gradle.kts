@@ -35,8 +35,20 @@ android {
             )
         }
     }
+
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val variantName = name
+            val versionName = versionName
+            val versionCode = versionCode
+
+            outputImpl.outputFileName = "SRU-Lib-${variantName}-v${versionName}-${versionCode}.apk"
+        }
+    }
+
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true // for datetime
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
