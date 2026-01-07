@@ -48,7 +48,7 @@ class BookRecyclerViewAdapter(
     private val onItemClicked: (book: Book) -> Unit
 ): RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder>(){
 
-    inner class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
         val rootView: MaterialCardView = view.findViewById(R.id.recyclerBookContainer)
         val tvTitle: TextView = view.findViewById(R.id.tvBookTitle)
         val tvBookQuan: TextView = view.findViewById(R.id.tvBookQuan)
@@ -111,7 +111,7 @@ class BookRecyclerViewAdapter(
     }
 
     private fun TextView.setTruncateText(text: String, maxLength: Int = 15) {
-        this.text = if (text.length > 15) text.substring(0, maxLength) + "..." else text
+        this.text = if (text.length > 15) text.take(maxLength) + "..." else text
     }
 
 }

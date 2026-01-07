@@ -28,7 +28,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.common.Loading
@@ -43,7 +42,6 @@ import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 /**
  * The main entry point of the application.
  *
@@ -51,6 +49,7 @@ import kotlinx.coroutines.launch
  * handles network connectivity changes, displays loading indicators,
  * and provides utility functions for common UI operations.
  */
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -87,7 +86,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.bottomNavViewBlurView.applyBlur(this, 10f, this.getTranslucentColor(isDarkMode))
+        binding.bottomNavViewBlurView.applyBlur(
+            this,
+            10f,
+            this.getTranslucentColor(isDarkMode)
+        )
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -184,7 +187,8 @@ class MainActivity : AppCompatActivity() {
         }
         snackbar.show()
     }
-    fun showDialog(title: String, message: String){
+
+    /*fun showDialog(title: String, message: String){
         MaterialAlertDialogBuilder(this)
             .setTitle(title)
             .setMessage(message)
@@ -194,13 +198,13 @@ class MainActivity : AppCompatActivity() {
             }
             .create()
             .show()
-    }
+    }*/
 
 
-//    fun hideKeyboard(){
-//        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-//    }
+    /*fun hideKeyboard(){
+        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    }*/
 
     private fun setUpView(isDarkMode: Boolean, isClassicMode: Boolean){
         when(isClassicMode){

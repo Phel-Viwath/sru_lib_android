@@ -32,7 +32,7 @@ class UserPreferences(context: Context, keyStoreManager: KeyStoreManager) {
         dataStoreHelper.saveEncryptedPrefs(REFRESH_TOKEN, refreshToken)
 
 
-    suspend fun saveUsername(username: String): Unit = dataStoreHelper.savePrefs(USERNAME, username)
+    suspend fun saveUserId(username: String): Unit = dataStoreHelper.savePrefs(USER_ID, username)
 
     suspend fun saveRole(role: String): Unit =dataStoreHelper.savePrefs(ROLE, role)
 
@@ -40,19 +40,19 @@ class UserPreferences(context: Context, keyStoreManager: KeyStoreManager) {
 
     suspend fun getRefreshToken(): String? = dataStoreHelper.readEncryptedPrefs(REFRESH_TOKEN).firstOrNull()
 
-    suspend fun getUsername(): String? = dataStoreHelper.readPrefs(USERNAME).firstOrNull()
+    suspend fun getUserId(): String? = dataStoreHelper.readPrefs(USER_ID).firstOrNull()
 
     suspend fun getRole(): String? = dataStoreHelper.readPrefs(ROLE).firstOrNull()
 
     suspend fun clearToken(){
-        dataStoreHelper.clearValue(USERNAME, ROLE)
+        dataStoreHelper.clearValue(USER_ID, ROLE)
         dataStoreHelper.clearEncryptedValue(ACCESS_TOKEN, REFRESH_TOKEN)
     }
 
     companion object{
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
-        private val USERNAME = stringPreferencesKey("username")
+        private val USER_ID = stringPreferencesKey("userId")
         private val ROLE = stringPreferencesKey("role")
     }
 

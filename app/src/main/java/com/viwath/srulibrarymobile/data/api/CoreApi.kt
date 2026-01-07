@@ -32,7 +32,7 @@ import retrofit2.http.Query
  * - Borrowing: Managing book borrowing, including adding, fetching, extending, and searching.
  * - Donation: Managing book donations.
  */
-interface CoreApi : BookApi, BorrowApi, DonationApi{
+interface CoreApi : BookApi, BorrowApi, DonationApi, UserApi{
     /// core api
     @GET("/api/v1/dashboard")
     suspend fun dashboard(): Response<Dashboard>

@@ -25,7 +25,7 @@ class BookCardAdapter(
     private var isDarkMode: Boolean
 ): RecyclerView.Adapter<BookCardAdapter.ViewHolder>(){
 
-    inner class ViewHolder(val binding: ItemBookCardBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ItemBookCardBinding): RecyclerView.ViewHolder(binding.root) {
         @Suppress("SetTextI18n")
         fun bind(item: BookCard) {
             binding.tvCardTitle.text = item.title

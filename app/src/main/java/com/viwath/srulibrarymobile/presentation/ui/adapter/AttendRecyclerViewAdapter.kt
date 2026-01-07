@@ -30,7 +30,7 @@ class AttendRecyclerViewAdapter(
     private val isClassicMode: Boolean = false
 ): RecyclerView.Adapter<AttendRecyclerViewAdapter.EntryViewHolder>(){
 
-    inner class EntryViewHolder(
+    class EntryViewHolder(
         private val binding: ItemEntryBinding
     ): RecyclerView.ViewHolder(binding.root){
 
@@ -116,13 +116,13 @@ class AttendRecyclerViewAdapter(
         }
 
         dialog.setView(dialogView)
-        dialog.setBackground(Color.TRANSPARENT.toDrawable())
+        dialog.background = Color.TRANSPARENT.toDrawable()
         dialog.setCancelable(true)
         dialog.show()
     }
 
     private fun TextView.setTruncateText(text: String, maxLength: Int = 15) {
-        this.text = if (text.length > 15) text.substring(0, maxLength) + "..." else text
+        this.text = if (text.length > 15) text.take(maxLength) + "..." else text
     }
 
 

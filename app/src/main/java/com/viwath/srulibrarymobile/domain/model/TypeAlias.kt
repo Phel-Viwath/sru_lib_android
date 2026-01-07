@@ -50,6 +50,7 @@ typealias CollegeName = String
 typealias RefreshToken = String
 typealias AccessToken = String
 typealias Username = String
+typealias UserId = String
 typealias Email = String
 typealias Password = String
 typealias Role = String

@@ -30,7 +30,7 @@ class TrashRecyclerViewAdapter(
     private val onClick: (BookInTrash) -> Unit
 ): RecyclerView.Adapter<TrashRecyclerViewAdapter.ItemViewHolder>() {
 
-    inner class ItemViewHolder(
+    class ItemViewHolder(
         private val binding: ItemRestoreBookBinding
     ): RecyclerView.ViewHolder(binding.root){
         val baseCardView = binding.baseCardview

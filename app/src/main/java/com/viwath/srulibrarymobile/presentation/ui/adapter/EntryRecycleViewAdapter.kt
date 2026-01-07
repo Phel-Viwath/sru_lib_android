@@ -28,7 +28,7 @@ class EntryRecycleViewAdapter(
     private val list: List<AttendDetail>
 ) : RecyclerView.Adapter<EntryRecycleViewAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val tvStudentName: TextView = view.findViewById(R.id.tvStudentName)
         val tvId: TextView = view.findViewById(R.id.tvStudentId)
         val tvGender: TextView = view.findViewById(R.id.tvGender)

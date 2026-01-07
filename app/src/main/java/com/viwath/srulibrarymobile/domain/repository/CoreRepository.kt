@@ -66,4 +66,7 @@ interface CoreRepository {
     suspend fun addDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
     suspend fun getAllDonation(): Result<List<DonationDto>, DataError.Remote>
     suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
+
+    // user
+    suspend fun getUser(userId: String): Result<Unit, DataError.Remote>
 }

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  * Copyright (c) 2025.
  * @Author Phel Viwath
@@ -14,12 +16,12 @@ plugins {
 
 android {
     namespace = "com.viwath.srulibrarymobile"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.viwath.srulibrarymobile"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0-demo"
 
@@ -52,9 +54,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+
     buildFeatures {
         viewBinding = true
     }
@@ -63,6 +63,11 @@ android {
     packagingOptions{
         resources.excludes.add("META-INF/DEPENDENCIES")
         exclude("META-INF/gradle/incremental.annotation.processors")
+    }
+}
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 //kapt {

@@ -24,6 +24,7 @@ import com.viwath.srulibrarymobile.domain.model.DonationIO
 import com.viwath.srulibrarymobile.domain.model.Language
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.model.Students
+import com.viwath.srulibrarymobile.domain.model.auth.Profile
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
@@ -199,6 +200,10 @@ class CoreRepositoryImp @Inject constructor(
 
     override suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataError.Remote> {
         return safeCall { api.updateDonation(donationIO) }
+    }
+
+    override suspend fun getUser(userId: String): Result<Unit, DataError.Remote> {
+        return safeCall { api.getProfile(userId) }
     }
 
 }

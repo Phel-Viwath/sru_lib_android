@@ -27,9 +27,10 @@ import retrofit2.http.Query
  * Each function represents a specific authentication operation and defines the
  * corresponding HTTP method, endpoint path, request parameters, and response type.
  */
+
 interface AuthApi {
     @POST("/api/v1/auth/register")
-    suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
+    suspend fun register(@Body request: RegisterRequest): Response<String>
 
     @POST("/api/v1/auth/login")
     suspend fun logIn(@Body request: LogInRequest): Response<AuthResponse>
@@ -48,4 +49,6 @@ interface AuthApi {
 
     @PUT("/api/v1/auth/change-password")
     suspend fun changePassword(@Body changePasswordRequest: ChangePasswordRequest): Response<Unit>
+
+
 }

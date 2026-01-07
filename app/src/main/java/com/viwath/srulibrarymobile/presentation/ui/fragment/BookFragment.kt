@@ -70,7 +70,7 @@ class BookFragment : Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBookBinding.inflate(inflater, container, false)
         return binding.root
     }

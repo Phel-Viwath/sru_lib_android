@@ -37,6 +37,7 @@ import javax.inject.Inject
  * @property api The [AuthApi] instance used to make network requests to the authentication server.
  * @property userPreferences The [UserPreferences] instance used to manage authentication tokens.
  */
+
 class AuthRepositoryImp @Inject constructor(
     private val api: AuthApi,
     private val userPreferences: UserPreferences
@@ -63,7 +64,7 @@ class AuthRepositoryImp @Inject constructor(
                 tokenResponse.body()?.let {
                     userPreferences.saveAccessToken(it.accessToken)
                     userPreferences.saveRefreshToken(it.refreshToken)
-                    userPreferences.saveUsername(it.username)
+                    userPreferences.saveUserId(it.userId)
                     userPreferences.saveRole(it.role)
                     return AuthResult.Authorize()
                 }
@@ -102,7 +103,7 @@ class AuthRepositoryImp @Inject constructor(
             val response = api.refreshToken(RefreshToken(refreshToken))
             if (response.isSuccessful) {
                 response.body()?.let {
-                    userPreferences.saveUsername(it.username)
+                    userPreferences.saveUserId(it.userId)
                     userPreferences.saveAccessToken(it.accessToken)
                     userPreferences.saveRefreshToken(it.refreshToken)
                     userPreferences.saveRole(it.role)

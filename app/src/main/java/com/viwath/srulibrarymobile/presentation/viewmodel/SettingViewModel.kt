@@ -41,7 +41,7 @@ class SettingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _state.value = _state.value.copy(username = userPreferences.getUsername() ?: "User")
+            _state.value = _state.value.copy(username = userPreferences.getUserId() ?: "User")
             _state.value = _state.value.copy(userType = userPreferences.getRole() ?: "?")
             _state.value = _state.value.copy(themeMode = settingPreferences.getSavedTheme())
             _viewMode.postValue(settingPreferences.getViewMode())

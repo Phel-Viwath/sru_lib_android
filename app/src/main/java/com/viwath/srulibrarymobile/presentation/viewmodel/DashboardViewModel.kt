@@ -57,7 +57,7 @@ class DashboardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _username.value = userPreferences.getUsername() ?: "User"
+            _username.value = userPreferences.getUserId() ?: "User"
         }
         if(_state.value?.dashboard == null){
             getDashboard()

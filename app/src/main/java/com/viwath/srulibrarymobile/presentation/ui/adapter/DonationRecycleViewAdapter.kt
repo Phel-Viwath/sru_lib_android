@@ -30,7 +30,7 @@ class DonationRecycleViewAdapter(
     private val onEditClick: (Donation) -> Unit
 ): RecyclerView.Adapter<DonationRecycleViewAdapter.ViewHolder>(){
 
-    inner class ViewHolder(
+    class ViewHolder(
         private val binding: ItemDonationBinding
     ) : RecyclerView.ViewHolder(binding.root){
 

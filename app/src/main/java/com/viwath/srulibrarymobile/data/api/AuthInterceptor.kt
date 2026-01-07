@@ -42,7 +42,7 @@ class AuthInterceptor @Inject constructor(
                 requestBuilder.addHeader("Authorization", "Bearer $token")
             }
 
-            var response = chain.proceed(requestBuilder.build())
+            val response = chain.proceed(requestBuilder.build())
 
             // Handle 401 by refreshing token and retrying once
             if (response.code == 401) {
