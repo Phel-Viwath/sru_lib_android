@@ -8,7 +8,7 @@
 package com.viwath.srulibrarymobile.data
 
 import android.util.Log
-import com.viwath.srulibrarymobile.domain.DataError
+import com.viwath.srulibrarymobile.domain.DataAppError
 import com.viwath.srulibrarymobile.domain.Result
 import kotlinx.coroutines.ensureActive
 import retrofit2.Response
@@ -46,39 +46,39 @@ import kotlin.coroutines.coroutineContext
  */
 suspend inline fun <reified T> safeCall(
     execute: () -> Response<T>
-): Result<T, DataError.Remote>{
+): Result<T, DataAppError.Remote>{
     val response = try {
         execute()
     }catch (e: SocketTimeoutException){
         Log.d("RetrofitExt", "safeCall: ${e.message}")
-        return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
+        return Result.Error(DataAppError.Remote.REQUEST_TIMEOUT)
     }catch (e: UnresolvedAddressException){
         Log.d("RetrofitExt", "safeCall: ${e.message}")
-        return Result.Error(DataError.Remote.NO_INTERNET)
+        return Result.Error(DataAppError.Remote.NO_INTERNET)
     }catch (e: Exception){
         Log.d("RetrofitExt", "safeCall: ${e.message}")
         coroutineContext.ensureActive()
-        return Result.Error(DataError.Remote.UNKNOWN)
+        return Result.Error(DataAppError.Remote.UNKNOWN)
     }
     return responseToResult(response)
 }
 
 inline fun <reified T> responseToResult(
     response: Response<T>
-): Result<T, DataError.Remote>{
+): Result<T, DataAppError.Remote>{
     return when{
         response.isSuccessful -> {
             val body = response.body()
             if (body != null) {
                 Result.Success(body)
             } else {
-                Result.Error(DataError.Remote.SERIALIZATION)
+                Result.Error(DataAppError.Remote.SERIALIZATION)
             }
         }
-        response.code() == 403 -> Result.Error(DataError.Remote.FORBIDDEN)
-        response.code() == 408 -> Result.Error(DataError.Remote.REQUEST_TIMEOUT)
-        response.code() == 429 -> Result.Error(DataError.Remote.TOO_MANY_REQUESTS)
-        response.code() in 500..599 -> Result.Error(DataError.Remote.SERVER)
-        else -> Result.Error(DataError.Remote.UNKNOWN)
+        response.code() == 403 -> Result.Error(DataAppError.Remote.FORBIDDEN)
+        response.code() == 408 -> Result.Error(DataAppError.Remote.REQUEST_TIMEOUT)
+        response.code() == 429 -> Result.Error(DataAppError.Remote.TOO_MANY_REQUESTS)
+        response.code() in 500..599 -> Result.Error(DataAppError.Remote.SERVER)
+        else -> Result.Error(DataAppError.Remote.UNKNOWN)
     }
 }

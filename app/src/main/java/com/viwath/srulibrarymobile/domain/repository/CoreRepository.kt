@@ -11,7 +11,7 @@ import com.viwath.srulibrarymobile.data.dto.BookDto
 import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.data.dto.BorrowDetailDto
 import com.viwath.srulibrarymobile.data.dto.DonationDto
-import com.viwath.srulibrarymobile.domain.DataError
+import com.viwath.srulibrarymobile.domain.DataAppError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.BorrowId
@@ -34,39 +34,39 @@ import okhttp3.MultipartBody
  */
 interface CoreRepository {
     suspend fun getDashboard(): Dashboard
-    suspend fun getStudentById(id: Long): Result<Students, DataError.Remote>
+    suspend fun getStudentById(id: Long): Result<Students, DataAppError.Remote>
     suspend fun newAttend(studentId: String, purpose: String): Attend
     suspend fun getRecentEntryData(): Entry
     suspend fun updateExitingTime(studentId: Long): Boolean
     suspend fun checkExitingAttend(id: String): String
 
     // book
-    suspend fun addBooks(books: List<Book>): Result<Unit, DataError.Remote>
-    suspend fun uploadBook(file: MultipartBody.Part): Result<Unit, DataError.Remote>
-    suspend fun updateBook(book: Book): Result<Unit, DataError.Remote>
-    suspend fun getBooks(): Result<List<BookDto>, DataError.Remote>
-    suspend fun getBooksInTrash(): Result<List<BookDto>, DataError.Remote>
-    suspend fun getSummaryBook(): Result<BookSummary, DataError.Remote>
-    suspend fun moveToTrash(bookId: BookId): Result<Unit, DataError.Remote>
-    suspend fun recoverBook(bookId: BookId): Result<Unit, DataError.Remote>
-    suspend fun bookLanguages(): Result<List<Language>, DataError.Remote>
-    suspend fun college(): Result<List<College>, DataError.Remote>
-    suspend fun searchBook(keyword: String): Result<List<BookDto>, DataError.Remote>
-    suspend fun deleteBook(bookId: BookId): Result<Unit, DataError.Remote>
+    suspend fun addBooks(books: List<Book>): Result<Unit, DataAppError.Remote>
+    suspend fun uploadBook(file: MultipartBody.Part): Result<Unit, DataAppError.Remote>
+    suspend fun updateBook(book: Book): Result<Unit, DataAppError.Remote>
+    suspend fun getBooks(): Result<List<BookDto>, DataAppError.Remote>
+    suspend fun getBooksInTrash(): Result<List<BookDto>, DataAppError.Remote>
+    suspend fun getSummaryBook(): Result<BookSummary, DataAppError.Remote>
+    suspend fun moveToTrash(bookId: BookId): Result<Unit, DataAppError.Remote>
+    suspend fun recoverBook(bookId: BookId): Result<Unit, DataAppError.Remote>
+    suspend fun bookLanguages(): Result<List<Language>, DataAppError.Remote>
+    suspend fun college(): Result<List<College>, DataAppError.Remote>
+    suspend fun searchBook(keyword: String): Result<List<BookDto>, DataAppError.Remote>
+    suspend fun deleteBook(bookId: BookId): Result<Unit, DataAppError.Remote>
 
     // borrow
-    suspend fun borrowBook(borrow: BorrowRequest): Result<Unit, DataError.Remote>
-    suspend fun getAllBorrowsDetail(): Result<List<BorrowDetailDto>, DataError.Remote>
-    suspend fun getActiveBorrowsDetail(): Result<List<BorrowDetailDto>, DataError.Remote>
-    suspend fun searchBorrow(keyword: String): Result<List<BorrowDetailDto>, DataError.Remote>
-    suspend fun extendBorrow(id: BorrowId): Result<Unit, DataError.Remote>
-    suspend fun returnBook(studentId: StudentId, bookId: BookId): Result<Unit, DataError.Remote>
+    suspend fun borrowBook(borrow: BorrowRequest): Result<Unit, DataAppError.Remote>
+    suspend fun getAllBorrowsDetail(): Result<List<BorrowDetailDto>, DataAppError.Remote>
+    suspend fun getActiveBorrowsDetail(): Result<List<BorrowDetailDto>, DataAppError.Remote>
+    suspend fun searchBorrow(keyword: String): Result<List<BorrowDetailDto>, DataAppError.Remote>
+    suspend fun extendBorrow(id: BorrowId): Result<Unit, DataAppError.Remote>
+    suspend fun returnBook(studentId: StudentId, bookId: BookId): Result<Unit, DataAppError.Remote>
 
     // donation
-    suspend fun addDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
-    suspend fun getAllDonation(): Result<List<DonationDto>, DataError.Remote>
-    suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataError.Remote>
+    suspend fun addDonation(donationIO: DonationIO): Result<Unit, DataAppError.Remote>
+    suspend fun getAllDonation(): Result<List<DonationDto>, DataAppError.Remote>
+    suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataAppError.Remote>
 
     // user
-    suspend fun getUser(userId: String): Result<Unit, DataError.Remote>
+    suspend fun getUser(userId: String): Result<Unit, DataAppError.Remote>
 }

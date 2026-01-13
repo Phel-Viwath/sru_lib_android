@@ -7,4 +7,4 @@
 
 package com.viwath.srulibrarymobile.domain
 
-interface Error
+interface AppError

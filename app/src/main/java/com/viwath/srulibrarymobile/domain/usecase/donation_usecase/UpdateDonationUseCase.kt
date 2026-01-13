@@ -8,7 +8,7 @@
 package com.viwath.srulibrarymobile.domain.usecase.donation_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
-import com.viwath.srulibrarymobile.domain.DataError
+import com.viwath.srulibrarymobile.domain.DataAppError
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.DonationIO
@@ -27,7 +27,7 @@ class UpdateDonationUseCase @Inject constructor(
                 emit(Resource.Success(result.data))
             }
             is Result.Error -> {
-                val error: DataError.Remote = result.error
+                val error: DataAppError.Remote = result.error
                 val message = error.handleRemoteError()
                 emit(Resource.Error(message))
             }

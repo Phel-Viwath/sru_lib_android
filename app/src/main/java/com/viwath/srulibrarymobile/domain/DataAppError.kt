@@ -15,8 +15,8 @@ package com.viwath.srulibrarymobile.domain
  * Using a sealed interface ensures that all possible error types are known at compile time,
  * which can help in writing exhaustive and robust error-handling logic.
  */
-sealed interface DataError : Error{
-    enum class Remote: DataError{
+sealed interface DataAppError : AppError{
+    enum class Remote: DataAppError{
         REQUEST_TIMEOUT,
         TOO_MANY_REQUESTS,
         NO_INTERNET,
@@ -25,7 +25,7 @@ sealed interface DataError : Error{
         FORBIDDEN,
         UNKNOWN
     }
-    enum class Local: DataError{
+    enum class Local: DataAppError{
         DISK_FULL,
         UNKNOWN
     }
