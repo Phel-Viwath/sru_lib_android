@@ -9,8 +9,8 @@ package com.viwath.srulibrarymobile.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.Genre
+import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.usecase.book_usecase.BookUseCase
 import com.viwath.srulibrarymobile.domain.usecase.borrow_usecase.BorrowUseCase
@@ -24,7 +24,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -73,9 +72,11 @@ class BookTabViewModel @Inject constructor(
         viewModelScope.launch { loadInitData() }
     }
 
-    suspend fun loadInitData() = coroutineScope {
+    fun loadInitData() {
+        viewModelScope.launch(Dispatchers.IO) {
             val bookDeferred = async{ loadListBook() }
             bookDeferred.await()
+        }
     }
 
     fun onEvent(event: BookTabEvent){

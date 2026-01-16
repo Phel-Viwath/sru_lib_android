@@ -96,6 +96,8 @@ class BookTabFragment : Fragment() {
         BiometricPromptUtils(requireActivity() as AppCompatActivity)
     }
 
+    private var hasLoadDate = false
+
     // dialog
     private var dialogAddUpdate: Dialog? = null
     private var progressDialog: Dialog? = null
@@ -111,7 +113,7 @@ class BookTabFragment : Fragment() {
     private var isClassicMode = true
     private lateinit var bookRecyclerViewAdapter: BookRecyclerViewAdapter
 
-    private val viewModel: BookTabViewModel by activityViewModels()
+    private val bookTabViewModel: BookTabViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
     private val languageViewModel: LanguageViewModel by activityViewModels()
     private val collegeViewModel: CollegeViewModel by activityViewModels()
@@ -245,6 +247,14 @@ class BookTabFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!hasLoadDate){
+            bookTabViewModel.loadInitData()
+            hasLoadDate = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         dialogAddUpdate?.dismiss()
@@ -277,7 +287,7 @@ class BookTabFragment : Fragment() {
                     if (binding.edtSearch.isFocused)
                         binding.edtSearch.clearFocus()
                     requireActivity().hideKeyboard(binding.root)
-                    viewModel.loadInitData()
+                    bookTabViewModel.loadInitData()
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     isRefreshing = false
@@ -302,7 +312,7 @@ class BookTabFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (parent?.selectedItem != null) {
                     val selectedItem = _genres[position]
-                    viewModel.apply {
+                    bookTabViewModel.apply {
                         onEvent(BookTabEvent.FilterGenreChange(selectedItem))
                         onEvent(BookTabEvent.FilterGenre)
                     }
@@ -313,14 +323,14 @@ class BookTabFragment : Fragment() {
 
         binding.tilSearchBook.setEndIconOnClickListener{
             val keyword = binding.edtSearch.text.toString().trim()
-            viewModel.apply {
+            bookTabViewModel.apply {
                 onEvent(BookTabEvent.SearchChange(keyword))
                 onEvent(BookTabEvent.Search)
             }
         }
         binding.edtSearch.doOnTextChanged {text, _, _, _ ->
-            viewModel.onEvent(BookTabEvent.SearchChange(text.toString().trim()))
-            viewModel.onEvent(BookTabEvent.FilterByIdOrTitle)
+            bookTabViewModel.onEvent(BookTabEvent.SearchChange(text.toString().trim()))
+            bookTabViewModel.onEvent(BookTabEvent.FilterByIdOrTitle)
         }
     }
     /**
@@ -335,7 +345,7 @@ class BookTabFragment : Fragment() {
 
         // handle load book
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
+            bookTabViewModel.state.collect { state ->
                 when {
                     state.isLoading -> startLoading() // Show loading indicator
                     state.error.isNotBlank() -> {
@@ -352,7 +362,7 @@ class BookTabFragment : Fragment() {
 
         // handle event message
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.eventFlow.collect { event ->
+            bookTabViewModel.eventFlow.collect { event ->
                 when (event) {
                     is ResultEvent.ShowSuccess -> showToast(event.message) // Show success message
                     is ResultEvent.ShowError -> showToast(event.errorMsg) // Show error message
@@ -362,7 +372,7 @@ class BookTabFragment : Fragment() {
 
         // handle upload book file
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uploadState.collect { state ->
+            bookTabViewModel.uploadState.collect { state ->
                 when (state) {
                     is UploadState.Idle -> {
                         // Initial state, do nothing
@@ -384,14 +394,14 @@ class BookTabFragment : Fragment() {
 
         // handle student search
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.findStudentChannel.collect { isFound ->
+            bookTabViewModel.findStudentChannel.collect { isFound ->
                 if (::dialogBorrow.isInitialized)
                     dialogBorrow.btBorrow.isEnabled = isFound
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.genres.collect{
+            bookTabViewModel.genres.collect{
                 if (it.isNotEmpty()){
                     _genres.clear()
                     _genres.addAll(it)
@@ -484,8 +494,8 @@ class BookTabFragment : Fragment() {
         dialogView.findViewById<MaterialButton>(R.id.btAddBook).setOnClickListener {
             if (fileUri != null){
                 val newFile = fileUri?.uriToFile(requireContext()) ?: return@setOnClickListener
-                viewModel.onEvent(BookTabEvent.FileChange(newFile))
-                viewModel.onEvent(BookTabEvent.UploadBook)
+                bookTabViewModel.onEvent(BookTabEvent.FileChange(newFile))
+                bookTabViewModel.onEvent(BookTabEvent.UploadBook)
                 return@setOnClickListener
             }
             val (bookId, title, author, genre, year, quan) = dialogAddBook.getBookData()
@@ -498,7 +508,7 @@ class BookTabFragment : Fragment() {
 
             if (book == null) {
                 // Add new book
-                viewModel.apply {
+                bookTabViewModel.apply {
                     onEvent(BookTabEvent.BookIdChange(bookId))
                     onEvent(BookTabEvent.BookTittleChange(title))
                     onEvent(BookTabEvent.AuthorChange(author))
@@ -513,7 +523,7 @@ class BookTabFragment : Fragment() {
                 // Update existing book
                 biometricPromptUtils.showBiometricForm()
                 observeBiometricAuthentication {
-                    viewModel.apply {
+                    bookTabViewModel.apply {
                         onEvent(BookTabEvent.BookIdChange(bookId))
                         onEvent(BookTabEvent.BookTittleChange(title))
                         onEvent(BookTabEvent.AuthorChange(author))
@@ -576,7 +586,7 @@ class BookTabFragment : Fragment() {
             .setMessage("Are you sure you want to delete this book?")
             .setCancelable(true)
             .setPositiveButton("Remove"){_, _ ->
-                viewModel.onEvent(BookTabEvent.Remove)
+                bookTabViewModel.onEvent(BookTabEvent.Remove)
             }
             .setNegativeButton("Cancel"){d, _ ->
                 d.dismiss()
@@ -585,7 +595,7 @@ class BookTabFragment : Fragment() {
 
         biometricPromptUtils.showBiometricForm()
         observeBiometricAuthentication {
-            viewModel.onEvent(BookTabEvent.BookIdChange(bookId))
+            bookTabViewModel.onEvent(BookTabEvent.BookIdChange(bookId))
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setTextColor(resources.getColor(R.color.red))
@@ -619,13 +629,13 @@ class BookTabFragment : Fragment() {
         dialogBorrow.btBorrow.isEnabled = false
 
         dialogBorrow.onSearchClick { studentId ->
-            viewModel.apply {
+            bookTabViewModel.apply {
                 onEvent(BookTabEvent.StudentIdChange(studentId))
                 onEvent(BookTabEvent.GetStudent)
             }
         }
         dialogBorrow.onBorrowClick { studentId, quan, bookId->
-            viewModel.apply {
+            bookTabViewModel.apply {
                 onEvent(BookTabEvent.StudentIdChange(studentId))
                 onEvent(BookTabEvent.QuanChange(quan))
                 onEvent(BookTabEvent.BookIdChange(bookId))

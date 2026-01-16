@@ -18,6 +18,7 @@ import com.viwath.srulibrarymobile.presentation.state.InTrashState
 import com.viwath.srulibrarymobile.utils.collectResource
 import com.viwath.srulibrarymobile.utils.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,9 +44,8 @@ class TrashTabViewModel @Inject constructor(
 
     private var isInitialize = false
 
-
-    init {
-        viewModelScope.launch {
+    fun initLoadData() {
+        viewModelScope.launch(Dispatchers.IO){
             val bookInTrashDeferred = async{ loadBookInTrash() }
             bookInTrashDeferred.await()
         }

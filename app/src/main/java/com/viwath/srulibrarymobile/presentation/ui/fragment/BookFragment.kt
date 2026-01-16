@@ -97,9 +97,14 @@ class BookFragment : Fragment(){
                 getString(R.string.backup)
             )
         }
-        binding.viewPagerBook.offscreenPageLimit = 3
-        binding.viewPagerBook.adapter = bookPagerAdapter
-        TabLayoutMediator(binding.tabLayout, binding.viewPagerBook){tab, position ->
+        binding.viewPagerBook.apply{
+            offscreenPageLimit = 1
+            adapter = bookPagerAdapter
+        }
+        TabLayoutMediator(
+            binding.tabLayout,
+            binding.viewPagerBook
+        ){tab, position ->
             tab.text = tabTitle[position]
         }.attach()
     }

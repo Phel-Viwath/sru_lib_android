@@ -19,8 +19,8 @@ import com.viwath.srulibrarymobile.presentation.state.book_state.DonationState
 import com.viwath.srulibrarymobile.utils.collectResource
 import com.viwath.srulibrarymobile.utils.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -98,9 +98,11 @@ class DonationTabViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadInitData() = coroutineScope{
-        val donationDeferred = async{ loadDonationList() }
-        donationDeferred.await()
+    fun loadInitData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val donationDeferred = async{ loadDonationList() }
+            donationDeferred.await()
+        }
     }
 
     private fun emitEvent(event: ResultEvent){

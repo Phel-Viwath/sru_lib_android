@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
  * and initiate the process of returning or extending a borrowed item's due date.
  *
  * @constructor Creates a [BorrowedTabFragment] instance.
- * @property viewModel The [BorrowTabViewModel] instance used to interact with the data layer.
+ * @property borrowTabViewModel The [BorrowTabViewModel] instance used to interact with the data layer.
  * @property connectivityViewModel The [ConnectivityViewModel] instance used to observe network connectivity.
  * @property dialogExtendOrReturn A custom dialog [DialogExtendOrReturn] for returning or extending an item.
  */
@@ -54,8 +54,10 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
     private var _binding: FragmentBorrowedTabBinding? = null
     private val binding get() = _binding!!
 
+    private var hasLoadData = false
+
     // view model
-    private val viewModel: BorrowTabViewModel by activityViewModels()
+    private val borrowTabViewModel: BorrowTabViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
     private val settingViewModel by activityViewModels<SettingViewModel>()
 
@@ -97,6 +99,14 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         setUpUi()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!hasLoadData){
+            borrowTabViewModel.loadInitData()
+            hasLoadData = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -104,7 +114,7 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
     private fun observerViewModel(){
         viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.state.collect{state ->
+            borrowTabViewModel.state.collect{ state ->
                 when{
                     state.isLoading -> loading.startLoading()
                     state.borrowList.isNotEmpty() -> {
@@ -120,7 +130,7 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.resultEvent.collect { event ->
+            borrowTabViewModel.resultEvent.collect { event ->
                 when (event) {
                     is ResultEvent.ShowSuccess -> {
                         showSnackbar(binding.root,event.message)
@@ -143,7 +153,7 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
                     if (binding.edtSearch.isFocused)
                         binding.edtSearch.clearFocus()
                     requireActivity().hideKeyboard(binding.root)
-                    viewModel.onEvent(BorrowedTabEvent.LoadBorrowList)
+                    borrowTabViewModel.onEvent(BorrowedTabEvent.LoadBorrowList)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     this@apply.isRefreshing = false
@@ -154,33 +164,33 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
         binding.checkboxFilterBorrow.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    viewModel.onEvent(BorrowedTabEvent.OnFilterChange(true))
-                    viewModel.onEvent(BorrowedTabEvent.FilterOverDue)
+                    borrowTabViewModel.onEvent(BorrowedTabEvent.OnFilterChange(true))
+                    borrowTabViewModel.onEvent(BorrowedTabEvent.FilterOverDue)
                 }
                 else {
-                    viewModel.onEvent(BorrowedTabEvent.OnFilterChange(false))
-                    viewModel.onEvent(BorrowedTabEvent.FilterOverDue)
+                    borrowTabViewModel.onEvent(BorrowedTabEvent.OnFilterChange(false))
+                    borrowTabViewModel.onEvent(BorrowedTabEvent.FilterOverDue)
                 }
             }
         }
 
         binding.checkboxGetAllBorrow.setOnCheckedChangeListener{_, isChecked ->
             if (isChecked){
-                viewModel.onEvent(BorrowedTabEvent.GetAllBorrow)
+                borrowTabViewModel.onEvent(BorrowedTabEvent.GetAllBorrow)
             }else {
-                viewModel.onEvent(BorrowedTabEvent.OnFilterChange(false))
-                viewModel.onEvent(BorrowedTabEvent.FilterOverDue)
+                borrowTabViewModel.onEvent(BorrowedTabEvent.OnFilterChange(false))
+                borrowTabViewModel.onEvent(BorrowedTabEvent.FilterOverDue)
             }
         }
 
         binding.edtSearch.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(BorrowedTabEvent.OnSearchTextChange(text.toString().trim()))
-            viewModel.onEvent(BorrowedTabEvent.FilterByTextSearch)
+            borrowTabViewModel.onEvent(BorrowedTabEvent.OnSearchTextChange(text.toString().trim()))
+            borrowTabViewModel.onEvent(BorrowedTabEvent.FilterByTextSearch)
         }
         binding.tilSearchBorrow.setEndIconOnClickListener{
             val keyword = binding.edtSearch.text.toString().trim()
-            viewModel.onEvent(BorrowedTabEvent.OnSearchTextChange(keyword))
-            viewModel.onEvent(BorrowedTabEvent.SearchBorrow)
+            borrowTabViewModel.onEvent(BorrowedTabEvent.OnSearchTextChange(keyword))
+            borrowTabViewModel.onEvent(BorrowedTabEvent.SearchBorrow)
         }
 
     }
@@ -219,12 +229,12 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
             onReturnOrExtendClick(borrow){ studentId, bookId, borrowId ->
                 when {
                     studentId == null && bookId == null && borrowId != null -> {
-                        viewModel.onEvent(BorrowedTabEvent.OnBorrowIdChange(borrowId))
-                        viewModel.onEvent(BorrowedTabEvent.ExtendBorrow)
+                        borrowTabViewModel.onEvent(BorrowedTabEvent.OnBorrowIdChange(borrowId))
+                        borrowTabViewModel.onEvent(BorrowedTabEvent.ExtendBorrow)
                     }
                     studentId != null && bookId != null && borrowId == null -> {
-                        viewModel.onEvent(BorrowedTabEvent.OnReturnBookDataChange(studentId, bookId))
-                        viewModel.onEvent(BorrowedTabEvent.ReturnBook)
+                        borrowTabViewModel.onEvent(BorrowedTabEvent.OnReturnBookDataChange(studentId, bookId))
+                        borrowTabViewModel.onEvent(BorrowedTabEvent.ReturnBook)
                     }
                     else -> return@onReturnOrExtendClick
                 }

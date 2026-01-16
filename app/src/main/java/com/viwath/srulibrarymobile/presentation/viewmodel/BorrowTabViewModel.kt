@@ -19,8 +19,8 @@ import com.viwath.srulibrarymobile.utils.DateTimeUtil.toLocalDate
 import com.viwath.srulibrarymobile.utils.collectResource
 import com.viwath.srulibrarymobile.utils.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -51,11 +51,6 @@ class BorrowTabViewModel @Inject constructor(
     private val _resultEvent = MutableSharedFlow<ResultEvent>()
     val resultEvent: SharedFlow<ResultEvent> get() = _resultEvent
 
-    init {
-        viewModelScope.launch{
-            loadInitData()
-        }
-    }
 
     fun onEvent(event: BorrowedTabEvent){
         when(event){
@@ -74,9 +69,11 @@ class BorrowTabViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadInitData() = coroutineScope {
-        val borrowDeferred = async{ loadBorrowList() }
-        borrowDeferred.await()
+    fun loadInitData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val borrowDeferred = async { loadBorrowList() }
+            borrowDeferred.await()
+        }
     }
 
     private fun emitEvent(event: ResultEvent){

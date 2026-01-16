@@ -59,6 +59,8 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private var _binding: FragmentDonationTabBinding? = null
     private val binding get() = _binding!!
 
+    private var hasLoadData = false
+
     // dialog
     private var dialog: Dialog? = null
 
@@ -67,7 +69,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private val _genres: MutableList<Genre> = mutableListOf()
 
     // view model
-    private val viewModel: DonationTabViewModel by activityViewModels()
+    private val donationTabViewModel: DonationTabViewModel by activityViewModels()
     private val connectivityViewModel: ConnectivityViewModel by activityViewModels()
     private val collegeViewModel: CollegeViewModel by activityViewModels()
     private val languageViewModel: LanguageViewModel by activityViewModels()
@@ -142,6 +144,14 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         viewEvent()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!hasLoadData){
+            donationTabViewModel.loadInitData()
+            hasLoadData = true
+        }
+    }
+
     @Suppress("DEPRECATION")
     @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -167,7 +177,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                     binding.edtSearchDonation.clearFocus()
                 requireActivity().hideKeyboard(binding.root)
                 lifecycleScope.launch {
-                    viewModel.onEvent(DonationTabEvent.OnReloadList)
+                    donationTabViewModel.onEvent(DonationTabEvent.OnReloadList)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     isRefreshing = false
@@ -195,7 +205,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (parent?.selectedItem != null){
                     val selectedItem = _genres[position]
-                    viewModel.apply {
+                    donationTabViewModel.apply {
                         onEvent(DonationTabEvent.OnFilterGenreChange(selectedItem))
                         onEvent(DonationTabEvent.OnFilter)
                     }
@@ -209,7 +219,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private fun observeViewModel() {
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
+            donationTabViewModel.state.collect { state ->
                 when {
                     state.isLoading -> loading.startLoading()
                     state.donationList.isNotEmpty() -> {
@@ -225,7 +235,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.resultEvent.collect { result ->
+            donationTabViewModel.resultEvent.collect { result ->
                 when (result) {
                     is ResultEvent.ShowError -> showSnackbar(binding.root, result.errorMsg)
                     is ResultEvent.ShowSuccess -> showSnackbar(binding.root, result.message)
@@ -268,7 +278,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
         }
 
         lifecycleScope.launch {
-            viewModel.genreList.collect {
+            donationTabViewModel.genreList.collect {
                 if (it.isNotEmpty()) {
                     _genres.clear()
                     _genres.addAll(it)
@@ -327,7 +337,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
             onButtonClick(
                 onSubmitClick = { donation ->
                     if (initDonation != null){
-                        viewModel.apply {
+                        donationTabViewModel.apply {
                             onEvent(DonationTabEvent.OnDonatorIdChange(donation.donatorId!!))
                             onEvent(DonationTabEvent.OnDonatorNameChange(donation.donatorName))
                             onEvent(DonationTabEvent.OnBookIdChange(donation.bookId))
@@ -342,7 +352,7 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
                         }
                     }
                     else{
-                        viewModel.apply {
+                        donationTabViewModel.apply {
                             onEvent(DonationTabEvent.OnDonatorNameChange(donation.donatorName))
                             onEvent(DonationTabEvent.OnBookIdChange(donation.bookId))
                             onEvent(DonationTabEvent.OnBookTitleChange(donation.bookTitle))

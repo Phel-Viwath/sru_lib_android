@@ -43,7 +43,9 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
     private var _binding: FragmentBackupTabBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by activityViewModels<TrashTabViewModel>()
+    private var hasLoadData = false
+
+    private val trashTabViewModel by activityViewModels<TrashTabViewModel>()
     private val settingViewModel by activityViewModels<SettingViewModel>()
     private val connectivityViewModel by activityViewModels<ConnectivityViewModel>()
 
@@ -88,6 +90,14 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
         viewAction()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!hasLoadData){
+            trashTabViewModel.initLoadData()
+            hasLoadData = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -97,7 +107,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
         binding.swipeRefreshLayout.apply {
             setOnRefreshListener {
                 this.isRefreshing = false
-                viewModel.onEvent(InTrashEvent.RefreshData)
+                trashTabViewModel.onEvent(InTrashEvent.RefreshData)
                 Handler(Looper.getMainLooper()).postDelayed({
                     this@apply.isRefreshing = false
                 },2000)
@@ -113,7 +123,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
             ) {
                 if (parent?.selectedItem != null){
                     val selectedItem = _genres[position]
-                    viewModel.apply {
+                    trashTabViewModel.apply {
                         onEvent(InTrashEvent.FilterGenreChange(selectedItem))
                         onEvent(InTrashEvent.Filter)
                     }
@@ -128,7 +138,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
     private fun observeMainViewModel() {
 
         lifecycleScope.launch {
-            viewModel.state.collect{ state ->
+            trashTabViewModel.state.collect{ state ->
                 when{
                     state.isLoading -> loading.startLoading()
                     state.booksInTrash.isNotEmpty() -> {
@@ -144,7 +154,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
         }//
 
         lifecycleScope.launch {
-            viewModel.resultEvent.collect {
+            trashTabViewModel.resultEvent.collect {
                 when(it){
                     is ResultEvent.ShowSuccess -> showSnackbar(it.message)
                     is ResultEvent.ShowError -> showSnackbar(it.errorMsg)
@@ -153,7 +163,7 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.genres.collect { g ->
+            trashTabViewModel.genres.collect { g ->
                 if (g.isNotEmpty()){
                     _genres.clear()
                     _genres.addAll(g)
@@ -184,12 +194,12 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
             .setTitle("Application")
             .setMessage("Do you want to restore or delete this book?")
             .setPositiveButton("Restore") { _, _ ->
-                viewModel.onEvent(InTrashEvent.OnRestoreClicked(bookId))
-                viewModel.onEvent(InTrashEvent.RestoreBook)
+                trashTabViewModel.onEvent(InTrashEvent.OnRestoreClicked(bookId))
+                trashTabViewModel.onEvent(InTrashEvent.RestoreBook)
             }
             .setNegativeButton("Delete") { _, _ ->
-                viewModel.onEvent(InTrashEvent.OnDeleteClicked(bookId))
-                viewModel.onEvent(InTrashEvent.DeleteBook)
+                trashTabViewModel.onEvent(InTrashEvent.OnDeleteClicked(bookId))
+                trashTabViewModel.onEvent(InTrashEvent.DeleteBook)
             }
             .show()
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(requireContext(),R.color.red))

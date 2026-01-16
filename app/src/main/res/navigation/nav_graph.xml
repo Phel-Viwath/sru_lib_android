@@ -6,7 +6,9 @@
     <fragment
         android:id="@+id/nav_dashboard"
         android:name="com.viwath.srulibrarymobile.presentation.ui.fragment.DashboardFragment"
-        android:label="Dashboard" />
+        android:label="Dashboard"
+        
+        />
 
     <fragment
         android:id="@+id/nav_entry"
@@ -18,10 +20,10 @@
         android:name="com.viwath.srulibrarymobile.presentation.ui.fragment.BookFragment"
         android:label="Book" />
 
-    <fragment
-        android:id="@+id/nav_student"
-        android:name="com.viwath.srulibrarymobile.presentation.ui.fragment.StudentFragment"
-        android:label="Student" />
+<!--    <fragment-->
+<!--        android:id="@+id/nav_student"-->
+<!--        android:name="com.viwath.srulibrarymobile.presentation.ui.fragment.StudentFragment"-->
+<!--        android:label="Student" />-->
 
     <fragment
         android:id="@+id/nav_setting"
