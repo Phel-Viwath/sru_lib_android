@@ -112,10 +112,6 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.nav_book)
                     true
                 }
-                R.id.nav_student -> {
-                    navController.navigate(R.id.nav_student)
-                    true
-                }
                 R.id.nav_setting -> {
                     navController.navigate(R.id.nav_setting)
                     true

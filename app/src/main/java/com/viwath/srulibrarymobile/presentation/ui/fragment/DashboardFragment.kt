@@ -468,6 +468,8 @@ class DashboardFragment : Fragment() {
 
         //button
         input.btnFind.setImageResource(if (isDarkMode) R.drawable.ic_light_search_24 else R.drawable.ic_night_search_24)
+
+        // search student by ID
         input.btnFind.setOnClickListener {
             val studentId = input.getStudentId()
             if (studentId != null){
@@ -475,6 +477,8 @@ class DashboardFragment : Fragment() {
                 viewModel.onEntryEvent(DashboardEntryEvent.GetStudent(studentId.toString()))
             }
         }
+
+        // entry
         input.btEntry.setOnClickListener {
             val studentId = input.entryPurpose().first
             val purpose = input.entryPurpose().second ?: ""

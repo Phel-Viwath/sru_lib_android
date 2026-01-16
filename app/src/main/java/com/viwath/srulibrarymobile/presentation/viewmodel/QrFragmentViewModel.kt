@@ -74,6 +74,7 @@ class QrFragmentViewModel @Inject constructor(
                useCase.saveAttendUseCase(studentId, purpose)
                _state.value = QrFragmentState.AttentionSaved()
            }catch (e: Exception){
+               Log.e("QrFragmentViewModel", "saveAttend: ", e)
                _state.value = QrFragmentState.Error(e.localizedMessage ?: "Unknown Error")
            }
         }

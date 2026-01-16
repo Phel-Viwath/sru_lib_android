@@ -11,7 +11,7 @@ import android.content.Context
 import android.util.Base64
 
 class PinEncryptionData(context: Context) {
-    private val preferences = SharedPreferencesHelper.getInstance(context)
+    /*private val preferences = SharedPreferencesHelper.getInstance(context)
 
     fun savePin(encryptedPin: ByteArray){
         preferences.putString(ENCRYPTED_PIN, Base64.encodeToString(encryptedPin, Base64.DEFAULT))
@@ -29,5 +29,5 @@ class PinEncryptionData(context: Context) {
     companion object{
         private const val ENCRYPTED_PIN = "encrypted_pin"
         private const val ENCRYPTION_IV = "encryption_iv"
-    }
+    }*/
 }

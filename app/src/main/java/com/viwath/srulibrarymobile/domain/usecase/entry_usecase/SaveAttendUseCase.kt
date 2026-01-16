@@ -7,6 +7,7 @@
 
 package com.viwath.srulibrarymobile.domain.usecase.entry_usecase
 
+import android.util.Log
 import com.viwath.srulibrarymobile.domain.repository.CoreRepository
 import javax.inject.Inject
 
@@ -29,8 +30,7 @@ class SaveAttendUseCase @Inject constructor(
         try {
             repository.newAttend(studentId, purpose)
         } catch (e: Exception) {
-            println("Error saving attendance: ${e.message}") // Log the error
-            throw e
+            Log.e("SaveAttendUseCase", "invoke Error saving attendance: ", e)
         }
     }
 }

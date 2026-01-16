@@ -7,25 +7,12 @@
 
 package com.viwath.srulibrarymobile.presentation.ui.activities
 
-import android.content.Intent
-import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
-import com.viwath.srulibrarymobile.R
-import com.viwath.srulibrarymobile.databinding.ActivityPinCreationBinding
-import com.viwath.srulibrarymobile.presentation.viewmodel.PinViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreatePinActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPinCreationBinding
+    /*private lateinit var binding: ActivityPinCreationBinding
 
     private val viewModel: PinViewModel by viewModels()
 
@@ -135,5 +122,5 @@ class CreatePinActivity : AppCompatActivity() {
 
     private fun showSnackBar(str: String){
         Snackbar.make(binding.root, str, Snackbar.LENGTH_SHORT).show()
-    }
+    }*/
 }

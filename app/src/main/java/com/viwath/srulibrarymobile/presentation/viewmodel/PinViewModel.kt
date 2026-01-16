@@ -18,11 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PinViewModel @Inject constructor(
-    private val keyStoreManager: KeyStoreManager,
-    private val pinEncryptionData: PinEncryptionData
+//    private val keyStoreManager: KeyStoreManager,
+//    private val pinEncryptionData: PinEncryptionData
 ): ViewModel(){
 
-    private val _pinStatus = MutableLiveData<Boolean>()
+    /*private val _pinStatus = MutableLiveData<Boolean>()
     val pinStatus: LiveData<Boolean> get() = _pinStatus
 
     fun savePin(pin: String){
@@ -48,5 +48,5 @@ class PinViewModel @Inject constructor(
 
     fun clearPin(){
         pinEncryptionData.clearPin()
-    }
+    }*/
 }

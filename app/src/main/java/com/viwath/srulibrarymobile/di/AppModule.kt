@@ -10,6 +10,7 @@ package com.viwath.srulibrarymobile.di
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.Strictness
 import com.viwath.srulibrarymobile.common.constant.Constant
 import com.viwath.srulibrarymobile.data.api.AuthApi
 import com.viwath.srulibrarymobile.data.api.AuthInterceptor
@@ -96,7 +97,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder()
-        .setLenient() // Allows some leniency with JSON parsing
+        .setStrictness(Strictness.LENIENT) // Allows some leniency with JSON parsing
         .create()
 
     /**

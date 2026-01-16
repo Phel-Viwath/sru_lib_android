@@ -8,10 +8,6 @@
 package com.viwath.srulibrarymobile.utils.share_preferences
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-import androidx.core.content.edit
 
 /**
  * A helper class for managing SharedPreferences, providing both regular and encrypted storage options.
@@ -25,7 +21,7 @@ class SharedPreferencesHelper private constructor(
     context: Context
 ) {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+   /* private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val encryptedPrefs = createEncryptedSharePreferences(context)
 
     fun putString(key: String, values: String): Unit = prefs.edit{ putString(key, values) }
@@ -50,8 +46,12 @@ class SharedPreferencesHelper private constructor(
     fun getInt(key: String, defaultValue: Int = 0): Int = prefs.getInt(key, defaultValue)
     fun getEncryptedInt(key: String, defaultValue: Int = 0): Int = encryptedPrefs.getInt(key, defaultValue)
 
-    fun clearValue(vararg key: String): Unit = key.forEach { prefs.edit().remove(it).apply() }
-    fun clearEncryptedValue(vararg key: String): Unit = key.forEach { encryptedPrefs.edit().remove(it).apply() }
+    fun clearValue(vararg key: String): Unit = key.forEach { prefs.edit { remove(it) } }
+    fun clearEncryptedValue(vararg key: String): Unit = key.forEach { encryptedPrefs.edit {
+        remove(
+            it
+        )
+    } }
 
     /// private
 
@@ -78,5 +78,5 @@ class SharedPreferencesHelper private constructor(
             }
             return instance!!
         }
-    }
+    }*/
 }
