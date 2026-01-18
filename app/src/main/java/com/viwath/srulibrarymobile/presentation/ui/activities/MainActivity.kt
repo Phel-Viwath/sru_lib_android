@@ -75,15 +75,13 @@ class MainActivity : AppCompatActivity() {
 
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        lifecycleScope.launch {
-            settingViewModel.viewMode.observe(this@MainActivity) {
-                val isClassicMode = when(it){
-                    CLASSIC -> true
-                    MODERN -> false
-                    else -> true
-                }
-                setUpView(isDarkMode, isClassicMode)
+        settingViewModel.viewMode.observe(this@MainActivity) {
+            val isClassicMode = when(it){
+                CLASSIC -> true
+                MODERN -> false
+                else -> true
             }
+            setUpView(isDarkMode, isClassicMode)
         }
 
         binding.bottomNavViewBlurView.applyBlur(

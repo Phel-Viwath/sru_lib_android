@@ -14,8 +14,8 @@ import android.graphics.Color
 import android.os.Build
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
-import eightbitlab.com.blurview.BlurView
 import androidx.core.graphics.drawable.toDrawable
+import eightbitlab.com.blurview.BlurView
 import eightbitlab.com.blurview.RenderEffectBlur
 import eightbitlab.com.blurview.RenderScriptBlur
 
@@ -37,7 +37,7 @@ fun BlurView.applyBlur(
         setupWith(rootView, blurAlgorithm)
             .setFrameClearDrawable(windowBackground)
             .setBlurRadius(r)
-            .setBlurAutoUpdate(true)
+            .setBlurAutoUpdate(false)
             .setBlurEnabled(true)
             .setOverlayColor(translucentColor)
 
@@ -45,4 +45,9 @@ fun BlurView.applyBlur(
         clipToOutline = true
     }
 
+}
+
+fun BlurView.releaseBlur(){
+    setBlurAutoUpdate(false)
+    setBlurEnabled(false)
 }

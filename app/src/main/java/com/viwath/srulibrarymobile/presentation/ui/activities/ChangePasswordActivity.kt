@@ -98,7 +98,6 @@ class ChangePasswordActivity : AppCompatActivity(){
     }
 
 
-
     private fun loadingStart(): Unit = runOnUiThread{ loading.startLoading() }
     private fun loadingStop(): Unit = runOnUiThread{ loading.stopLoading() }
     private fun showToast(message: String): Unit = runOnUiThread{

@@ -17,7 +17,9 @@ import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
@@ -114,29 +116,35 @@ class BorrowedTabFragment: Fragment(R.layout.fragment_borrowed_tab) {
 
     private fun observerViewModel(){
         viewLifecycleOwner.lifecycleScope.launch{
-            borrowTabViewModel.state.collect{ state ->
-                when{
-                    state.isLoading -> loading.startLoading()
-                    state.borrowList.isNotEmpty() -> {
-                        loading.stopLoading()
-                        borrowRecyclerAdapter.updateBorrowList(state.borrowList)
-                    }
-                    else -> {
-                       loading.stopLoading()
-                       borrowRecyclerAdapter.updateBorrowList(emptyList())
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                borrowTabViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.borrowList.isNotEmpty() -> {
+                            loading.stopLoading()
+                            borrowRecyclerAdapter.updateBorrowList(state.borrowList)
+                        }
+
+                        else -> {
+                            loading.stopLoading()
+                            borrowRecyclerAdapter.updateBorrowList(emptyList())
+                        }
                     }
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch{
-            borrowTabViewModel.resultEvent.collect { event ->
-                when (event) {
-                    is ResultEvent.ShowSuccess -> {
-                        showSnackbar(binding.root,event.message)
-                    }
-                    is ResultEvent.ShowError -> {
-                        requireContext().showToast(event.errorMsg)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                borrowTabViewModel.resultEvent.collect { event ->
+                    when (event) {
+                        is ResultEvent.ShowSuccess -> {
+                            showSnackbar(binding.root, event.message)
+                        }
+
+                        is ResultEvent.ShowError -> {
+                            requireContext().showToast(event.errorMsg)
+                        }
                     }
                 }
             }

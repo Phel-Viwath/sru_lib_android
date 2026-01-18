@@ -29,7 +29,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -56,6 +58,7 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
+import com.viwath.srulibrarymobile.utils.view_component.releaseBlur
 import com.viwath.srulibrarymobile.utils.view_component.showSnackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,16 +100,14 @@ class DashboardFragment : Fragment() {
         loading = Loading(requireActivity())
         isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        lifecycleScope.launch {
-            settingViewModel.viewMode.observe(requireActivity()) { viewMode ->
-                isClassicMode = when(viewMode){
-                    CLASSIC -> true
-                    MODERN -> false
-                    else -> true
-                }
-                if (_binding != null){
-                    setUpTheme(isDarkMode, isClassicMode)
-                }
+        settingViewModel.viewMode.observe(requireActivity()) { viewMode ->
+            isClassicMode = when(viewMode){
+                CLASSIC -> true
+                MODERN -> false
+                else -> true
+            }
+            if (_binding != null){
+                setUpTheme(isDarkMode, isClassicMode)
             }
         }
 
@@ -124,9 +125,24 @@ class DashboardFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        _binding?.let { b ->
+            b.blurViewCardSection.releaseBlur()
+            b.cardEntryBlur.releaseBlur()
+            b.cardBorrowBlur.releaseBlur()
+            b.cardDonationBlur.releaseBlur()
+            b.cardMonthlyEntryBlur.releaseBlur()
+
+            b.blurViewBarChartSection.releaseBlur()
+            b.pieChartBlur.releaseBlur()
+            b.progressRingBlur.releaseBlur()
+            b.blurViewEntryList.releaseBlur()
+            b.blurViewBtEntry.releaseBlur()
+        }
+
+        _binding = null
+
         super.onDestroyView()
         //viewModel.state.removeObservers(this)
-        _binding = null
     }
 
 
@@ -157,93 +173,102 @@ class DashboardFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun observeViewModel(isDarkMode: Boolean){
         viewModel.state.removeObservers(viewLifecycleOwner)
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when{
-                state.isLoading -> loading.startLoading()
-                state.dashboard != null -> {
-                    state.dashboard.let { dashboard ->
-                        loading.stopLoading()
-                        // entry card
-                        val cardData = dashboard.cardData
-                        binding.tvCard1.text = cardData[0].cardType
-                        binding.tvEntryCount.text = "${cardData[0].amount}"
-                        binding.tvEntryPercentage.text = buildString {
-                            append(dashboard.cardData[0].analytic.toString())
-                            append(" % from yesterday")
-                        }
-                        // borrow card
-                        binding.tvCard2.text = cardData[1].cardType
-                        binding.tvBookBorrowCount.text = "${cardData[1].amount}"
-                        binding.tvBookBorrowPercentage.text = buildString {
-                            append(cardData[1].analytic.toString())
-                            append(" % from yesterday")
-                        }
-                        //
-                        binding.tvCard3.text = cardData[2].cardType
-                        binding.tvBookSponsorCount.text = "${cardData[2].amount}"
-                        binding.tvBookBorrowPercentage.text = buildString {
-                            append(cardData[2].analytic.toString())
-                            append(" % from last month")
-                        }
-                        binding.tvCard4.text = cardData[3].cardType
-                        binding.tvTotalEntryCount.text = "${cardData[3].amount}"
-                        binding.tvTotalEntryPercentage.text = buildString {
-                            append(cardData[3].analytic.toString())
-                            append(" % from last month")
-                        }
-                        // weekly visitor
-                        binding.tvTotalMajor.text = buildString {
-                            append("Total")
-                            append(dashboard.totalMajorVisitor.size.toString())
-                        }
-                        // bar chart
-                        barChart(dashboard.weeklyVisitor.days, isDarkMode)
-                        // pie chart
-                        pieChart(dashboard.totalMajorVisitor, isDarkMode)
-                        // progress ring
 
-                        val totalEngBook = dashboard.bookAvailable[0].totalBook
-                        val engBookAvailable = dashboard.bookAvailable[0].available
-                        val eng = dashboard.bookAvailable[0].language
-                        with(binding.progressEnglish){
-                            progress = totalEngBook.toFloat()
-                            text = engBookAvailable.toString()
-                            textColor = if (isDarkMode) Color.WHITE else Color.BLACK
-                            finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else "#8A2BE2".toColorInt()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.state.observe(viewLifecycleOwner) { state ->
+                    when{
+                        state.isLoading -> loading.startLoading()
+                        state.dashboard != null -> {
+                            state.dashboard.let { dashboard ->
+                                loading.stopLoading()
+                                // entry card
+                                val cardData = dashboard.cardData
+                                binding.tvCard1.text = cardData[0].cardType
+                                binding.tvEntryCount.text = "${cardData[0].amount}"
+                                binding.tvEntryPercentage.text = buildString {
+                                    append(dashboard.cardData[0].analytic.toString())
+                                    append(" % from yesterday")
+                                }
+                                // borrow card
+                                binding.tvCard2.text = cardData[1].cardType
+                                binding.tvBookBorrowCount.text = "${cardData[1].amount}"
+                                binding.tvBookBorrowPercentage.text = buildString {
+                                    append(cardData[1].analytic.toString())
+                                    append(" % from yesterday")
+                                }
+                                //
+                                binding.tvCard3.text = cardData[2].cardType
+                                binding.tvBookSponsorCount.text = "${cardData[2].amount}"
+                                binding.tvBookBorrowPercentage.text = buildString {
+                                    append(cardData[2].analytic.toString())
+                                    append(" % from last month")
+                                }
+                                binding.tvCard4.text = cardData[3].cardType
+                                binding.tvTotalEntryCount.text = "${cardData[3].amount}"
+                                binding.tvTotalEntryPercentage.text = buildString {
+                                    append(cardData[3].analytic.toString())
+                                    append(" % from last month")
+                                }
+                                // weekly visitor
+                                binding.tvTotalMajor.text = buildString {
+                                    append("Total")
+                                    append(dashboard.totalMajorVisitor.size.toString())
+                                }
+                                // bar chart
+                                barChart(dashboard.weeklyVisitor.days, isDarkMode)
+                                // pie chart
+                                pieChart(dashboard.totalMajorVisitor, isDarkMode)
+                                // progress ring
+
+                                val totalEngBook = dashboard.bookAvailable[0].totalBook
+                                val engBookAvailable = dashboard.bookAvailable[0].available
+                                val eng = dashboard.bookAvailable[0].language
+                                with(binding.progressEnglish){
+                                    progress = totalEngBook.toFloat()
+                                    text = engBookAvailable.toString()
+                                    textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                                    finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else "#8A2BE2".toColorInt()
+                                }
+                                binding.english.text = eng
+
+                                val totalKhBook = dashboard.bookAvailable[1].totalBook
+                                val khBookAvailable = dashboard.bookAvailable[1].available
+                                val kh = dashboard.bookAvailable[1].language
+                                with(binding.progressKhmer){
+                                    progress = khBookAvailable.toFloat()
+                                    text = totalKhBook.toString()
+                                    textColor = if (isDarkMode) Color.WHITE else Color.BLACK
+                                    finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else "#8A2BE2".toColorInt()
+                                }
+                                binding.khmer.text = kh
+
+
+                                /// add recycler view
+                                val list: List<AttendDetail> = dashboard.customEntry
+                                binding.recyclerViewEntry.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                                val adapter = AttendRecyclerViewAdapter(requireActivity(), list, isDarkMode, isClassicMode)
+                                binding.recyclerViewEntry.adapter = adapter
+
+                            }
+                            binding.swipeRefresh.isRefreshing = false
                         }
-                        binding.english.text = eng
-
-                        val totalKhBook = dashboard.bookAvailable[1].totalBook
-                        val khBookAvailable = dashboard.bookAvailable[1].available
-                        val kh = dashboard.bookAvailable[1].language
-                        with(binding.progressKhmer){
-                            progress = khBookAvailable.toFloat()
-                            text = totalKhBook.toString()
-                            textColor = if (isDarkMode) Color.WHITE else Color.BLACK
-                            finishedStrokeColor = if (isDarkMode) resources.getColor(R.color.purple) else "#8A2BE2".toColorInt()
+                        state.error.isNotEmpty() -> {
+                            loading.stopLoading()
+                            Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+                            binding.swipeRefresh.isRefreshing = false
                         }
-                        binding.khmer.text = kh
-
-
-                        /// add recycler view
-                        val list: List<AttendDetail> = dashboard.customEntry
-                        binding.recyclerViewEntry.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        val adapter = AttendRecyclerViewAdapter(requireActivity(), list, isDarkMode, isClassicMode)
-                        binding.recyclerViewEntry.adapter = adapter
-
                     }
-                    binding.swipeRefresh.isRefreshing = false
-                }
-                state.error.isNotEmpty() -> {
-                    loading.stopLoading()
-                    Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
-                    binding.swipeRefresh.isRefreshing = false
                 }
             }
         }
 
-        viewModel.username.observe(viewLifecycleOwner) {
-            binding.greetingText.text = "Hello, $it"
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.username.observe(viewLifecycleOwner) {
+                    binding.greetingText.text = "Hello, $it"
+                }
+            }
         }
     }
 
@@ -490,34 +515,36 @@ class DashboardFragment : Fragment() {
         }
 
         // collect channel result
-        lifecycleScope.launch {
-            viewModel.eventFlow.collect { result ->
-                when(result){
-                    is StudentState.GetStudentLoading -> loading.startLoading()
-                    is StudentState.GetStudentSuccess -> {
-                        loading.stopLoading()
-                        with(result.students){
-                            input.setSearchResult(studentName, majorName, generation)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.eventFlow.collect { result ->
+                    when(result){
+                        is StudentState.GetStudentLoading -> loading.startLoading()
+                        is StudentState.GetStudentSuccess -> {
+                            loading.stopLoading()
+                            with(result.students){
+                                input.setSearchResult(studentName, majorName, generation)
+                            }
+                            withContext(Dispatchers.Main){
+                                input.btEntry.isEnabled = true
+                            }
                         }
-                        withContext(Dispatchers.Main){
-                            input.btEntry.isEnabled = true
+                        is StudentState.GetStudentError -> {
+                            loading.stopLoading()
+                            Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
                         }
-                    }
-                    is StudentState.GetStudentError -> {
-                        loading.stopLoading()
-                        Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
-                    }
-                    is StudentState.SaveAttendLoading -> loading.startLoading()
-                    is StudentState.SaveAttendSuccess -> {
-                        loading.stopLoading()
-                        Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
-                        dialog.dismiss()
-                    }
-                    is StudentState.SaveAttendError -> {
-                        loading.stopLoading()
-                        Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
-                    }
+                        is StudentState.SaveAttendLoading -> loading.startLoading()
+                        is StudentState.SaveAttendSuccess -> {
+                            loading.stopLoading()
+                            Toast.makeText(context, "Entry Saved Successfully!", Toast.LENGTH_LONG).show()
+                            dialog.dismiss()
+                        }
+                        is StudentState.SaveAttendError -> {
+                            loading.stopLoading()
+                            Snackbar.make(dialogView, result.errorMsg, Snackbar.LENGTH_LONG).show()
+                        }
 
+                    }
                 }
             }
         }

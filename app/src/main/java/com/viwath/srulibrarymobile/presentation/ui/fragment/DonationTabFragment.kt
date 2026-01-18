@@ -25,7 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -219,75 +221,88 @@ class DonationTabFragment : Fragment(R.layout.fragment_donation_tab) {
     private fun observeViewModel() {
 
         viewLifecycleOwner.lifecycleScope.launch {
-            donationTabViewModel.state.collect { state ->
-                when {
-                    state.isLoading -> loading.startLoading()
-                    state.donationList.isNotEmpty() -> {
-                        loading.stopLoading()
-                        donationRecycleViewAdapter.updateDonationList(state.donationList)
-                    }
-                    else -> {
-                        loading.stopLoading()
-                        donationRecycleViewAdapter.updateDonationList(emptyList())
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                donationTabViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.donationList.isNotEmpty() -> {
+                            loading.stopLoading()
+                            donationRecycleViewAdapter.updateDonationList(state.donationList)
+                        }
+
+                        else -> {
+                            loading.stopLoading()
+                            donationRecycleViewAdapter.updateDonationList(emptyList())
+                        }
                     }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            donationTabViewModel.resultEvent.collect { result ->
-                when (result) {
-                    is ResultEvent.ShowError -> showSnackbar(binding.root, result.errorMsg)
-                    is ResultEvent.ShowSuccess -> showSnackbar(binding.root, result.message)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            languageViewModel.state.collect {
-                when {
-                    it.isLoading -> loading.startLoading()
-                    it.error.isNotEmpty() -> {
-                        loading.stopLoading()
-                        requireContext().showToast(it.error)
-                    }
-                    else -> {
-                        _language.clear()
-                        _language.addAll(it.languages)
-                        loading.stopLoading()
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                donationTabViewModel.resultEvent.collect { result ->
+                    when (result) {
+                        is ResultEvent.ShowError -> showSnackbar(binding.root, result.errorMsg)
+                        is ResultEvent.ShowSuccess -> showSnackbar(binding.root, result.message)
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            collegeViewModel.state.collect {
-                when {
-                    it.isLoading -> loading.startLoading()
-                    it.error.isNotEmpty() -> {
-                        loading.stopLoading()
-                        requireContext().showToast(it.error)
-                    }
-                    else -> {
-                        loading.stopLoading()
-                        _colleges.clear()
-                        _colleges.addAll(it.colleges)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                languageViewModel.state.collect {
+                    when {
+                        it.isLoading -> loading.startLoading()
+                        it.error.isNotEmpty() -> {
+                            loading.stopLoading()
+                            requireContext().showToast(it.error)
+                        }
+
+                        else -> {
+                            _language.clear()
+                            _language.addAll(it.languages)
+                            loading.stopLoading()
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            donationTabViewModel.genreList.collect {
-                if (it.isNotEmpty()) {
-                    _genres.clear()
-                    _genres.addAll(it)
-                    ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_dropdown_item,
-                        it
-                    ).also { adapter ->
-                        binding.spinnerFilter.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                collegeViewModel.state.collect {
+                    when {
+                        it.isLoading -> loading.startLoading()
+                        it.error.isNotEmpty() -> {
+                            loading.stopLoading()
+                            requireContext().showToast(it.error)
+                        }
+
+                        else -> {
+                            loading.stopLoading()
+                            _colleges.clear()
+                            _colleges.addAll(it.colleges)
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                donationTabViewModel.genreList.collect {
+                    if (it.isNotEmpty()) {
+                        _genres.clear()
+                        _genres.addAll(it)
+                        ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            it
+                        ).also { adapter ->
+                            binding.spinnerFilter.adapter = adapter
+                        }
                     }
                 }
             }

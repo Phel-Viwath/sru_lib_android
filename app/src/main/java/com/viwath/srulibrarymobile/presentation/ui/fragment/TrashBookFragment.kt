@@ -18,7 +18,9 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -137,39 +139,50 @@ class TrashBookFragment : Fragment(R.layout.fragment_backup_tab) {
 
     private fun observeMainViewModel() {
 
-        lifecycleScope.launch {
-            trashTabViewModel.state.collect{ state ->
-                when{
-                    state.isLoading -> loading.startLoading()
-                    state.booksInTrash.isNotEmpty() -> {
-                        loading.stopLoading()
-                        trashRecyclerViewAdapter.updateBookData(state.booksInTrash)
-                    }
-                    else -> {
-                        loading.stopLoading()
-                        trashRecyclerViewAdapter.updateBookData(emptyList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                trashTabViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.booksInTrash.isNotEmpty() -> {
+                            loading.stopLoading()
+                            trashRecyclerViewAdapter.updateBookData(state.booksInTrash)
+                        }
+
+                        else -> {
+                            loading.stopLoading()
+                            trashRecyclerViewAdapter.updateBookData(emptyList())
+                        }
                     }
                 }
             }
         }//
 
-        lifecycleScope.launch {
-            trashTabViewModel.resultEvent.collect {
-                when(it){
-                    is ResultEvent.ShowSuccess -> showSnackbar(it.message)
-                    is ResultEvent.ShowError -> showSnackbar(it.errorMsg)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                trashTabViewModel.resultEvent.collect {
+                    when (it) {
+                        is ResultEvent.ShowSuccess -> showSnackbar(it.message)
+                        is ResultEvent.ShowError -> showSnackbar(it.errorMsg)
+                    }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            trashTabViewModel.genres.collect { g ->
-                if (g.isNotEmpty()){
-                    _genres.clear()
-                    _genres.addAll(g)
-                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, g).also{
-                        it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.spinnerFilter.adapter = it
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                trashTabViewModel.genres.collect { g ->
+                    if (g.isNotEmpty()) {
+                        _genres.clear()
+                        _genres.addAll(g)
+                        ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            g
+                        ).also {
+                            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            binding.spinnerFilter.adapter = it
+                        }
                     }
                 }
             }

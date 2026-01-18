@@ -38,7 +38,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -179,6 +181,23 @@ class BookTabFragment : Fragment() {
         }
     )
 
+
+    /**
+     * An [androidx.activity.result.ActivityResultLauncher] for handling the result of the biometric enrollment process.
+     *
+     * This launcher is triggered when the user is prompted to set up a biometric credential (like a fingerprint,
+     * face, or device PIN/password/pattern) because one is not already configured. It uses the
+     * [ActivityResultContracts.StartActivityForResult] contract to launch the system's enrollment activity.
+     *
+     * After the enrollment activity finishes, this launcher processes the result:
+     * - If the result is `Activity.RESULT_OK` or `Activity.RESULT_CANCELED`, it calls [retryBiometricAuthentication]
+     *   to attempt the biometric authentication again, as the user might have successfully enrolled or simply backed out.
+     * - In case of any other result, it displays a dialog indicating that the enrollment failed and resets the
+     *   enrollment request flag.
+     *
+     * @see [requestBiometricEnrollment]
+     * @see [retryBiometricAuthentication]
+     */
     private val enrollLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){ result ->
@@ -195,6 +214,7 @@ class BookTabFragment : Fragment() {
             }
         }
     }
+
     // Android lifecycle function
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -220,8 +240,6 @@ class BookTabFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("BookTabFragment", "onViewCreated: BookTabFragment is created.")
 
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         loading = Loading(requireActivity())
@@ -344,17 +362,26 @@ class BookTabFragment : Fragment() {
     private fun observeViewModel(isDarkMode: Boolean, isClassicMode: Boolean) {
 
         // handle load book
+
         viewLifecycleOwner.lifecycleScope.launch {
-            bookTabViewModel.state.collect { state ->
-                when {
-                    state.isLoading -> startLoading() // Show loading indicator
-                    state.error.isNotBlank() -> {
-                        stopLoading()
-                        showToast(state.error) // Display error message
-                    }
-                    state.books.isNotEmpty() -> {
-                        stopLoading()
-                        setupRecyclerView(state.books, isDarkMode, isClassicMode) // Display list of books
+
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookTabViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> startLoading() // Show loading indicator
+                        state.error.isNotBlank() -> {
+                            stopLoading()
+                            showToast(state.error) // Display error message
+                        }
+
+                        state.books.isNotEmpty() -> {
+                            stopLoading()
+                            setupRecyclerView(
+                                state.books,
+                                isDarkMode,
+                                isClassicMode
+                            ) // Display list of books
+                        }
                     }
                 }
             }
@@ -362,31 +389,38 @@ class BookTabFragment : Fragment() {
 
         // handle event message
         viewLifecycleOwner.lifecycleScope.launch {
-            bookTabViewModel.eventFlow.collect { event ->
-                when (event) {
-                    is ResultEvent.ShowSuccess -> showToast(event.message) // Show success message
-                    is ResultEvent.ShowError -> showToast(event.errorMsg) // Show error message
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookTabViewModel.eventFlow.collect { event ->
+                    when (event) {
+                        is ResultEvent.ShowSuccess -> showToast(event.message) // Show success message
+                        is ResultEvent.ShowError -> showToast(event.errorMsg) // Show error message
+                    }
                 }
             }
         }
 
         // handle upload book file
         viewLifecycleOwner.lifecycleScope.launch {
-            bookTabViewModel.uploadState.collect { state ->
-                when (state) {
-                    is UploadState.Idle -> {
-                        // Initial state, do nothing
-                    }
-                    is UploadState.Uploading -> {
-                        showProgressDialog(state.progress, state.uploadedSize, state.totalSize)
-                    }
-                    is UploadState.Success -> {
-                        dismissProgressDialog()
-                        showToast("File uploaded successfully")
-                    }
-                    is UploadState.Error -> {
-                        dismissProgressDialog()
-                        showToast(state.message)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookTabViewModel.uploadState.collect { state ->
+                    when (state) {
+                        is UploadState.Idle -> {
+                            // Initial state, do nothing
+                        }
+
+                        is UploadState.Uploading -> {
+                            showProgressDialog(state.progress, state.uploadedSize, state.totalSize)
+                        }
+
+                        is UploadState.Success -> {
+                            dismissProgressDialog()
+                            showToast("File uploaded successfully")
+                        }
+
+                        is UploadState.Error -> {
+                            dismissProgressDialog()
+                            showToast(state.message)
+                        }
                     }
                 }
             }
@@ -394,54 +428,64 @@ class BookTabFragment : Fragment() {
 
         // handle student search
         viewLifecycleOwner.lifecycleScope.launch {
-            bookTabViewModel.findStudentChannel.collect { isFound ->
-                if (::dialogBorrow.isInitialized)
-                    dialogBorrow.btBorrow.isEnabled = isFound
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookTabViewModel.findStudentChannel.collect { isFound ->
+                    if (::dialogBorrow.isInitialized)
+                        dialogBorrow.btBorrow.isEnabled = isFound
+                }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch{
-            bookTabViewModel.genres.collect{
-                if (it.isNotEmpty()){
-                    _genres.clear()
-                    _genres.addAll(it)
-                    ArrayAdapter(requireContext(), spinnerLayout, it).also { adapter ->
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.spinnerFilter.adapter = adapter
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookTabViewModel.genres.collect {
+                    if (it.isNotEmpty()) {
+                        _genres.clear()
+                        _genres.addAll(it)
+                        ArrayAdapter(requireContext(), spinnerLayout, it).also { adapter ->
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            binding.spinnerFilter.adapter = adapter
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch{
-            languageViewModel.state.collect{ state ->
-                when{
-                    state.isLoading -> loading.startLoading()
-                    state.error.isNotBlank() -> {
-                        loading.stopLoading()
-                        requireContext().showToast(state.error)
-                    }
-                    state.languages.isNotEmpty() -> {
-                        loading.stopLoading()
-                        _languages.clear()
-                        _languages.addAll(state.languages)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                languageViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.error.isNotBlank() -> {
+                            loading.stopLoading()
+                            requireContext().showToast(state.error)
+                        }
+
+                        state.languages.isNotEmpty() -> {
+                            loading.stopLoading()
+                            _languages.clear()
+                            _languages.addAll(state.languages)
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch{
-            collegeViewModel.state.collect { state ->
-                when {
-                    state.isLoading -> loading.startLoading()
-                    state.error.isNotBlank() -> {
-                        loading.stopLoading()
-                        requireContext().showToast(state.error)
-                    }
-                    state.colleges.isNotEmpty() -> {
-                        loading.stopLoading()
-                        _colleges.clear()
-                        _colleges.addAll(state.colleges)
+        viewLifecycleOwner.lifecycleScope.launch{
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                collegeViewModel.state.collect { state ->
+                    when {
+                        state.isLoading -> loading.startLoading()
+                        state.error.isNotBlank() -> {
+                            loading.stopLoading()
+                            requireContext().showToast(state.error)
+                        }
+
+                        state.colleges.isNotEmpty() -> {
+                            loading.stopLoading()
+                            _colleges.clear()
+                            _colleges.addAll(state.colleges)
+                        }
                     }
                 }
             }

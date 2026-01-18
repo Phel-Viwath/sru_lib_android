@@ -14,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.viwath.srulibrarymobile.R
@@ -87,6 +89,11 @@ class BookFragment : Fragment(){
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupViewPager(){
         bookPagerAdapter = BookPagerAdapter(this, fragmentList)
         val tabTitle by lazy {
@@ -125,29 +132,60 @@ class BookFragment : Fragment(){
 
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect{ state ->
-                if (state.isLoading){
-                    loading.startLoading()
-                }
-                if (state.error.isEmpty()){
-                    loading.stopLoading()
-                    val cardList = listOf(
-                        BookCard(resources.getString(R.string.total_book), R.drawable.img_stack_of_books, state.totalBook),
-                        BookCard(resources.getString(R.string.total_donate_book), R.drawable.img_books_stack, state.totalDonation),
-                        BookCard(resources.getString(R.string.total_borrow), R.drawable.img_reading_book, state.totalBorrowed),
-                        BookCard(resources.getString(R.string.total_exp), R.drawable.img_exp_book, state.totalExpiration),
-                        BookCard(resources.getString(R.string.borrow_today), R.drawable.img_borrow_book, state.borrowToday),
-                        BookCard(resources.getString(R.string.return_today), R.drawable.img_return_book, state.returnToday),
-                    )
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    if (state.isLoading) {
+                        loading.startLoading()
+                    }
+                    if (state.error.isEmpty()) {
+                        loading.stopLoading()
+                        val cardList = listOf(
+                            BookCard(
+                                resources.getString(R.string.total_book),
+                                R.drawable.img_stack_of_books,
+                                state.totalBook
+                            ),
+                            BookCard(
+                                resources.getString(R.string.total_donate_book),
+                                R.drawable.img_books_stack,
+                                state.totalDonation
+                            ),
+                            BookCard(
+                                resources.getString(R.string.total_borrow),
+                                R.drawable.img_reading_book,
+                                state.totalBorrowed
+                            ),
+                            BookCard(
+                                resources.getString(R.string.total_exp),
+                                R.drawable.img_exp_book,
+                                state.totalExpiration
+                            ),
+                            BookCard(
+                                resources.getString(R.string.borrow_today),
+                                R.drawable.img_borrow_book,
+                                state.borrowToday
+                            ),
+                            BookCard(
+                                resources.getString(R.string.return_today),
+                                R.drawable.img_return_book,
+                                state.returnToday
+                            ),
+                        )
 
-                    val adapter = BookCardAdapter(requireActivity(), cardList, isClassicMode, isDarkMode)
-                    bookCardAdapter = adapter
-                    binding.recyclerBookCard.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    binding.recyclerBookCard.adapter = adapter
-                }
-                if (state.error.isNotEmpty()){
-                    loading.stopLoading()
-                    showSnackbar(binding.root, state.error)
+                        val adapter =
+                            BookCardAdapter(requireActivity(), cardList, isClassicMode, isDarkMode)
+                        bookCardAdapter = adapter
+                        binding.recyclerBookCard.layoutManager = LinearLayoutManager(
+                            requireContext(),
+                            LinearLayoutManager.HORIZONTAL,
+                            false
+                        )
+                        binding.recyclerBookCard.adapter = adapter
+                    }
+                    if (state.error.isNotEmpty()) {
+                        loading.stopLoading()
+                        showSnackbar(binding.root, state.error)
+                    }
                 }
             }
         }

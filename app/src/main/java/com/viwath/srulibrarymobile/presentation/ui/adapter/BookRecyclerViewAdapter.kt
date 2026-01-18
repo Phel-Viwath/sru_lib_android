@@ -23,7 +23,6 @@ import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 import eightbitlab.com.blurview.BlurView
 
 /**
@@ -55,6 +54,7 @@ class BookRecyclerViewAdapter(
         val tvLanguage: TextView = view.findViewById(R.id.tvLanguage)
         val menuIcon: ImageView = itemView.findViewById(R.id.menuIcon)
         val blurView: BlurView = view.findViewById(R.id.blurViewBookCard)
+        var blurSetup = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -93,13 +93,23 @@ class BookRecyclerViewAdapter(
         }
         holder.itemView.setOnClickListener{ onItemClicked(book) }
 
-        if (!isClassicMode){
-            holder.rootView.apply {
-                setCardBackgroundColor(context.getTransparent())
-                radius = 8f
-                strokeColor = context.getTransparent()
+//        if (!isClassicMode){
+//            holder.rootView.apply {
+//                setCardBackgroundColor(context.getTransparent())
+//                radius = 8f
+//                strokeColor = context.getTransparent()
+//            }
+//            holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
+//        }
+
+        if (!isClassicMode) {
+            if (!holder.blurSetup) {
+                holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
+                holder.blurSetup = true
             }
-            holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
+            holder.blurView.setBlurEnabled(true)
+        } else {
+            holder.blurView.setBlurEnabled(false)
         }
 
     }

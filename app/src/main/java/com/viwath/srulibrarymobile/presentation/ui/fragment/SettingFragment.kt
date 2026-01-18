@@ -18,7 +18,9 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentSettingBinding
 import com.viwath.srulibrarymobile.presentation.ui.activities.LoginActivity
@@ -69,13 +71,13 @@ class SettingFragment : Fragment() {
         // theme option
 
         setupView()
-        observeViewmodel(isDarkMode)
+        observeViewModel(isDarkMode)
 
     }
     // end of onViewCreated
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
@@ -128,12 +130,14 @@ class SettingFragment : Fragment() {
 
     }
 
-    private fun observeViewmodel(isDarkMode: Boolean){
+    private fun observeViewModel(isDarkMode: Boolean){
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                binding.tvUsername.text = state.username
-                binding.tvUserType.text = state.userType
-                binding.themeSpinner.setSelection(state.themeMode)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    binding.tvUsername.text = state.username
+                    binding.tvUserType.text = state.userType
+                    binding.themeSpinner.setSelection(state.themeMode)
+                }
             }
         }
 

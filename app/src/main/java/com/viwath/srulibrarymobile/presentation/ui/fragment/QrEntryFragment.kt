@@ -23,7 +23,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.client.android.BeepManager
@@ -46,6 +48,7 @@ import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.setIcon
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /**
  * QrEntryFragment is a Fragment responsible for handling QR code scanning and student attendance entry.
@@ -131,6 +134,7 @@ class QrEntryFragment: Fragment(){
             }
         )
 
+
         settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
             isClassicMode = when(viewMode){
                 CLASSIC -> true
@@ -158,6 +162,12 @@ class QrEntryFragment: Fragment(){
     override fun onDestroyView() {
         super.onDestroyView()
         loading.stopLoading()
+
+        // stop scanner
+        if (::scannerView.isInitialized)
+            scannerView.pause()
+
+        _binding = null
     }
     //// End override method
 
@@ -274,51 +284,54 @@ class QrEntryFragment: Fragment(){
     /// Observe View model
     @SuppressLint("SetTextI18n")
     private fun observerViewModel(){
-        viewModel.state.onEach { state ->
-            when(state){
-                is QrFragmentState.Idle -> {}
-                is QrFragmentState.Loading -> loading.startLoading()
-                is QrFragmentState.StudentLoaded -> {
-                    loading.stopLoading()
-                    binding.edtId.setText(studentId.toString())
-                    binding.edtStuName.setText(state.student.studentName)
-                    binding.edtMajor.setText(state.student.majorName)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.state.onEach { state ->
+                    when(state){
+                        is QrFragmentState.Idle -> {}
+                        is QrFragmentState.Loading -> loading.startLoading()
+                        is QrFragmentState.StudentLoaded -> {
+                            loading.stopLoading()
+                            binding.edtId.setText(studentId.toString())
+                            binding.edtStuName.setText(state.student.studentName)
+                            binding.edtMajor.setText(state.student.majorName)
 
-                    binding.edtId.isEnabled = false
-                    binding.edtStuName.isEnabled = false
-                    binding.edtMajor.isEnabled = false
-                    binding.swipeRefresh.isRefreshing = false
-                }
-                is QrFragmentState.Error -> {
-                    loading.stopLoading()
-                    binding.swipeRefresh.isRefreshing = false
-                    Log.d("QRFragment", "observerViewModel: ${state.message}")
-                    AlertDialog.Builder(requireContext())
-                        .setMessage(state.message)
-                        .setCancelable(false)
-                        .setPositiveButton("OK"){dialog, _ ->
-                            dialog.dismiss()
+                            binding.edtId.isEnabled = false
+                            binding.edtStuName.isEnabled = false
+                            binding.edtMajor.isEnabled = false
+                            binding.swipeRefresh.isRefreshing = false
                         }
-                        .setTitle("Hello")
-                        .create()
-                        .show()
-                }
-                is QrFragmentState.AttentionSaved -> {
-                    loading.stopLoading()
-                    binding.swipeRefresh.isRefreshing = false
-                    showSnackbar("Attendance saved successfully!")
-                    onButtonClearClick()
-                }
-                is QrFragmentState.EntryState -> state.entry?.let {
-                    loading.stopLoading()
-                    binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
-                    binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
-                    binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
-                }
+                        is QrFragmentState.Error -> {
+                            loading.stopLoading()
+                            binding.swipeRefresh.isRefreshing = false
+                            Log.d("QRFragment", "observerViewModel: ${state.message}")
+                            AlertDialog.Builder(requireContext())
+                                .setMessage(state.message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK"){dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .setTitle("Hello")
+                                .create()
+                                .show()
+                        }
+                        is QrFragmentState.AttentionSaved -> {
+                            loading.stopLoading()
+                            binding.swipeRefresh.isRefreshing = false
+                            showSnackbar("Attendance saved successfully!")
+                            onButtonClearClick()
+                        }
+                        is QrFragmentState.EntryState -> state.entry?.let {
+                            loading.stopLoading()
+                            binding.tvEntry.text = "${it.cardEntry[0].dataNumber}"
+                            binding.tvExit.text = "${it.cardEntry[1].dataNumber}"
+                            binding.tvTotal.text = "${it.cardEntry[2].dataNumber}"
+                        }
 
+                    }
+                }.launchIn(lifecycleScope)
             }
-        }.launchIn(lifecycleScope)
-
+        }
     }
 
 
