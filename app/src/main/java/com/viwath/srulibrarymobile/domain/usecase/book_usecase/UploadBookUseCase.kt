@@ -10,7 +10,8 @@ package com.viwath.srulibrarymobile.domain.usecase.book_usecase
 import android.util.Log
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import com.viwath.srulibrarymobile.presentation.state.book_state.UploadState
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.Channel
@@ -37,14 +38,14 @@ import javax.inject.Inject
  * - Validating the file's existence and readability.
  * - Creating a request body with the appropriate content type.
  * - Reporting upload progress to the caller.
- * - Sending the file to the server via the [CoreRepository].
+ * - Sending the file to the server via the [DashboardRepository].
  * - Handling various potential errors during the upload process (e.g., HTTP errors, network issues).
  * - Emitting different states of the upload process through a [Flow] of [UploadState].
  *
- * @property repository The [CoreRepository] instance used to communicate with the server.
+ * @property repository The [DashboardRepository] instance used to communicate with the server.
  */
 class UploadBookUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BookRepository
 ) {
     operator fun invoke(
         file: File

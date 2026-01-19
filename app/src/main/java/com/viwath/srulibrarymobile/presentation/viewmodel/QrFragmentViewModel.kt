@@ -82,7 +82,7 @@ class QrFragmentViewModel @Inject constructor(
 
     private fun getRecentEntryData(){
         viewModelScope.launch{
-            useCase.recentEntryUseCase().collect { result ->
+            useCase.getRecentEntryUseCase().collect { result ->
                 when(result){
                     is Resource.Loading -> {
                         _state.value = QrFragmentState.Loading

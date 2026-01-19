@@ -130,10 +130,8 @@ class BorrowTabViewModel @Inject constructor(
                 val isOverdue = borrowOverDueDate(borrowDate, borrow.isExtend)
                 isOverdue && !borrow.isBringBack && !borrow.isExtend
             }
-        val resultList = if (borrowFiltered.isEmpty()) {
+        val resultList = borrowFiltered.ifEmpty {
             emptyList()
-        } else {
-            borrowFiltered
         }
         if (isFilter) _state.updateState { copy(borrowList = resultList) }
         else _state.updateState { copy(borrowList = _borrowList) }

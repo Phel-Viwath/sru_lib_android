@@ -12,7 +12,7 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.book.toBook
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,7 +30,7 @@ import javax.inject.Inject
  * @property repository The repository responsible for data access. Injected via constructor injection.
  */
 class GetBooksUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BookRepository
 ) {
     operator fun invoke(): Flow<Resource<List<Book>>> = flow {
         emit(Resource.Loading())

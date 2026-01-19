@@ -12,13 +12,14 @@ import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BookId
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class DeleteBookUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BookRepository
 ) {
 
     operator fun invoke(bookId: BookId): Flow<Resource<Boolean>> = flow {

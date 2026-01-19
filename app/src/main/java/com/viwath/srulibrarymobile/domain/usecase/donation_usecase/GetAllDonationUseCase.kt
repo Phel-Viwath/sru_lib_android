@@ -13,13 +13,13 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.Donation
 import com.viwath.srulibrarymobile.domain.model.toDonation
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.DonationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetAllDonationUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: DonationRepository
 ){
     operator fun invoke(): Flow<Resource<List<Donation>>> = flow{
         emit(Resource.Loading())

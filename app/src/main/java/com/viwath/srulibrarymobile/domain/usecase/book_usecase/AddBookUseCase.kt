@@ -11,7 +11,7 @@ import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.book.Book
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -25,7 +25,7 @@ import javax.inject.Inject
  * @property repository The repository responsible for data access.
  */
 class AddBookUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BookRepository
 ) {
     operator fun invoke(bookDto: Book): Flow< Resource<Unit>> = flow {
         emit(Resource.Loading(Unit))

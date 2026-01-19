@@ -12,13 +12,13 @@ import com.viwath.srulibrarymobile.domain.DataAppError
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.DonationIO
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.DonationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UpdateDonationUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: DonationRepository
 ){
     operator fun invoke(donation: DonationIO): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())

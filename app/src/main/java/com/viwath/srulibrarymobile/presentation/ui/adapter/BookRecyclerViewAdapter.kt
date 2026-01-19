@@ -106,10 +106,10 @@ class BookRecyclerViewAdapter(
         if (!isClassicMode) {
             if (!holder.blurSetup) {
                 holder.rootView.apply {
-                setCardBackgroundColor(context.getTransparent())
-                radius = 8f
-                strokeColor = context.getTransparent()
-            }
+                    setCardBackgroundColor(context.getTransparent())
+                    radius = 8f
+                    strokeColor = context.getTransparent()
+                }
                 holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
                 holder.blurSetup = true
             }

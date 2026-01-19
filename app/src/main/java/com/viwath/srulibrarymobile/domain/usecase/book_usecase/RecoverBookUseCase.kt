@@ -11,7 +11,7 @@ import android.util.Log
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -28,7 +28,7 @@ import javax.inject.Inject
  * @constructor Creates a `RecoverBookUseCase` with the provided `CoreRepository`.
  */
 class RecoverBookUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BookRepository
 ) {
     operator fun invoke(bookId: String): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading())

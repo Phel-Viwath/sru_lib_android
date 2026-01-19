@@ -15,10 +15,20 @@ import com.viwath.srulibrarymobile.common.constant.Constant
 import com.viwath.srulibrarymobile.data.api.AuthApi
 import com.viwath.srulibrarymobile.data.api.AuthInterceptor
 import com.viwath.srulibrarymobile.data.api.CoreApi
+import com.viwath.srulibrarymobile.data.repository.AttendRepositoryImp
 import com.viwath.srulibrarymobile.data.repository.AuthRepositoryImp
-import com.viwath.srulibrarymobile.data.repository.CoreRepositoryImp
+import com.viwath.srulibrarymobile.data.repository.BookRepositoryImp
+import com.viwath.srulibrarymobile.data.repository.BorrowRepositoryImp
+import com.viwath.srulibrarymobile.data.repository.DashboardRepositoryImp
+import com.viwath.srulibrarymobile.data.repository.DonationRepositoryImp
+import com.viwath.srulibrarymobile.data.repository.UserRepositoryImp
+import com.viwath.srulibrarymobile.domain.repository.AttendRepository
 import com.viwath.srulibrarymobile.domain.repository.AuthRepository
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BookRepository
+import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
+import com.viwath.srulibrarymobile.domain.repository.DonationRepository
+import com.viwath.srulibrarymobile.domain.repository.UserRepository
 import com.viwath.srulibrarymobile.domain.usecase.GetCollegeUseCase
 import com.viwath.srulibrarymobile.domain.usecase.GetLanguageUseCase
 import com.viwath.srulibrarymobile.domain.usecase.auth_usecase.AuthUseCase
@@ -179,10 +189,39 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideCoreRepository(api: CoreApi): CoreRepository {
-        return CoreRepositoryImp(api)
+    fun provideDashboardRepository(api: CoreApi): DashboardRepository {
+        return DashboardRepositoryImp(api)
     }
 
+    @Provides
+    @Singleton
+    fun provideAttendRepository(api: CoreApi): AttendRepository {
+        return AttendRepositoryImp(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookRepository(api: CoreApi): BookRepository {
+        return BookRepositoryImp(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBorrowRepository(api: CoreApi): BorrowRepository {
+        return BorrowRepositoryImp(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDonationRepository(api: CoreApi): DonationRepository {
+        return DonationRepositoryImp(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(api: CoreApi): UserRepository {
+        return UserRepositoryImp(api)
+    }
 
     /**
      * Use Case Dependencies
@@ -196,7 +235,7 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideQrUseCase(repository: CoreRepository): EntryUseCase {
+    fun provideQrUseCase(repository: AttendRepository): EntryUseCase {
         return EntryUseCase(
             GetStudentByIDUseCase(repository),
             SaveAttendUseCase(repository),
@@ -230,34 +269,37 @@ object AppModule {
     /**
      * Provides book management related use cases
      * Handles CRUD operations for books, including trash management
-     * @param repository Core repository instance
+     * @param bookRepository Core repository instance
      * @return BookUseCase containing all book-related use cases
      */
     @Provides
     @Singleton
-    fun provideBookUseCase(repository: CoreRepository): BookUseCase{
+    fun provideBookUseCase(
+        bookRepository: BookRepository,
+        attendRepository: AttendRepository
+    ): BookUseCase{
         return BookUseCase(
-            AddBookUseCase(repository),
-            GetBooksUseCase(repository),
-            UpdateBookUseCase(repository),
-            RemoveBookUseCase(repository),
-            RecoverBookUseCase(repository),
-            GetBookInTrashUseCase(repository),
-            GetSummaryUseCase(repository),
-            UploadBookUseCase(repository),
-            GetStudentByIDUseCase(repository),
-            SearchBookUseCase(repository),
-            DeleteBookUseCase(repository)
+            AddBookUseCase(bookRepository),
+            GetBooksUseCase(bookRepository),
+            UpdateBookUseCase(bookRepository),
+            RemoveBookUseCase(bookRepository),
+            RecoverBookUseCase(bookRepository),
+            GetBookInTrashUseCase(bookRepository),
+            GetSummaryUseCase(bookRepository),
+            UploadBookUseCase(bookRepository),
+            GetStudentByIDUseCase(attendRepository),
+            SearchBookUseCase(bookRepository),
+            DeleteBookUseCase(bookRepository)
         )
     }
 
     @Provides
     @Singleton
-    fun provideGetCollegeUseCase(repository: CoreRepository): GetCollegeUseCase = GetCollegeUseCase(repository)
+    fun provideGetCollegeUseCase(repository: BookRepository): GetCollegeUseCase = GetCollegeUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetLanguageUseCase(repository: CoreRepository): GetLanguageUseCase = GetLanguageUseCase(repository)
+    fun provideGetLanguageUseCase(repository: BookRepository): GetLanguageUseCase = GetLanguageUseCase(repository)
 
     /**
      * Provides book borrowing related use cases
@@ -268,7 +310,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBorrowUseCase(
-        repository: CoreRepository
+        repository: BorrowRepository
     ): BorrowUseCase = BorrowUseCase(
         GetAllBorrowUseCase(repository),
         BorrowBookUseCase(repository),
@@ -286,7 +328,7 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideDonationUseCase(repository: CoreRepository): DonationUseCase{
+    fun provideDonationUseCase(repository: DonationRepository): DonationUseCase{
         return DonationUseCase(
             GetAllDonationUseCase(repository),
             AddDonationUseCase(repository),

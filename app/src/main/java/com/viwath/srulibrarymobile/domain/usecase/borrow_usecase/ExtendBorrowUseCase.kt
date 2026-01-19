@@ -11,7 +11,8 @@ import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BorrowId
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -19,12 +20,12 @@ import javax.inject.Inject
 /**
  * `ExtendBorrowUseCase` is a use case responsible for extending the duration of a borrowed item.
  *
- * It interacts with the [CoreRepository] to perform the extension operation.
+ * It interacts with the [DashboardRepository] to perform the extension operation.
  *
- * @property repository The [CoreRepository] instance used to communicate with the data layer.
+ * @property repository The [DashboardRepository] instance used to communicate with the data layer.
  */
 class ExtendBorrowUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BorrowRepository
 ) {
     operator fun invoke(id: BorrowId): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())

@@ -12,7 +12,8 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.toBorrow
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -21,14 +22,14 @@ import javax.inject.Inject
  * Use case responsible for retrieving all borrow records.
  *
  * This class encapsulates the logic for fetching a list of all [Borrow] objects
- * from the underlying [CoreRepository]. It handles potential errors during the
+ * from the underlying [DashboardRepository]. It handles potential errors during the
  * data retrieval process, such as network issues or server errors, and emits
  * the result as a [Resource] sealed class.
  *
- * @property repository The [CoreRepository] instance used to interact with the data layer.
+ * @property repository The [DashboardRepository] instance used to interact with the data layer.
  */
 class GetAllBorrowUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: BorrowRepository
 ) {
     operator fun invoke(): Flow<Resource<List<Borrow>>> = flow{
         emit(Resource.Loading())

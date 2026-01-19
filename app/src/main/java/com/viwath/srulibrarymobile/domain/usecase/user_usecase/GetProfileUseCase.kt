@@ -7,9 +7,9 @@
 
 package com.viwath.srulibrarymobile.domain.usecase.user_usecase
 
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 
 class GetProfileUseCase (
-    private val repository: CoreRepository
+    private val repository: DashboardRepository
 ){
 }

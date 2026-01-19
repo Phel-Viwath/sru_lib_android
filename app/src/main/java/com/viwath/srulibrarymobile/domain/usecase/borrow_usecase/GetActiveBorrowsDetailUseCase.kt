@@ -12,7 +12,8 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.toBorrow
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.flow
  * @property repository The `CoreRepository` instance responsible for data access.
  */
 class GetActiveBorrowsDetailUseCase(
-    private val repository: CoreRepository
+    private val repository: BorrowRepository
 ) {
     operator fun invoke(): Flow<Resource<List<Borrow>>> = flow{
         emit(Resource.Loading())

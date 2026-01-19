@@ -9,7 +9,7 @@ package com.viwath.srulibrarymobile.domain.usecase.dashboard_usecase
 
 import com.viwath.srulibrarymobile.common.result.Resource
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
-import com.viwath.srulibrarymobile.domain.repository.CoreRepository
+import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -19,14 +19,14 @@ import javax.inject.Inject
 /**
  * [DashboardUseCase] is a Use Case class responsible for fetching and handling the Dashboard data.
  *
- * It interacts with the [CoreRepository] to retrieve the [Dashboard] information.
+ * It interacts with the [DashboardRepository] to retrieve the [Dashboard] information.
  * It handles potential errors during the data retrieval process, such as network or server issues,
  * and emits the result as a [Flow] of [Resource] objects.
  *
- * @property repository The [CoreRepository] instance used to access the data layer.
+ * @property repository The [DashboardRepository] instance used to access the data layer.
  */
 class DashboardUseCase @Inject constructor(
-    private val repository: CoreRepository
+    private val repository: DashboardRepository
 ) {
     operator fun invoke(): Flow<Resource<Dashboard>> = flow {
         runCatching {
