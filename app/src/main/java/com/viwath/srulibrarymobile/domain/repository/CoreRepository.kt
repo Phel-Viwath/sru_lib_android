@@ -23,7 +23,6 @@ import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.model.dashboard.Dashboard
-import com.viwath.srulibrarymobile.domain.model.entry.Attend
 import com.viwath.srulibrarymobile.domain.model.entry.Entry
 import okhttp3.MultipartBody
 
@@ -32,40 +31,8 @@ import okhttp3.MultipartBody
  * This interface defines methods for interacting with various data sources,
  * including dashboards, students, attendance, books, borrows, and donations.
  */
-interface CoreRepository {
+interface CoreRepository : AttendRepository, BookRepository, BorrowRepository, DonationRepository {
     suspend fun getDashboard(): Dashboard
-    suspend fun getStudentById(id: Long): Result<Students, DataAppError.Remote>
-    suspend fun newAttend(studentId: String, purpose: String): Attend
-    suspend fun getRecentEntryData(): Entry
-    suspend fun updateExitingTime(studentId: Long): Boolean
-    suspend fun checkExitingAttend(id: String): String
-
-    // book
-    suspend fun addBooks(books: List<Book>): Result<Unit, DataAppError.Remote>
-    suspend fun uploadBook(file: MultipartBody.Part): Result<Unit, DataAppError.Remote>
-    suspend fun updateBook(book: Book): Result<Unit, DataAppError.Remote>
-    suspend fun getBooks(): Result<List<BookDto>, DataAppError.Remote>
-    suspend fun getBooksInTrash(): Result<List<BookDto>, DataAppError.Remote>
-    suspend fun getSummaryBook(): Result<BookSummary, DataAppError.Remote>
-    suspend fun moveToTrash(bookId: BookId): Result<Unit, DataAppError.Remote>
-    suspend fun recoverBook(bookId: BookId): Result<Unit, DataAppError.Remote>
-    suspend fun bookLanguages(): Result<List<Language>, DataAppError.Remote>
-    suspend fun college(): Result<List<College>, DataAppError.Remote>
-    suspend fun searchBook(keyword: String): Result<List<BookDto>, DataAppError.Remote>
-    suspend fun deleteBook(bookId: BookId): Result<Unit, DataAppError.Remote>
-
-    // borrow
-    suspend fun borrowBook(borrow: BorrowRequest): Result<Unit, DataAppError.Remote>
-    suspend fun getAllBorrowsDetail(): Result<List<BorrowDetailDto>, DataAppError.Remote>
-    suspend fun getActiveBorrowsDetail(): Result<List<BorrowDetailDto>, DataAppError.Remote>
-    suspend fun searchBorrow(keyword: String): Result<List<BorrowDetailDto>, DataAppError.Remote>
-    suspend fun extendBorrow(id: BorrowId): Result<Unit, DataAppError.Remote>
-    suspend fun returnBook(studentId: StudentId, bookId: BookId): Result<Unit, DataAppError.Remote>
-
-    // donation
-    suspend fun addDonation(donationIO: DonationIO): Result<Unit, DataAppError.Remote>
-    suspend fun getAllDonation(): Result<List<DonationDto>, DataAppError.Remote>
-    suspend fun updateDonation(donationIO: DonationIO): Result<Unit, DataAppError.Remote>
 
     // user
     suspend fun getUser(userId: String): Result<Unit, DataAppError.Remote>

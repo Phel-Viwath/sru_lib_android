@@ -12,5 +12,5 @@ package com.viwath.srulibrarymobile.common.constant
  */
 object Constant {
     //const val BASE_URL = "https://sru-lib-spring.onrender.com/"
-    const val BASE_URL = "http://192.168.1.7:8070/"
+    const val BASE_URL = "http://192.168.1.19:8070/"
 }

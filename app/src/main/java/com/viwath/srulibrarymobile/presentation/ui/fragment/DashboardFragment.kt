@@ -138,11 +138,10 @@ class DashboardFragment : Fragment() {
             b.blurViewEntryList.releaseBlur()
             b.blurViewBtEntry.releaseBlur()
         }
-
-        _binding = null
-
         super.onDestroyView()
         //viewModel.state.removeObservers(this)
+
+        _binding = null
     }
 
 

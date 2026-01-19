@@ -23,6 +23,7 @@ import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
+import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 import eightbitlab.com.blurview.BlurView
 
 /**
@@ -104,6 +105,11 @@ class BookRecyclerViewAdapter(
 
         if (!isClassicMode) {
             if (!holder.blurSetup) {
+                holder.rootView.apply {
+                setCardBackgroundColor(context.getTransparent())
+                radius = 8f
+                strokeColor = context.getTransparent()
+            }
                 holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
                 holder.blurSetup = true
             }
