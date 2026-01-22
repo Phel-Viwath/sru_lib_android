@@ -13,7 +13,6 @@ import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.toBorrow
 import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,10 +21,10 @@ import javax.inject.Inject
  * Use case for searching borrows based on a keyword.
  *
  * This class encapsulates the logic for searching borrows from the data source
- * via the [DashboardRepository]. It handles loading states, success responses, and
+ * via the [BorrowRepository]. It handles loading states, success responses, and
  * various error conditions (like network issues and HTTP errors).
  *
- * @property repository The [DashboardRepository] instance used to interact with the data source.
+ * @property repository The [BorrowRepository] instance used to interact with the data source.
  */
 class SearchBorrowUseCase @Inject constructor(
     private val repository: BorrowRepository

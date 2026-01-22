@@ -21,10 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.domain.model.book.Book
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
-import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.view_component.getTransparent
-import eightbitlab.com.blurview.BlurView
 
 /**
  * [BookRecyclerViewAdapter] is a RecyclerView adapter responsible for displaying a list of [Book] objects.
@@ -39,6 +35,7 @@ import eightbitlab.com.blurview.BlurView
  *          It takes the [Book] object and the action string ("update", "delete", "borrow") as parameters.
  * @property onItemClicked Callback function invoked when a book item is clicked. It takes the clicked [Book] object as a parameter.
  */
+
 class BookRecyclerViewAdapter(
     private val context: Activity,
     private var books: List<Book>,
@@ -54,8 +51,6 @@ class BookRecyclerViewAdapter(
         val tvBookQuan: TextView = view.findViewById(R.id.tvBookQuan)
         val tvLanguage: TextView = view.findViewById(R.id.tvLanguage)
         val menuIcon: ImageView = itemView.findViewById(R.id.menuIcon)
-        val blurView: BlurView = view.findViewById(R.id.blurViewBookCard)
-        var blurSetup = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -94,28 +89,37 @@ class BookRecyclerViewAdapter(
         }
         holder.itemView.setOnClickListener{ onItemClicked(book) }
 
-//        if (!isClassicMode){
-//            holder.rootView.apply {
-//                setCardBackgroundColor(context.getTransparent())
-//                radius = 8f
-//                strokeColor = context.getTransparent()
-//            }
-//            holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
-//        }
+        /*if (!isClassicMode){
+            holder.rootView.apply {
+                setCardBackgroundColor(context.getTransparent())
+                radius = 8f
+                strokeColor = context.getTransparent()
+            }
+            holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
+        }*/
 
         if (!isClassicMode) {
-            if (!holder.blurSetup) {
-                holder.rootView.apply {
-                    setCardBackgroundColor(context.getTransparent())
-                    radius = 8f
-                    strokeColor = context.getTransparent()
-                }
-                holder.blurView.applyBlur(context, 10f, context.getTranslucentColor(isDarkMode))
-                holder.blurSetup = true
+            // Modern mode = semi-transparent card
+            holder.rootView.apply {
+                // 80% opacity white in light mode / dark gray in dark mode
+                setCardBackgroundColor(
+                    if (isDarkMode) context.getColor(R.color.opaque_charcoal)
+                    else context.getColor(R.color.opaque_white)
+                )
+                strokeColor = if (isDarkMode)
+                    context.getColor(R.color.translucent_white)
+                else context.getColor(R.color.translucent_black)
             }
-            holder.blurView.setBlurEnabled(true)
         } else {
-            holder.blurView.setBlurEnabled(false)
+            // Classic mode = normal solid background
+            holder.rootView.apply {
+                setCardBackgroundColor(
+                    if (isDarkMode)
+                        context.getColor(R.color.material_dark_gray)
+                    else context.getColor(R.color.solid_white)
+                )
+                strokeWidth = 1
+            }
         }
 
     }

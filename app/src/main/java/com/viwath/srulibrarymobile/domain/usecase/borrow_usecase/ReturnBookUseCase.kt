@@ -13,7 +13,6 @@ import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.BookId
 import com.viwath.srulibrarymobile.domain.model.StudentId
 import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,10 +21,10 @@ import javax.inject.Inject
  * Use case for returning a book.
  *
  * This class encapsulates the logic for returning a book to the library. It interacts with the
- * [DashboardRepository] to perform the actual return operation and handles potential errors, such as
+ * [BorrowRepository] to perform the actual return operation and handles potential errors, such as
  * network issues or server errors.
  *
- * @property repository The [DashboardRepository] instance responsible for interacting with the data layer.
+ * @property repository The [BorrowRepository] instance responsible for interacting with the data layer.
  */
 class ReturnBookUseCase @Inject constructor(
     private val repository: BorrowRepository

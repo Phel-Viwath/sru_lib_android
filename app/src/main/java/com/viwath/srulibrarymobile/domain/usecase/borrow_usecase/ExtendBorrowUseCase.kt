@@ -20,9 +20,9 @@ import javax.inject.Inject
 /**
  * `ExtendBorrowUseCase` is a use case responsible for extending the duration of a borrowed item.
  *
- * It interacts with the [DashboardRepository] to perform the extension operation.
+ * It interacts with the [BorrowRepository] to perform the extension operation.
  *
- * @property repository The [DashboardRepository] instance used to communicate with the data layer.
+ * @property repository The [BorrowRepository] instance used to communicate with the data layer.
  */
 class ExtendBorrowUseCase @Inject constructor(
     private val repository: BorrowRepository

@@ -12,8 +12,6 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.Students
 import com.viwath.srulibrarymobile.domain.repository.AttendRepository
-import com.viwath.srulibrarymobile.domain.repository.BookRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,13 +20,13 @@ import javax.inject.Inject
  * `GetStudentByIDUseCase` is a use case class responsible for retrieving a student's data by their ID.
  *
  * This class encapsulates the business logic for fetching a student from the repository
- * and handling potential errors during the process. It interacts with the [DashboardRepository]
+ * and handling potential errors during the process. It interacts with the [AttendRepository]
  * to access the underlying data source.
  *
- * @property repository The [DashboardRepository] instance used to access student data.
+ * @property repository The [AttendRepository] instance used to access student data.
  *
  * @constructor Creates a [GetStudentByIDUseCase] instance.
- * @param repository The [DashboardRepository] to be injected.
+ * @param repository The [AttendRepository] to be injected.
  */
 class GetStudentByIDUseCase @Inject constructor(
     private val repository: AttendRepository

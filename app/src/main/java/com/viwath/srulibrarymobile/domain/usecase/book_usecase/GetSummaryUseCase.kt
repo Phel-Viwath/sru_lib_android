@@ -12,20 +12,19 @@ import com.viwath.srulibrarymobile.data.dto.BookSummary
 import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.repository.BookRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
  * `GetSummaryUseCase` is a Use Case class responsible for fetching a summary of a book.
- * It interacts with the [DashboardRepository] to retrieve the summary data and
+ * It interacts with the [BookRepository] to retrieve the summary data and
  * emits the result as a [Flow] of [Resource] objects.
  *
  * This class follows the Clean Architecture principles by encapsulating the business logic
  * related to fetching the book summary, separating it from the data layer and the UI layer.
  *
- * @property repository The [DashboardRepository] instance used to access the data layer and
+ * @property repository The [BookRepository] instance used to access the data layer and
  *                    fetch the book summary. Injected via constructor injection.
  */
 class GetSummaryUseCase @Inject constructor(

@@ -21,6 +21,7 @@ class LibApp : Application(){
     private lateinit var settingPreferences: SettingPreferences
     override fun onCreate() {
         super.onCreate()
+
         settingPreferences = SettingPreferences(applicationContext, KeyStoreManager())
 
         CoroutineScope(Dispatchers.IO).launch {

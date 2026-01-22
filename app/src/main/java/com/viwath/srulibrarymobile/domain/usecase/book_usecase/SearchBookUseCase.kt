@@ -13,7 +13,6 @@ import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.book.Book
 import com.viwath.srulibrarymobile.domain.model.book.toBook
 import com.viwath.srulibrarymobile.domain.repository.BookRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,11 +21,11 @@ import javax.inject.Inject
  * Use case for searching books based on a keyword.
  *
  * This class encapsulates the logic for searching books in the data source
- * through the [DashboardRepository]. It handles the flow of data, including
+ * through the [BookRepository]. It handles the flow of data, including
  * loading, success, and error states. It also manages potential exceptions
  * during the search process, such as network errors or HTTP errors.
  *
- * @property repository The [DashboardRepository] instance responsible for interacting with the data source.
+ * @property repository The [BookRepository] instance responsible for interacting with the data source.
  */
 class SearchBookUseCase @Inject constructor(
     private val repository: BookRepository

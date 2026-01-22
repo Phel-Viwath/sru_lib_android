@@ -12,7 +12,6 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.BorrowRequest
 import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -20,12 +19,12 @@ import javax.inject.Inject
 /**
  * A use case class responsible for handling the borrowing of a book.
  *
- * This class interacts with the [DashboardRepository] to perform the actual
+ * This class interacts with the [BorrowRepository] to perform the actual
  * borrowing operation and handles various scenarios, including success,
  * failure, network issues, and HTTP errors. It emits a [Resource] state
  * representing the outcome of the borrow operation.
  *
- * @property repository The [DashboardRepository] instance used to communicate with
+ * @property repository The [BorrowRepository] instance used to communicate with
  *                     the data layer for borrowing operations.
  */
 class BorrowBookUseCase @Inject constructor(

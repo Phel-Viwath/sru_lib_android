@@ -123,4 +123,20 @@
     <color name="zxing_custom_viewfinder_laser">#ffcc0000</color>
     <color name="zxing_custom_viewfinder_mask">#60000000</color>
 
+    <color name="opaque_charcoal">#661C1C1C</color>
+    <color name="opaque_white">#66FFFFFF</color>
+    <color name="translucent_white">#33FFFFFF</color>
+    <color name="translucent_black">#33000000</color>
+
+    <color name="material_dark_gray">#FF121212</color>
+    <color name="solid_white">#FFFFFFFF</color>
+
+    <!-- 80% opacity -->
+    <color name="glass_white">#CCFFFFFF</color>
+    <color name="glass_charcoal">#CC1C1C1C</color>
+
+    <!-- subtle borders -->
+    <color name="glass_stroke_light">#33000000</color>
+    <color name="glass_stroke_dark">#33FFFFFF</color>
+
 </resources>

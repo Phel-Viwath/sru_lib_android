@@ -18,9 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemDonationBinding
 import com.viwath.srulibrarymobile.domain.model.Donation
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
-import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 class DonationRecycleViewAdapter(
     private val activity: Activity,
@@ -35,7 +32,6 @@ class DonationRecycleViewAdapter(
     ) : RecyclerView.ViewHolder(binding.root){
 
         val root = binding.root
-        val blurViewDonationItem = binding.blurViewDonationItem
 
         val btEdit = binding.btEdit
         val cardView = binding.rootCardView
@@ -114,15 +110,28 @@ class DonationRecycleViewAdapter(
             }
         }
 
-        if (!isClassicMode){
+        if (!isClassicMode) {
+            // Modern mode = semi-transparent card
             holder.root.apply {
-                setCardBackgroundColor(activity.getTransparent())
-                strokeColor = context.getTransparent()
-                radius = 5f
+                // 80% opacity white in light mode / dark gray in dark mode
+                setCardBackgroundColor(
+                    if (isDarkMode) context.getColor(R.color.opaque_charcoal)
+                    else context.getColor(R.color.opaque_white)
+                )
+                strokeColor = if (isDarkMode)
+                    context.getColor(R.color.translucent_white)
+                else context.getColor(R.color.translucent_black)
             }
-            holder.blurViewDonationItem.applyBlur(
-                activity, 10f, activity.getTranslucentColor(isDarkMode)
-            )
+        } else {
+            // Classic mode = normal solid background
+            holder.root.apply {
+                setCardBackgroundColor(
+                    if (isDarkMode)
+                        context.getColor(R.color.material_dark_gray)
+                    else context.getColor(R.color.solid_white)
+                )
+                strokeWidth = 1
+            }
         }
 
     }

@@ -38,11 +38,11 @@ import javax.inject.Inject
  * - Validating the file's existence and readability.
  * - Creating a request body with the appropriate content type.
  * - Reporting upload progress to the caller.
- * - Sending the file to the server via the [DashboardRepository].
+ * - Sending the file to the server via the [BookRepository].
  * - Handling various potential errors during the upload process (e.g., HTTP errors, network issues).
  * - Emitting different states of the upload process through a [Flow] of [UploadState].
  *
- * @property repository The [DashboardRepository] instance used to communicate with the server.
+ * @property repository The [BookRepository] instance used to communicate with the server.
  */
 class UploadBookUseCase @Inject constructor(
     private val repository: BookRepository

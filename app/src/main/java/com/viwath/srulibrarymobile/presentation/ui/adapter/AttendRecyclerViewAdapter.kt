@@ -14,28 +14,25 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemEntryBinding
 import com.viwath.srulibrarymobile.domain.model.entry.AttendDetail
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 
 class AttendRecyclerViewAdapter(
-    private val context: Activity,
+    private val activity: Activity,
     private val data: List<AttendDetail>,
     private val isDarkMode: Boolean,
-    private val isClassicMode: Boolean = false
+    private var isClassicMode: Boolean
 ): RecyclerView.Adapter<AttendRecyclerViewAdapter.EntryViewHolder>(){
 
     class EntryViewHolder(
         private val binding: ItemEntryBinding
     ): RecyclerView.ViewHolder(binding.root){
 
-        val cardView = binding.root
-        val blurCard = binding.blurAttendCard
+        val cardView = binding.cardViewEntry
 
         fun bindData(entry: AttendDetail){
             binding.tvStudentId.text = entry.studentId.toString()
@@ -66,16 +63,31 @@ class AttendRecyclerViewAdapter(
     ) {
         val attend = data[position]
         val isOut = attend.status == "OUT"
-        val innerCardTranslucentColor = if (!isDarkMode) {
-            ContextCompat.getColor(context, R.color.translucent_white_35)
+
+        if (!isClassicMode) {
+            // Modern mode = semi-transparent card
+            holder.cardView.apply {
+                // 80% opacity white in light mode / dark gray in dark mode
+                setCardBackgroundColor(
+                    if (isDarkMode) activity.getColor(R.color.opaque_charcoal)
+                    else activity.getColor(R.color.opaque_white)
+                )
+                strokeColor = if (isDarkMode)
+                    activity.getColor(R.color.translucent_white)
+                else activity.getColor(R.color.translucent_black)
+            }
         } else {
-            ContextCompat.getColor(context, R.color.translucent_black_35)
+            // Classic mode = normal solid background
+            holder.cardView.apply {
+                setCardBackgroundColor(
+                    if (isDarkMode)
+                        activity.getColor(R.color.material_dark_gray)
+                    else activity.getColor(R.color.solid_white)
+                )
+                strokeWidth = 1
+            }
         }
 
-        holder.cardView.strokeColor = if (isDarkMode) context.getColor(R.color.white) else context.getColor(R.color.black)
-        if (!isClassicMode){
-            holder.blurCard.applyBlur(context, 20f, innerCardTranslucentColor)
-        }
 
         holder.bindData(attend)
         holder.setColorStatus(isOut)
@@ -125,5 +137,11 @@ class AttendRecyclerViewAdapter(
         this.text = if (text.length > 15) text.take(maxLength) + "..." else text
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateViewMode(isClassic: Boolean){
+        if (this.isClassicMode == isClassic) return
+        this.isClassicMode = isClassic
+        notifyDataSetChanged()
+    }
 
 }

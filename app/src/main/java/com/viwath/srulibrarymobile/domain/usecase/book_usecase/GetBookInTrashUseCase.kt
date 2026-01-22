@@ -14,7 +14,6 @@ import com.viwath.srulibrarymobile.domain.HandleDataError.handleRemoteError
 import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
 import com.viwath.srulibrarymobile.domain.repository.BookRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -25,11 +24,11 @@ import javax.inject.Inject
  * `GetBookInTrashUseCase`
  *
  * This class represents a use case for retrieving a list of books that are marked as being in the trash.
- * It interacts with the [DashboardRepository] to fetch the data and returns a [Flow] emitting a [Resource]
+ * It interacts with the [BookRepository] to fetch the data and returns a [Flow] emitting a [Resource]
  * indicating the state of the operation (loading, success, or error) along with the list of [BookDto]
  * if the operation was successful.
  *
- * @property repository The [DashboardRepository] instance responsible for data access.
+ * @property repository The [BookRepository] instance responsible for data access.
  *
  * Usage:
  *  1. Inject this class into the ViewModel or Presenter.

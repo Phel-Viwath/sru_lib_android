@@ -55,7 +55,6 @@ import com.viwath.srulibrarymobile.presentation.ui.dialog.DialogEntry
 import com.viwath.srulibrarymobile.presentation.viewmodel.ConnectivityViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.DashboardViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
-import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.releaseBlur
@@ -83,6 +82,8 @@ class DashboardFragment : Fragment() {
     private val settingViewModel: SettingViewModel by activityViewModels()
 
     private lateinit var loading: Loading
+    private lateinit var attendAdapter: AttendRecyclerViewAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,25 +101,25 @@ class DashboardFragment : Fragment() {
         loading = Loading(requireActivity())
         isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        settingViewModel.viewMode.observe(requireActivity()) { viewMode ->
-            isClassicMode = when(viewMode){
-                CLASSIC -> true
-                MODERN -> false
-                else -> true
-            }
+        settingViewModel.viewMode.observe(viewLifecycleOwner) { viewMode ->
+            isClassicMode = viewMode != MODERN
             if (_binding != null){
                 setUpTheme(isDarkMode, isClassicMode)
+                // Update adapter immediately if it exists
+                if (::attendAdapter.isInitialized) {
+                    attendAdapter.updateViewMode(isClassicMode)
+                }
             }
         }
 
         setUpUi(isDarkMode)
-        observeViewModel(isDarkMode)
+        observeViewModel(isDarkMode, isClassicMode)
 
         // observe network status
         connectivityViewModel.networkStatus.observe(viewLifecycleOwner){ isConnected ->
             when(isConnected){
                 false -> showSnackbar(binding.root, "No Internet Connection")
-                true -> observeViewModel(isDarkMode)
+                true -> observeViewModel(isDarkMode, isClassicMode)
             }
         }
     }
@@ -170,7 +171,7 @@ class DashboardFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun observeViewModel(isDarkMode: Boolean){
+    private fun observeViewModel(isDarkMode: Boolean, isClassicMode: Boolean){
         viewModel.state.removeObservers(viewLifecycleOwner)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -178,6 +179,11 @@ class DashboardFragment : Fragment() {
                 viewModel.state.observe(viewLifecycleOwner) { state ->
                     when{
                         state.isLoading -> loading.startLoading()
+                        state.error.isNotEmpty() -> {
+                            loading.stopLoading()
+                            Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+                            binding.swipeRefresh.isRefreshing = false
+                        }
                         state.dashboard != null -> {
                             state.dashboard.let { dashboard ->
                                 loading.stopLoading()
@@ -242,19 +248,24 @@ class DashboardFragment : Fragment() {
                                 }
                                 binding.khmer.text = kh
 
-
                                 /// add recycler view
                                 val list: List<AttendDetail> = dashboard.customEntry
-                                binding.recyclerViewEntry.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                                val adapter = AttendRecyclerViewAdapter(requireActivity(), list, isDarkMode, isClassicMode)
-                                binding.recyclerViewEntry.adapter = adapter
+                                if (!::attendAdapter.isInitialized){
+                                    attendAdapter = AttendRecyclerViewAdapter(
+                                        requireActivity(),
+                                        list,
+                                        isDarkMode,
+                                        isClassicMode
+                                    )
+                                    binding.recyclerViewEntry.layoutManager =
+                                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                                    binding.recyclerViewEntry.adapter = attendAdapter
+                                } else {
+                                    attendAdapter.updateViewMode(isClassicMode)
+                                }
 
                             }
-                            binding.swipeRefresh.isRefreshing = false
-                        }
-                        state.error.isNotEmpty() -> {
-                            loading.stopLoading()
-                            Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
                             binding.swipeRefresh.isRefreshing = false
                         }
                     }

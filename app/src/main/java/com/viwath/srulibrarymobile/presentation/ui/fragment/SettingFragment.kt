@@ -18,9 +18,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.FragmentSettingBinding
 import com.viwath.srulibrarymobile.presentation.ui.activities.LoginActivity
@@ -28,8 +26,8 @@ import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.CLASSIC
 import com.viwath.srulibrarymobile.presentation.viewmodel.SettingViewModel.Companion.MODERN
 import com.viwath.srulibrarymobile.utils.KeyStoreManager
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.datastore.SettingPreferences
+import com.viwath.srulibrarymobile.utils.view_component.applyBlur
 import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
 import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 import kotlinx.coroutines.launch
@@ -132,12 +130,10 @@ class SettingFragment : Fragment() {
 
     private fun observeViewModel(isDarkMode: Boolean){
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    binding.tvUsername.text = state.username
-                    binding.tvUserType.text = state.userType
-                    binding.themeSpinner.setSelection(state.themeMode)
-                }
+            viewModel.state.collect { state ->
+                binding.tvUsername.text = state.username
+                binding.tvUserType.text = state.userType
+                binding.themeSpinner.setSelection(state.themeMode)
             }
         }
 

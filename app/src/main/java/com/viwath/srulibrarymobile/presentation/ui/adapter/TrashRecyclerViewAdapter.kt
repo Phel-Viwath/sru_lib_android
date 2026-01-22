@@ -18,9 +18,6 @@ import androidx.transition.TransitionManager
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemRestoreBookBinding
 import com.viwath.srulibrarymobile.domain.model.book.BookInTrash
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
-import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 class TrashRecyclerViewAdapter(
     private var isClassicMode: Boolean,
@@ -34,7 +31,6 @@ class TrashRecyclerViewAdapter(
         private val binding: ItemRestoreBookBinding
     ): RecyclerView.ViewHolder(binding.root){
         val baseCardView = binding.baseCardview
-        val blurView = binding.blurViewRestore
         val arrowButton = binding.arrowButton
         val hiddenView = binding.hiddenView
 
@@ -83,17 +79,28 @@ class TrashRecyclerViewAdapter(
             }
         }
         // theme
-        if(!isClassicMode){
+        if (!isClassicMode) {
+            // Modern mode = semi-transparent card
             holder.baseCardView.apply {
-                setCardBackgroundColor(activity.getTransparent())
-                strokeColor = activity.getTransparent()
-                radius = 5f
+                // 80% opacity white in light mode / dark gray in dark mode
+                setCardBackgroundColor(
+                    if (isDarkMode) context.getColor(R.color.opaque_charcoal)
+                    else context.getColor(R.color.opaque_white)
+                )
+                strokeColor = if (isDarkMode)
+                    context.getColor(R.color.translucent_white)
+                else context.getColor(R.color.translucent_black)
             }
-            holder.blurView.applyBlur(
-                activity,
-                10f,
-                activity.getTranslucentColor(isDarkMode)
-            )
+        } else {
+            // Classic mode = normal solid background
+            holder.baseCardView.apply {
+                setCardBackgroundColor(
+                    if (isDarkMode)
+                        context.getColor(R.color.material_dark_gray)
+                    else context.getColor(R.color.solid_white)
+                )
+                strokeWidth = 1
+            }
         }
     }
 

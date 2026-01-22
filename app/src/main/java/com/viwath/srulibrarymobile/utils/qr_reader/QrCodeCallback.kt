@@ -47,7 +47,4 @@ class QrCodeCallback(
         isProcessing = false
     }
 
-    companion object {
-        private const val TAG = "QrCodeCallback"
-    }
 }

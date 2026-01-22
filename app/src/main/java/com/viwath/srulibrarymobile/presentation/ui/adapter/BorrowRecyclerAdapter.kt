@@ -18,9 +18,6 @@ import androidx.transition.TransitionManager
 import com.viwath.srulibrarymobile.R
 import com.viwath.srulibrarymobile.databinding.ItemBorrowedBinding
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
-import com.viwath.srulibrarymobile.utils.view_component.applyBlur
-import com.viwath.srulibrarymobile.utils.view_component.getTranslucentColor
-import com.viwath.srulibrarymobile.utils.view_component.getTransparent
 
 /**
  * [BorrowRecyclerAdapter] is a RecyclerView adapter that displays a list of [Borrow] objects.
@@ -51,7 +48,6 @@ class BorrowRecyclerAdapter(
         val baseCardView = binding.baseCardview
         val hiddenView = binding.hiddenView
         val arrowButton = binding.arrowButton
-        val blurViewBorrowed = binding.blurViewBorrowed
 
         fun bindData(borrow: Borrow, position: Int){
             binding.tvNo.text = "${position + 1}"
@@ -118,15 +114,28 @@ class BorrowRecyclerAdapter(
             notifyItemChanged(position)
         }
 
-        if (!isClassicMode){
+        if (!isClassicMode) {
+            // Modern mode = semi-transparent card
             holder.baseCardView.apply {
-                setCardBackgroundColor(context.getTransparent())
-                radius = 8f
-                strokeColor = context.getTransparent()
+                // 80% opacity white in light mode / dark gray in dark mode
+                setCardBackgroundColor(
+                    if (isDarkMode) context.getColor(R.color.opaque_charcoal)
+                    else context.getColor(R.color.opaque_white)
+                )
+                strokeColor = if (isDarkMode)
+                    context.getColor(R.color.translucent_white)
+                else context.getColor(R.color.translucent_black)
             }
-            holder.blurViewBorrowed.applyBlur(
-                context, 10f, context.getTranslucentColor(isDarkMode)
-            )
+        } else {
+            // Classic mode = normal solid background
+            holder.baseCardView.apply {
+                setCardBackgroundColor(
+                    if (isDarkMode)
+                        context.getColor(R.color.material_dark_gray)
+                    else context.getColor(R.color.solid_white)
+                )
+                strokeWidth = 1
+            }
         }
     }
 

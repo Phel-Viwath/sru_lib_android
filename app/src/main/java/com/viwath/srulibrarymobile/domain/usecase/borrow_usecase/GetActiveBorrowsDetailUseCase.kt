@@ -13,7 +13,6 @@ import com.viwath.srulibrarymobile.domain.Result
 import com.viwath.srulibrarymobile.domain.model.borrow.Borrow
 import com.viwath.srulibrarymobile.domain.model.borrow.toBorrow
 import com.viwath.srulibrarymobile.domain.repository.BorrowRepository
-import com.viwath.srulibrarymobile.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -26,7 +25,7 @@ import kotlinx.coroutines.flow.flow
  * a list of `Borrow` domain objects before emitting it. It also handles various error scenarios
  * and emits the appropriate `Resource.Error` state.
  *
- * @property repository The `CoreRepository` instance responsible for data access.
+ * @property repository The [BorrowRepository] instance responsible for data access.
  */
 class GetActiveBorrowsDetailUseCase(
     private val repository: BorrowRepository

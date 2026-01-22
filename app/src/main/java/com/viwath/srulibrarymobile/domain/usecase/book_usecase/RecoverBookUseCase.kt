@@ -24,8 +24,8 @@ import javax.inject.Inject
  * occur during the process, such as network issues or HTTP errors, and returns the result
  * wrapped in a `Resource` object.
  *
- * @property repository The `CoreRepository` instance used to interact with the data layer.
- * @constructor Creates a `RecoverBookUseCase` with the provided `CoreRepository`.
+ * @property repository The [BookRepository] instance used to interact with the data layer.
+ * @constructor Creates a `RecoverBookUseCase` with the provided [BookRepository].
  */
 class RecoverBookUseCase @Inject constructor(
     private val repository: BookRepository
