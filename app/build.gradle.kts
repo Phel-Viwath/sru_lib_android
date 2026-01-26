@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.api.dsl.ApplicationExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 /*
  * Copyright (c) 2025.
@@ -9,12 +10,15 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
-    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    alias(libs.plugins.legacy.kapt)
+    alias(libs.plugins.hilt.android)
 }
 
-android {
+base {
+    archivesName.set("SRU-Lib")
+}
+
+configure<ApplicationExtension> {
     namespace = "com.viwath.srulibrarymobile"
     compileSdk = 36
 
@@ -26,6 +30,7 @@ android {
         versionName = "1.0-demo"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -35,17 +40,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-
-    applicationVariants.all {
-        outputs.all {
-            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            val variantName = name
-            val versionName = versionName
-            val versionCode = versionCode
-
-            outputImpl.outputFileName = "SRU-Lib-${variantName}-v${versionName}-${versionCode}.apk"
         }
     }
 
@@ -65,22 +59,21 @@ android {
         exclude("META-INF/gradle/incremental.annotation.processors")
     }
 }
+
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+        languageVersion = KotlinVersion.KOTLIN_2_3
+        //jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 kapt {
     correctErrorTypes = true
-    includeCompileClasspath = false
     arguments {
         arg("dagger.fastInit", "enabled")
         arg("kapt.kotlin.generated", "true")
     }
 }
-hilt {
-    enableAggregatingTask = true
-}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
